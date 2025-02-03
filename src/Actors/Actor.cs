@@ -115,100 +115,12 @@ namespace NEP.MonoDirector.Actors
 
         public override void OnSceneBegin()
         {
-            base.OnSceneBegin();
-
-            for (int i = 0; i < 55; i++)
-            {
-                var bone = _clonedRigBones[i];
-
-                if (bone == null)
-                {
-                    continue;
-                }
-                
-                bone.position = _avatarFrames[0].TransformFrames[i].position;
-                bone.rotation = _avatarFrames[0].TransformFrames[i].rotation;
-            }
+            
         }
 
         public override void Act()
         {
-            _previousFrame = new FrameGroup();
-            _nextFrame = new FrameGroup();
-
-            for(int i = 0; i < _avatarFrames.Count; i++)
-            {
-                var frame = _avatarFrames[i];
-
-                _previousFrame = _nextFrame;
-                _nextFrame = frame;
-
-                if (frame.FrameTime > Director.Instance.Playhead.PlaybackTime)
-                {
-                    break;
-                }
-            }
-
-            float gap = _nextFrame.FrameTime - _previousFrame.FrameTime;
-            float head = Director.Instance.Playhead.PlaybackTime - _previousFrame.FrameTime;
-
-            float delta = head / gap;
-
-            ObjectFrame[] previousTransformFrames = _previousFrame.TransformFrames;
-            ObjectFrame[] nextTransformFrames = _nextFrame.TransformFrames;
-
-            for (int i = 0; i < 55; i++)
-            {
-                if (i == (int)HumanBodyBones.Jaw)
-                {
-                    continue;
-                }
-
-                if (previousTransformFrames == null)
-                {
-                    continue;
-                }
-
-                Vector3 previousPosition = previousTransformFrames[i].position;
-                Vector3 nextPosition = nextTransformFrames[i].position;
-
-                Quaternion previousRotation = previousTransformFrames[i].rotation;
-                Quaternion nextRotation = nextTransformFrames[i].rotation;
-
-                var bone = _clonedRigBones[i];
-
-                if(bone == null)
-                {
-                    continue;
-                }
-
-                bone.position = Vector3.Lerp(previousPosition, nextPosition, delta);
-                bone.rotation = Quaternion.Slerp(previousRotation, nextRotation, delta);
-#if DEBUG
-                _previousFrameDebugger[i].position = previousPosition;
-                _previousFrameDebugger[i].rotation = previousRotation;
-                
-                _nextFrameDebugger[i].position = nextPosition;
-                _nextFrameDebugger[i].rotation = nextRotation;
-#endif
-            }
             
-            for(int i = 0; i < actionFrames.Count; i++)
-            {
-                var actionFrame = actionFrames[i];
-
-                if(Director.Instance.Playhead.PlaybackTime < actionFrame.timestamp)
-                {
-                    continue;
-                }
-                else
-                {
-                    actionFrame.Run();
-                }
-            }
-
-            _microphone?.Playback();
-            _microphone?.UpdateJaw();
         }
 
         /// <summary>
@@ -217,39 +129,16 @@ namespace NEP.MonoDirector.Actors
         /// <param name="index">The frame to record the bones.</param>
         public override void RecordFrame()
         {
-            FrameGroup frameGroup = new FrameGroup();
-            CaptureBoneFrames(_avatarBones);
-            frameGroup.SetFrames(_tempFrames, Director.Instance.Playhead.RecordingTime);
-            _avatarFrames.Add(frameGroup);
+            
         }
 
         public void CloneAvatar()
         {
-            GameObject clonedAvatarObject = GameObject.Instantiate(_playerAvatar.gameObject);
-            _clonedAvatar = clonedAvatarObject.GetComponent<Avatar>();
-
-            _clonedAvatar.gameObject.SetActive(true);
-
-            _body = new ActorBody(this, BoneLib.Player.PhysicsRig);
-
-            // stops position overrides, if there are any
-            _clonedAvatar.GetComponent<Animator>().enabled = false;
-
-            _clonedRigBones = GetAvatarBones(_clonedAvatar);
-
-            GameObject.Destroy(_clonedAvatar.GetComponent<LODGroup>());
-
-            actorName = BoneLib.Player.RigManager.AvatarCrate.Crate.Title;
-            _clonedAvatar.name = actorName;
-            ShowHairMeshes(_clonedAvatar);
-
-            _microphone.SetAvatar(_clonedAvatar);
-
-            _clonedAvatar.gameObject.SetActive(true);
-
-            // avatarPortrait = AvatarPhotoBuilder.avatarPortraits[actorName];
-
-            Events.OnActorCasted?.Invoke(this);
+            _clonedAvatar = GameObject.Instantiate(_playerAvatar.gameObject).GetComponent<Avatar>();
+            ActorRig.CreateRig((Action<RigManager>)((rig) =>
+            {
+                rig.SwapAvatar(_clonedAvatar);
+            }));
         }
 
         public void SwitchToActor(Actor actor)
@@ -260,13 +149,7 @@ namespace NEP.MonoDirector.Actors
 
         public override void Delete()
         {
-            Events.OnActorUncasted?.Invoke(this);
-            _body.Delete();
-            GameObject.Destroy(_clonedAvatar.gameObject);
-            GameObject.Destroy(_microphone.gameObject);
-            _microphone = null;
-            _avatarFrames.Clear();
-            DeleteOwnedProps();
+            
         }
 
         public void DeleteProp(Prop prop)
@@ -288,18 +171,7 @@ namespace NEP.MonoDirector.Actors
 
         public void ParentToSeat(Il2CppSLZ.Marrow.Seat seat)
         {
-            _activeSeat = seat;
-
-            Transform pelvis = _clonedAvatar.animator.GetBoneTransform(HumanBodyBones.Hips);
-
-            _lastPelvisParent = pelvis.GetParent();
-
-            Vector3 seatOffset = new Vector3(seat._buttOffset.x, Mathf.Abs(seat._buttOffset.y) * _clonedAvatar.heightPercent, seat._buttOffset.z);
-
-            pelvis.SetParent(seat.transform);
-
-            pelvis.position = seat.buttTargetInWorld;
-            pelvis.localPosition = seatOffset;
+            
         }
 
         public void UnparentSeat()
