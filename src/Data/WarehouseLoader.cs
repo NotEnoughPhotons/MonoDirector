@@ -16,7 +16,7 @@ namespace NEP.MonoDirector.Data
         internal static Dictionary<string, AudioClip> soundTable;
         internal static List<AudioClip> sounds;
 
-        internal static readonly string companyCode = "NotEnoughPhotons.";
+        internal static readonly string companyCode = "NEP.";
         internal static readonly string modCode = "MonoDirector.";
         internal static readonly string typeCode = "Spawnable.";
 
@@ -59,7 +59,8 @@ namespace NEP.MonoDirector.Data
                 return;
             }
 
-            Barcode mainBarcode = new Barcode("NotEnoughPhotons.MonoDirector");
+            Barcode mainBarcode = new Barcode("NEP.MonoDirector");
+            
             if (!AssetWarehouse.Instance.HasPallet(mainBarcode))
             {
                 Main.Logger.Error("Pallet doesn't exist in registry.");
@@ -79,7 +80,6 @@ namespace NEP.MonoDirector.Data
             SpawnableCrate spawnable = null;
             foreach (Crate crate in pallet.Crates)
             {
-                Main.Logger.Msg(crate.Barcode);
                 if (crate.Barcode == (Barcode)CreateFullBarcode("SoundHolder"))
                 {
                     spawnable = crate.Cast<SpawnableCrate>();
@@ -95,10 +95,10 @@ namespace NEP.MonoDirector.Data
 
             foreach (var sound in sounds)
             {
-                SpawnableCrate copyCrate = new SpawnableCrate()
+                SpawnableCrate copyCrate = new()
                 {
                     Title = $"SFX - {sound.name}",
-                    Barcode = (Barcode)$"NotEnoughPhotons.MonoDirector.Spawnables.SFX{sound.name}",
+                    Barcode = (Barcode)$"NEP.MonoDirector.Spawnables.SFX{sound.name}",
                     Description = sound.name,
                     Pallet = spawnable.Pallet,
                     _packedAssets = spawnable.PackedAssets,

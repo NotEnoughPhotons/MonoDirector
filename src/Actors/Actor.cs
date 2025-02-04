@@ -11,8 +11,9 @@ using Il2CppSLZ.Marrow.Warehouse;
 using NEP.MonoDirector.Audio;
 using NEP.MonoDirector.Core;
 using NEP.MonoDirector.Data;
-
 using Avatar = Il2CppSLZ.VRMK.Avatar;
+using Directory = Il2CppSystem.IO.Directory;
+using Keyframe = NEP.MonoDirector.Data.Keyframe;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -20,26 +21,7 @@ namespace NEP.MonoDirector.Actors
     {
         public Actor() : base()
         {
-#if DEBUG
-            _previousFrameDebugger = new Transform[55];
-            _nextFrameDebugger = new Transform[55];
-
-            GameObject baseCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-            baseCube.GetComponent<BoxCollider>().enabled = false;
-            baseCube.transform.localScale = Vector3.one * 0.03F;
-
-            GameObject empty = new GameObject("MONODIRECTOR DEBUG VIZ");
-            baseCube.transform.parent = empty.transform;
             
-            for (int i = 0; i < 55; i++)
-            {
-                _previousFrameDebugger[i] = GameObject.Instantiate(empty).transform;
-                _nextFrameDebugger[i] = GameObject.Instantiate(empty).transform;
-            }
-
-            GameObject.Destroy(baseCube);
-#endif
         }
         
         public Actor(Il2CppSLZ.VRMK.Avatar avatar) : this()
@@ -52,11 +34,20 @@ namespace NEP.MonoDirector.Actors
             _avatarBones = GetAvatarBones(_playerAvatar);
             _avatarFrames = new List<FrameGroup>();
 
+            _controllerFrames = new List<KeyframeGroup<ControllerKeyframe>>();
+
             GameObject micObject = new GameObject("Actor Microphone");
             _microphone = micObject.AddComponent<ActorSpeech>();
 
             _tempFrames = new ObjectFrame[_avatarBones.Length];
+            _tempControllerFrames = new ControllerKeyframe[2];
             OwnedProps = new List<Prop>();
+
+            _controllers = new BaseController[2]
+            {
+                rigManager.ControllerRig.leftController,
+                rigManager.ControllerRig.rightController
+            };
         }
 
         // For a traditional rig, this should be all the "head" bones
@@ -68,7 +59,6 @@ namespace NEP.MonoDirector.Actors
             (int)HumanBodyBones.RightEye,
         };
 
-
         private Barcode _avatarBarcode;
         public Barcode AvatarBarcode => _avatarBarcode;
         
@@ -79,39 +69,33 @@ namespace NEP.MonoDirector.Actors
         public List<Prop> OwnedProps { get; private set; }
         public IReadOnlyList<FrameGroup> Frames => _avatarFrames.AsReadOnly();
 
-        public ActorBody ActorBody => _body;
-        public ActorSpeech Microphone => _microphone;
-        public Texture2D AvatarPortrait => _avatarPortrait;
-
-        public bool Seated => _activeSeat != null;
-
         protected List<FrameGroup> _avatarFrames;
+        protected List<KeyframeGroup<ControllerKeyframe>> _controllerFrames;
 
         private ActorBody _body;
         private ActorSpeech _microphone;
         private Texture2D _avatarPortrait;
 
-        private Il2CppSLZ.Marrow.Seat _activeSeat;
-
         private Avatar _playerAvatar;
         private Avatar _clonedAvatar;
 
         private ObjectFrame[] _tempFrames;
+        private ControllerKeyframe[] _tempControllerFrames;
 
         private Transform[] _avatarBones;
         private Transform[] _clonedRigBones;
+        private BaseController[] _controllers;
+        private BaseController[] _clonedControllers;
 
+        private RigManager _clonedRig;
+        
+        private KeyframeGroup<ControllerKeyframe> new_previousFrame;
+        private KeyframeGroup<ControllerKeyframe> new_nextFrame;
+        
         private FrameGroup _previousFrame;
         private FrameGroup _nextFrame;
-
-        private Transform _lastPelvisParent;
-        private int _headIndex;
         
-        // Debug build stuff
-        #if DEBUG
-        private Transform[] _previousFrameDebugger;
-        private Transform[] _nextFrameDebugger;
-        #endif
+        private int _headIndex;
 
         public override void OnSceneBegin()
         {
@@ -120,7 +104,67 @@ namespace NEP.MonoDirector.Actors
 
         public override void Act()
         {
+            new_previousFrame = new KeyframeGroup<ControllerKeyframe>();
+            new_nextFrame = new KeyframeGroup<ControllerKeyframe>();
+
+            for(int i = 0; i < _controllerFrames.Count; i++)
+            {
+                var frame = _controllerFrames[i];
+
+                new_previousFrame = new_nextFrame;
+                new_nextFrame = frame;
+
+                if (frame.Time > Director.Instance.Playhead.PlaybackTime)
+                {
+                    break;
+                }
+            }
+
+            float gap = new_nextFrame.Time - new_previousFrame.Time;
+            float head = Director.Instance.Playhead.PlaybackTime - new_previousFrame.Time;
+
+            float delta = head / gap;
+
+            ControllerKeyframe[] previousTransformFrames = new_previousFrame.Frames;
+            ControllerKeyframe[] nextTransformFrames = new_nextFrame.Frames;
+
+            for (int i = 0; i < 2; i++)
+            {
+                if (previousTransformFrames == null)
+                {
+                    continue;
+                }
+
+                Vector3 previousPosition = previousTransformFrames[i].position;
+                Vector3 nextPosition = nextTransformFrames[i].position;
+
+                Quaternion previousRotation = previousTransformFrames[i].rotation;
+                Quaternion nextRotation = nextTransformFrames[i].rotation;
+
+                var controller = _clonedControllers[i];
+
+                if(controller == null)
+                {
+                    continue;
+                }
+
+                controller.transform.position = Vector3.Lerp(previousPosition, nextPosition, delta);
+                controller.transform.rotation = Quaternion.Slerp(previousRotation, nextRotation, delta);
+            }
             
+            for(int i = 0; i < actionFrames.Count; i++)
+            {
+                var actionFrame = actionFrames[i];
+
+                if(Director.Instance.Playhead.PlaybackTime < actionFrame.timestamp)
+                {
+                    continue;
+                }
+                else
+                {
+                    actionFrame.Run();
+                }
+            }
         }
 
         /// <summary>
@@ -129,15 +173,22 @@ namespace NEP.MonoDirector.Actors
         /// <param name="index">The frame to record the bones.</param>
         public override void RecordFrame()
         {
-            
+            KeyframeGroup<ControllerKeyframe> frames = new KeyframeGroup<ControllerKeyframe>();
+            CaptureControllerFrames(_controllers);
+            frames.SetFrames(_tempControllerFrames, Director.Instance.Playhead.RecordingTime);
+            _controllerFrames.Add(frames);
         }
 
         public void CloneAvatar()
         {
-            _clonedAvatar = GameObject.Instantiate(_playerAvatar.gameObject).GetComponent<Avatar>();
+            _clonedControllers = new BaseController[2];
             ActorRig.CreateRig((Action<RigManager>)((rig) =>
             {
-                rig.SwapAvatar(_clonedAvatar);
+                rig.gameObject.AddComponent<ActorMarionette>();
+                rig.SwapAvatar(_playerAvatar);
+                _clonedRig = rig;
+                _clonedControllers[0] = rig.ControllerRig.leftController;
+                _clonedControllers[1] = rig.ControllerRig.rightController;
             }));
         }
 
@@ -169,18 +220,6 @@ namespace NEP.MonoDirector.Actors
             OwnedProps.Clear();
         }
 
-        public void ParentToSeat(Il2CppSLZ.Marrow.Seat seat)
-        {
-            
-        }
-
-        public void UnparentSeat()
-        {
-            _activeSeat = null;
-            Transform pelvis = _clonedAvatar.animator.GetBoneTransform(HumanBodyBones.Hips);
-            pelvis.SetParent(_lastPelvisParent);
-        }
-
         private void ShowHairMeshes(Avatar avatar)
         {
             if(avatar == null)
@@ -204,6 +243,22 @@ namespace NEP.MonoDirector.Actors
             }
         }
 
+        private void CaptureControllerFrames(BaseController[] controllers)
+        {
+            for (int i = 0; i < controllers.Length; i++)
+            {
+                BaseController controller = controllers[i];
+                
+                if (!controller)
+                {
+                    continue;
+                }
+
+                ControllerKeyframe frame = new(controller);
+                _tempControllerFrames[i] = frame;
+            }
+        }
+        
         private void CaptureBoneFrames(Transform[] boneList)
         {
             for (int i = 0; i < boneList.Length; i++)

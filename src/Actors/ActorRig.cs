@@ -5,6 +5,7 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppSLZ.Bonelab;
 using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Marrow.Interaction;
+using Il2CppSLZ.Marrow.Pool;
 using Il2CppSLZ.Marrow.Warehouse;
 
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace NEP.MonoDirector.Actors
         // https://github.com/Lakatrazz/BONELAB-Fusion/blob/main/LabFusion/src/Representation/PlayerRepUtilities.cs
         
         internal static string RepName = "[RigManager (MonoDirector)]";
-        
+
         private float _health;
         private bool _ragdoll;
         private bool _currentlyRagdolled;
@@ -77,7 +78,7 @@ namespace NEP.MonoDirector.Actors
             OpenControllerRig openControllerRig = rigManager.ControllerRig.TryCast<OpenControllerRig>();
             MarrowEntity entity = rigManager.physicsRig.marrowEntity;
 
-            BoneTagReference monoTag = new("NotEnoughPhotons.BoneTag.Actor");
+            BoneTagReference monoTag = new("NEP.BoneTag.Actor");
             entity.Tags.Tags.Add(monoTag);
             
             MarrowEntity controllerEntity = openControllerRig.GetComponent<MarrowEntity>();
@@ -136,11 +137,13 @@ namespace NEP.MonoDirector.Actors
             GameObject.DestroyImmediate(rigManager.ControllerRig.rightController.GetComponent<UIControllerInput>());
 
             SetupImpactProperties(rigManager);
+
+            SetupActorRig(rigManager);
         }
 
         private static void SetupImpactProperties(RigManager rigManager)
         {
-            MarrowEntity entity = rigManager.GetComponent<MarrowEntity>();
+            MarrowEntity entity = rigManager.physicsRig.marrowEntity;
             MarrowBody[] bodies = entity.Bodies;
             DataCardReference<SurfaceDataCard> bloodCard = new("SLZ.Backlot.SurfaceDataCard.Blood");
             
@@ -155,12 +158,33 @@ namespace NEP.MonoDirector.Actors
 
                 if (!properties)
                 {
-                    continue;
+                    properties = body.gameObject.AddComponent<ImpactProperties>();
                 }
-
+                
                 properties.SurfaceDataCard = bloodCard;
                 properties.decalType = ImpactProperties.DecalType.None;
             }
+        }
+
+        private static void SetupActorRig(RigManager rigManager)
+        {
+            rigManager.physicsRig.gameObject.AddComponent<Poolee>();
+
+            BaseController leftController = rigManager.ControllerRig.leftController;
+            BaseController rightController = rigManager.ControllerRig.rightController;
+            
+            Haptor leftHaptor = rigManager.ControllerRig.leftController.haptor;
+            Haptor rightHaptor = rigManager.ControllerRig.rightController.haptor;
+
+            rigManager.ControllerRig.leftController = leftController.gameObject.AddComponent<BaseController>();
+            rigManager.ControllerRig.leftController.contRig = rigManager.ControllerRig;
+            leftHaptor.device_Controller = rigManager.ControllerRig.leftController;
+            rigManager.ControllerRig.leftController.handedness = Handedness.LEFT;
+            
+            rigManager.ControllerRig.rightController = rightController.gameObject.AddComponent<BaseController>();
+            rigManager.ControllerRig.rightController.contRig = rigManager.ControllerRig;
+            rightHaptor.device_Controller = rigManager.ControllerRig.rightController;
+            rigManager.ControllerRig.rightController.handedness = Handedness.RIGHT;
         }
     }
 }

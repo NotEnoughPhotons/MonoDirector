@@ -140,8 +140,8 @@
       <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.UIElementsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="ECHO Copying mod to $(BONELAB_DIR)\Mods&#xD;&#xA;COPY &quot;$(TargetPath)&quot; &quot;$(BONELAB_DIR)\Mods\$(ProjectName).dll&quot;" />
-	</Target>
   <PropertyGroup />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="ECHO Copying mod to &quot;$(BONELAB_DIR)\Mods&quot;&#xA;COPY &quot;$(TargetPath)&quot; &quot;$(BONELAB_DIR)\Mods\$(ProjectName).dll&quot;&#xA;COPY &quot;$(TargetPath)&quot; &quot;$(BONELAB_DIR)\Mods\$(ProjectName).pdb&quot;" />
+  </Target>
 </Project>

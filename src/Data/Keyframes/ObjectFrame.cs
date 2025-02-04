@@ -172,7 +172,6 @@ namespace NEP.MonoDirector.Data
                 sizeof(short)
             );
             
-            
             Array.Copy(
                 BitConverter.GetBytes(position.x), 
                 0, 

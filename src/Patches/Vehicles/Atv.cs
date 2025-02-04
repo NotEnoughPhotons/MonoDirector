@@ -21,8 +21,6 @@ public static class Seat
             {
                 return;
             }
-            
-            activeActor.RecordAction(() => activeActor.ParentToSeat(__instance));
         }
     }
 
@@ -40,8 +38,6 @@ public static class Seat
             {
                 return;
             }
-
-            activeActor.RecordAction(() => activeActor.UnparentSeat());
         }
     }
 }

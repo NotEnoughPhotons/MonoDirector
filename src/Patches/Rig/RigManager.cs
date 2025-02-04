@@ -22,11 +22,11 @@ namespace NEP.MonoDirector.Patches
                     return;
                 }
 
-                Actor activeActor = Director.Instance.ActiveActor;
-                activeActor.RecordAction(new System.Action(() => activeActor.SwitchToActor(activeActor)));
-                activeActor.CloneAvatar();
+                // Actor activeActor = Director.Instance.ActiveActor;
+                // activeActor.RecordAction(new System.Action(() => activeActor.SwitchToActor(activeActor)));
+                // activeActor.CloneAvatar();
                 // Director.Instance.ActiveActors.Add(activeActor);
-                Director.Instance.StageActor(newAvatar);
+                // Director.Instance.StageActor(newAvatar);
             }
         }
     }

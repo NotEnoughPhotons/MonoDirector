@@ -25,11 +25,10 @@ namespace NEP.MonoDirector.State.Recording
             _perTickUpdate = 1f / Settings.World.FPS;
 
             Actor activeActor = Director.Instance.ActiveActor;
-            activeActor.Microphone.RecordMicrophone();
 
             foreach (Actor castMember in Director.Instance.Cast)
             {
-                castMember.Microphone.Playback();
+                
             }
 
             Director.Instance.DetermineMode(this);
@@ -68,7 +67,6 @@ namespace NEP.MonoDirector.State.Recording
             FeedbackSFX.Instance.Beep();
 
             Actor activeActor = Director.Instance.ActiveActor;
-            activeActor.Microphone.StopRecording();
             activeActor.CloneAvatar();
 
             Director.Instance.CastActor(activeActor);
