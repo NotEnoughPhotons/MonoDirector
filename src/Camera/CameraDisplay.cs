@@ -1,4 +1,4 @@
-﻿using SLZ.Bonelab;
+﻿using Il2CppSLZ.Bonelab;
 using UnityEngine;
 
 namespace NEP.MonoDirector.Cameras

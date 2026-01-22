@@ -2,11 +2,9 @@
 
 using NEP.MonoDirector.Actors;
 
-using SLZ.VRMK;
-
 using UnityEngine;
 
-using Avatar = SLZ.VRMK.Avatar;
+using MarrowAvatar = Il2CppSLZ.VRMK.Avatar;
 
 namespace NEP.MonoDirector
 {
@@ -24,7 +22,7 @@ namespace NEP.MonoDirector
         private Actor activeActor;
         private Actor lastActor;
 
-        public void SetActor(Avatar avatar)
+        public void SetActor(MarrowAvatar avatar)
         {
             lastActor = activeActor;
             activeActor = new Actor(avatar);

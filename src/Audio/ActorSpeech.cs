@@ -3,7 +3,7 @@ using UnityEngine.Audio;
 
 using System.Linq;
 
-using Avatar = SLZ.VRMK.Avatar;
+using MarrowAvatar = Il2CppSLZ.VRMK.Avatar;
 
 namespace NEP.MonoDirector.Audio
 {
@@ -12,7 +12,7 @@ namespace NEP.MonoDirector.Audio
     {
         public ActorSpeech(System.IntPtr ptr) : base(ptr) { }
 
-        private Avatar avatar;
+        private MarrowAvatar avatar;
 
         private AudioClip clip;
         private AudioSource source;
@@ -39,7 +39,7 @@ namespace NEP.MonoDirector.Audio
             spectrum.freqHigh = 44100f;
         }
 
-        public void SetAvatar(Avatar avatar)
+        public void SetAvatar(MarrowAvatar avatar)
         {
             this.avatar = avatar;
 

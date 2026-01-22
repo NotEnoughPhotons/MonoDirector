@@ -1,9 +1,4 @@
-﻿ using BoneLib;
-using NEP.MonoDirector.Core;
-using SLZ.Bonelab;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NEP.MonoDirector.Cameras
 {

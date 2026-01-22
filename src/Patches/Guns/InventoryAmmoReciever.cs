@@ -1,14 +1,13 @@
-﻿using SLZ.Props.Weapons;
-using SLZ.Interaction;
-using NEP.MonoDirector.Core;
+﻿using NEP.MonoDirector.Core;
 using NEP.MonoDirector.Actors;
-using SLZ.Marrow.Pool;
+
+using Il2CppSLZ.Marrow;
 
 namespace NEP.MonoDirector.Patches.Guns
 {
-    public static class Magazine
+    public static class MagazinePatches
     {
-        [HarmonyLib.HarmonyPatch(typeof(SLZ.Props.Weapons.Magazine), nameof(SLZ.Props.Weapons.Magazine.OnGrab))]
+        [HarmonyLib.HarmonyPatch(typeof(Magazine), nameof(Magazine.OnGrab))]
         public static class OnGrab
         {
             public static void Postfix(Hand hand)

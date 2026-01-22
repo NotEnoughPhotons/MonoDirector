@@ -2,9 +2,8 @@
 
 using UnityEngine;
 
-using SLZ.Interaction;
-using SLZ.VFX;
-using SLZ.Vehicle;
+using Il2CppSLZ.Marrow;
+using Il2CppSLZ.Bonelab;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -35,13 +34,13 @@ namespace NEP.MonoDirector.Actors
 
             var vfxBlip = rigidbody.GetComponent<Blip>();
 
-            if (Prop.EligibleWithType<SLZ.Props.Weapons.Gun>(rigidbody))
+            if (Prop.EligibleWithType<Gun>(rigidbody))
             {
                 Main.Logger.Msg($"Adding gun component to {gameObject.name}");
 
                 var actorProp = gameObject.AddComponent<GunProp>();
                 actorProp.SetRigidbody(rigidbody);
-                actorProp.SetGun(gameObject.GetComponent<SLZ.Props.Weapons.Gun>());
+                actorProp.SetGun(gameObject.GetComponent<Gun>());
                 Director.instance.RecordingProps.Add(actorProp);
 
                 vfxBlip?.CallSpawnEffect();
@@ -50,13 +49,13 @@ namespace NEP.MonoDirector.Actors
                 return;
             }
 
-            if (Prop.EligibleWithType<SLZ.Props.ObjectDestructable>(rigidbody))
+            if (Prop.EligibleWithType<ObjectDestructible>(rigidbody))
             {
                 Main.Logger.Msg($"Adding destructable component to {gameObject.name}");
 
                 var destructableProp = gameObject.AddComponent<BreakableProp>();
                 destructableProp.SetRigidbody(rigidbody);
-                destructableProp.SetBreakableObject(gameObject.GetComponent<SLZ.Props.ObjectDestructable>());
+                destructableProp.SetBreakableObject(gameObject.GetComponent<ObjectDestructible>());
 
                 Director.instance.RecordingProps.Add(destructableProp);
 
@@ -66,7 +65,7 @@ namespace NEP.MonoDirector.Actors
                 return;
             }
 
-            if (Prop.EligibleWithType<SLZ.Props.Weapons.Magazine>(rigidbody))
+            if (Prop.EligibleWithType<Magazine>(rigidbody))
             {
                 Main.Logger.Msg($"Adding magazine component to {gameObject.name}");
 

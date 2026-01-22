@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using NEP.MonoDirector.Data;
-using SLZ.Marrow.Pool;
+
 using UnityEngine;
-using UnityEngine.Rendering.Universal.LibTessDotNet;
+
+using Il2CppSLZ.Marrow.Pool;
 
 namespace NEP.MonoDirector.Audio
 {
@@ -13,14 +13,14 @@ namespace NEP.MonoDirector.Audio
 
         public static Dictionary<string, AudioClip> LoadedClips;
 
-        private AssetPoolee poolee;
+        private Poolee poolee;
 
         private AudioClip sound;
 
         private void Start()
         {
-            poolee = GetComponent<AssetPoolee>();
-            AssignSound(WarehouseLoader.soundTable[poolee.spawnableCrate.Description]);
+            poolee = GetComponent<Poolee>();
+            AssignSound(WarehouseLoader.soundTable[poolee.SpawnableCrate.Description]);
         }
 
         private void OnDisable()

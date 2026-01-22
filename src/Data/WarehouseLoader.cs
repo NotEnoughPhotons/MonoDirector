@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
 using BoneLib;
-using System.IO;
-using MelonLoader;
-using SLZ.Marrow.Warehouse;
-using NEP.MonoDirector.Audio;
+
+using MelonLoader.Utils;
+
+using Il2CppSLZ.Marrow.Warehouse;
 
 namespace NEP.MonoDirector.Data
 {
@@ -25,7 +25,7 @@ namespace NEP.MonoDirector.Data
         {
             List<AudioClip> sounds = new List<AudioClip>();
             soundTable = new Dictionary<string, AudioClip>();
-            string path = Path.Combine(MelonUtils.UserDataDirectory, "Not Enough Photons/MonoDirector/SFX/Sounds");
+            string path = Path.Combine(MelonEnvironment.UserDataDirectory, "Not Enough Photons/MonoDirector/SFX/Sounds");
 
             if (!Directory.Exists(path))
             {
@@ -63,7 +63,7 @@ namespace NEP.MonoDirector.Data
                 return;
             }
 
-            AssetWarehouse.PalletManifest palletManifest = AssetWarehouse.Instance.warehouseManifest[mainBarcode];
+            PalletManifest palletManifest = AssetWarehouse.Instance.palletManifests[mainBarcode];
 
             if (palletManifest == null)
             {
@@ -71,7 +71,7 @@ namespace NEP.MonoDirector.Data
                 return;
             }
 
-            Pallet pallet = palletManifest.pallet;
+            Pallet pallet = palletManifest.Pallet;
 
             SpawnableCrate spawnable = null;
             foreach (Crate crate in pallet.Crates)
@@ -98,7 +98,7 @@ namespace NEP.MonoDirector.Data
                     Barcode = (Barcode)$"NotEnoughPhotons.MonoDirector.Spawnables.SFX{sound.name}",
                     Description = sound.name,
                     Pallet = spawnable.Pallet,
-                    packedAssets = spawnable.packedAssets,
+                    _packedAssets = spawnable.PackedAssets,
                     MainAsset = spawnable.MainAsset,
                     MainGameObject = spawnable.MainGameObject
                 };

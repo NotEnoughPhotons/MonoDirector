@@ -1,9 +1,7 @@
 ﻿using NEP.MonoDirector.Actors;
-using SLZ;
-using SLZ.Interaction;
-using SLZ.Marrow.Pool;
-using SLZ.SFX;
 using UnityEngine;
+
+using Il2CppSLZ.Marrow;
 
 namespace NEP.MonoDirector.Tools
 {

@@ -3,7 +3,7 @@
 using UnityEngine;
 
 using NEP.MonoDirector.Data;
-using SLZ.Combat;
+using Il2CppSLZ.Marrow.Combat;
 
 namespace NEP.MonoDirector.Actors
 {

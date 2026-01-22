@@ -1,19 +1,21 @@
 ﻿using NEP.MonoDirector.Actors;
 using NEP.MonoDirector.Core;
 
+using Il2CppSLZ.Marrow;
+
 namespace NEP.MonoDirector.Patches
 {
-    internal class ObjectDestructable
+    internal class ObjectDestructiblePatches
     {
-        [HarmonyLib.HarmonyPatch(typeof(SLZ.Props.ObjectDestructable), nameof(SLZ.Props.ObjectDestructable.Awake))]
+        [HarmonyLib.HarmonyPatch(typeof(ObjectDestructible), nameof(ObjectDestructible.Awake))]
         internal static class TakeDamage
         {
-            static void Postfix(SLZ.Props.ObjectDestructable __instance)
+            static void Postfix(ObjectDestructible __instance)
             {
-                __instance.OnDestruction += new System.Action<SLZ.Props.ObjectDestructable>(OnObjectDestroyed);
+                __instance.OnDestruction += new System.Action<ObjectDestructible>(OnObjectDestroyed);
             }
 
-            static void OnObjectDestroyed(SLZ.Props.ObjectDestructable destructable)
+            static void OnObjectDestroyed(ObjectDestructible destructable)
             {
                 var prop = destructable.GetComponent<BreakableProp>();
                 prop?.RecordAction(prop.DestructionEvent);

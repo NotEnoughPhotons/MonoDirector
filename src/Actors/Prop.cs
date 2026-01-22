@@ -1,17 +1,9 @@
-﻿using System.Collections.Generic;
-
+﻿using NEP.MonoDirector.Core;
 using NEP.MonoDirector.Data;
-
-using SLZ.Interaction;
-using SLZ.Props;
-using SLZ.Props.Weapons;
 
 using UnityEngine;
 
-using System;
-
-using SLZ.Vehicle;
-using NEP.MonoDirector.Core;
+using Il2CppSLZ.Marrow;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -28,10 +20,10 @@ namespace NEP.MonoDirector.Actors
 
         public static readonly Il2CppSystem.Type[] whitelistedTypes = new Il2CppSystem.Type[]
         {
-            UnhollowerRuntimeLib.Il2CppType.Of<Gun>(),
-            UnhollowerRuntimeLib.Il2CppType.Of<Magazine>(),
-            UnhollowerRuntimeLib.Il2CppType.Of<ObjectDestructable>(),
-            UnhollowerRuntimeLib.Il2CppType.Of<Atv>()
+            Il2CppInterop.Runtime.Il2CppType.Of<Gun>(),
+            Il2CppInterop.Runtime.Il2CppType.Of<Magazine>(),
+            Il2CppInterop.Runtime.Il2CppType.Of<ObjectDestructible>(),
+            Il2CppInterop.Runtime.Il2CppType.Of<Atv>()
         };
 
         private Trackable actor;

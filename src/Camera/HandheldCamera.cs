@@ -1,7 +1,8 @@
 ﻿using NEP.MonoDirector.State;
-using SLZ.Interaction;
-using SLZ.Marrow.Interaction;
+
 using UnityEngine;
+
+using Il2CppSLZ.Marrow;
 
 namespace NEP.MonoDirector.Cameras
 {

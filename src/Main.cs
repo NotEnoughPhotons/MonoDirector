@@ -12,14 +12,14 @@ using NEP.MonoDirector.Core;
 using NEP.MonoDirector.UI;
 using NEP.MonoDirector.State;
 
-using BoneLib.BoneMenu.Elements;
+using BoneLib.BoneMenu;
 using NEP.MonoDirector.Data;
-using SLZ.Marrow.Warehouse;
+using Il2CppSLZ.Marrow.Warehouse;
 using Harmony;
 
 namespace NEP.MonoDirector
 {
-    public static class BuildInfo
+    public static partial class BuildInfo
     {
         public const string Name = "MonoDirector"; // Name of the Mod.  (MUST BE SET)
         public const string Description = "A movie/photo making utility for BONELAB!"; // Description for the Mod.  (Set as null if none)
@@ -46,7 +46,7 @@ namespace NEP.MonoDirector
 
         public override void OnInitializeMelon()
         {
-            Logger = new MelonLogger.Instance("MonoDirector", System.ConsoleColor.Magenta);
+            Logger = new MelonLogger.Instance("MonoDirector", System.Drawing.Color.Magenta);
 
             instance = this;
 
@@ -57,8 +57,8 @@ namespace NEP.MonoDirector
 
             bundle = GetEmbeddedBundle();
 
-            BoneLib.Hooking.OnLevelInitialized += (info) => MonoDirectorInitialize();
-            AssetWarehouse._onReady += new System.Action(() =>
+            BoneLib.Hooking.OnLevelLoaded += (info) => MonoDirectorInitialize();
+            BoneLib.Hooking.OnWarehouseReady += new System.Action(() =>
             {
                 AudioClip[] sounds = WarehouseLoader.GetSounds().ToArray();
                 WarehouseLoader.GenerateSpawnablesFromSounds(sounds);

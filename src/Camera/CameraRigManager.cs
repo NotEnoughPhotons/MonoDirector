@@ -1,11 +1,10 @@
 ﻿using NEP.MonoDirector.Patches;
 using NEP.MonoDirector.State;
 
-using SLZ.Bonelab;
-
 using UnityEngine;
 
-using RigManager = SLZ.Rig.RigManager;
+using Il2CppSLZ.Bonelab;
+using Il2CppSLZ.Marrow;
 
 namespace NEP.MonoDirector.Cameras
 {
@@ -13,7 +12,7 @@ namespace NEP.MonoDirector.Cameras
     {
         public CameraRigManager()
         {
-            RigManager rigManager = BoneLib.Player.rigManager;
+            RigManager rigManager = Constants.RigManager;
             RigScreenOptions screenOptions = rigManager.GetComponent<RigScreenOptions>();
             RigScreenOptions = screenOptions;
             Start();

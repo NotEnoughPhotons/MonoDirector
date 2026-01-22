@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using NEP.MonoDirector.Data;
+﻿using NEP.MonoDirector.Data;
 using NEP.MonoDirector.Core;
 
 using UnityEngine;

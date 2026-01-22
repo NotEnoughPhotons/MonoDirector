@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using NEP.MonoDirector.Actors;
+﻿using NEP.MonoDirector.Actors;
 using NEP.MonoDirector.Data;
 using NEP.MonoDirector.State;
-using SLZ.Marrow.Pool;
+
 using UnityEngine;
+
+using Il2CppSLZ.Marrow.Pool;
 
 namespace NEP.MonoDirector.UI
 {
@@ -65,7 +63,7 @@ namespace NEP.MonoDirector.UI
                 return;
             }
 
-            AssetPoolee marker = markers[prop].GetComponent<AssetPoolee>();
+            Poolee marker = markers[prop].GetComponent<Poolee>();
             marker.Despawn();
             marker.gameObject.SetActive(false);
             marker.transform.parent = null;

@@ -2,7 +2,7 @@
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-using MK.Glow.URP;
+using Il2CppMK.Glow.URP;
 
 namespace NEP.MonoDirector.Cameras
 {

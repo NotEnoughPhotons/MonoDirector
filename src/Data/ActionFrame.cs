@@ -1,7 +1,4 @@
-﻿using NEP.MonoDirector.Core;
-using System;
-
-namespace NEP.MonoDirector.Data
+﻿namespace NEP.MonoDirector.Data
 {
     public class ActionFrame
     {

@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 
+using Il2CppSLZ.Marrow;
+
 namespace NEP.MonoDirector.Patches
 {
     internal static class PlayerAvatarArtPatches
     {
-        [HarmonyLib.HarmonyPatch(typeof(SLZ.VRMK.PlayerAvatarArt), nameof(SLZ.VRMK.PlayerAvatarArt.UpdateAvatarHead))]
+        [HarmonyLib.HarmonyPatch(typeof(PlayerAvatarArt), nameof(PlayerAvatarArt.UpdateAvatarHead))]
         internal static class UpdateAvatarHead
         {
             internal static Vector3 preTransformHead;
@@ -12,15 +14,15 @@ namespace NEP.MonoDirector.Patches
             
             internal static Vector3 calculatedHeadOffset;
             
-            internal static void Prefix(SLZ.VRMK.PlayerAvatarArt __instance)
+            internal static void Prefix(PlayerAvatarArt __instance)
             {
-                Transform head = __instance._rigManager.avatar.animator.GetBoneTransform(HumanBodyBones.Head);
+                Transform head = __instance._openCtrlRig.avatar.animator.GetBoneTransform(HumanBodyBones.Head);
                 preTransformHead = head.position;
             }
 
-            internal static void Postfix(SLZ.VRMK.PlayerAvatarArt __instance)
+            internal static void Postfix(PlayerAvatarArt __instance)
             {
-                Transform head = __instance._rigManager.avatar.animator.GetBoneTransform(HumanBodyBones.Head);
+                Transform head = __instance._openCtrlRig.avatar.animator.GetBoneTransform(HumanBodyBones.Head);
                 postTransformHead = head.position;
 
                 calculatedHeadOffset = preTransformHead - postTransformHead;

@@ -8,13 +8,12 @@ using NEP.MonoDirector.Audio;
 using NEP.MonoDirector.Core;
 using NEP.MonoDirector.Data;
 
-using SLZ.Props;
-using SLZ.Rig;
-using SLZ.Vehicle;
+using Il2CppSLZ.Marrow;
 
 using UnityEngine;
 
-using Avatar = SLZ.VRMK.Avatar;
+using MarrowAvatar = Il2CppSLZ.VRMK.Avatar;
+using MarrowSeat = Il2CppSLZ.Marrow.Seat;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -32,7 +31,7 @@ namespace NEP.MonoDirector.Actors
             baseCube.transform.localScale = Vector3.one * 0.03F;
 
             MeshRenderer renderer = baseCube.GetComponent<MeshRenderer>();
-            renderer.material = new Material(Shader.Find(Jevil.Const.UrpLitName));
+            // renderer.material = new Material(Shader.Find(Jevil.Const.UrpLitName));
 
             GameObject empty = new GameObject("MONODIRECTOR DEBUG VIZ");
             baseCube.transform.parent = empty.transform;
@@ -47,10 +46,9 @@ namespace NEP.MonoDirector.Actors
 #endif
         }
         
-        public Actor(SLZ.VRMK.Avatar avatar) : this()
+        public Actor(MarrowAvatar avatar) : this()
         {
-            RigManager rigManager = BoneLib.Player.rigManager;
-            avatarBarcode = rigManager.AvatarCrate.Barcode;
+            avatarBarcode = Constants.RigManager.AvatarCrate.Barcode.ToString();
             
             playerAvatar = avatar;
 
@@ -76,8 +74,8 @@ namespace NEP.MonoDirector.Actors
         private string avatarBarcode;
         public string AvatarBarcode => avatarBarcode;
         
-        public Avatar PlayerAvatar { get => playerAvatar; }
-        public Avatar ClonedAvatar { get => clonedAvatar; }
+        public MarrowAvatar PlayerAvatar { get => playerAvatar; }
+        public MarrowAvatar ClonedAvatar { get => clonedAvatar; }
         public Transform[] AvatarBones { get => avatarBones; }
 
         public IReadOnlyList<FrameGroup> Frames => avatarFrames.AsReadOnly();
@@ -94,10 +92,10 @@ namespace NEP.MonoDirector.Actors
         private ActorSpeech microphone;
         private Texture2D avatarPortrait;
 
-        private SLZ.Vehicle.Seat activeSeat;
+        private MarrowSeat activeSeat;
 
-        private Avatar playerAvatar;
-        private Avatar clonedAvatar;
+        private MarrowAvatar playerAvatar;
+        private MarrowAvatar clonedAvatar;
 
         private ObjectFrame[] tempFrames;
 
@@ -229,11 +227,11 @@ namespace NEP.MonoDirector.Actors
         public void CloneAvatar()
         {
             GameObject clonedAvatarObject = GameObject.Instantiate(playerAvatar.gameObject);
-            clonedAvatar = clonedAvatarObject.GetComponent<SLZ.VRMK.Avatar>();
+            clonedAvatar = clonedAvatarObject.GetComponent<MarrowAvatar>();
 
             clonedAvatar.gameObject.SetActive(true);
 
-            body = new ActorBody(this, Constants.rigManager.physicsRig);
+            body = new ActorBody(this, Constants.RigManager.physicsRig);
 
             // stops position overrides, if there are any
             clonedAvatar.GetComponent<Animator>().enabled = false;
@@ -242,7 +240,7 @@ namespace NEP.MonoDirector.Actors
 
             GameObject.Destroy(clonedAvatar.GetComponent<LODGroup>());
 
-            actorName = Constants.rigManager.AvatarCrate.Crate.Title;
+            actorName = Constants.RigManager.AvatarCrate.Crate.Title;
             clonedAvatar.name = actorName;
             ShowHairMeshes(clonedAvatar);
 
@@ -271,7 +269,7 @@ namespace NEP.MonoDirector.Actors
             avatarFrames.Clear();
         }
 
-        public void ParentToSeat(SLZ.Vehicle.Seat seat)
+        public void ParentToSeat(MarrowSeat seat)
         {
             activeSeat = seat;
 
@@ -294,16 +292,16 @@ namespace NEP.MonoDirector.Actors
             pelvis.SetParent(lastPelvisParent);
         }
 
-        private void ShowHairMeshes(SLZ.VRMK.Avatar avatar)
+        private void ShowHairMeshes(MarrowAvatar avatar)
         {
             if(avatar == null)
             {
-                MelonLogger.LogError("ShowHairMeshes: Avatar doesn't exist!");
+                Main.Logger.Error("ShowHairMeshes: Avatar doesn't exist!");
             }
 
             if(avatar.hairMeshes.Count == 0 || avatar.hairMeshes == null)
             {
-                MelonLogger.LogWarning("ShowHairMeshes: No hair meshes to clone.");
+                Main.Logger.Warning("ShowHairMeshes: No hair meshes to clone.");
             }
 
             foreach (var mesh in avatar.hairMeshes)
@@ -340,7 +338,7 @@ namespace NEP.MonoDirector.Actors
                 tempFrames[headBone].position += Patches.PlayerAvatarArtPatches.UpdateAvatarHead.calculatedHeadOffset;
         }
 
-        private Transform[] GetAvatarBones(SLZ.VRMK.Avatar avatar)
+        private Transform[] GetAvatarBones(MarrowAvatar avatar)
         {
             Transform[] bones = new Transform[(int)HumanBodyBones.LastBone];
 

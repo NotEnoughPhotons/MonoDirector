@@ -1,6 +1,6 @@
 ﻿using NEP.MonoDirector.Data;
 using NEP.MonoDirector.State;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace NEP.MonoDirector.Cameras
@@ -13,8 +13,8 @@ namespace NEP.MonoDirector.Cameras
         public readonly Dictionary<BodyPart, BodyPartData> FollowPoints = new Dictionary<BodyPart, BodyPartData>()
         {
             { BodyPart.Head, new BodyPartData(CameraRigManager.Instance.RigScreenOptions.TargetTransform) },
-            { BodyPart.Chest, new BodyPartData(Constants.rigManager.physicsRig.m_chest) },
-            { BodyPart.Pelvis, new BodyPartData(Constants.rigManager.physicsRig.m_pelvis) }
+            { BodyPart.Chest, new BodyPartData(Constants.RigManager.physicsRig.m_chest) },
+            { BodyPart.Pelvis, new BodyPartData(Constants.RigManager.physicsRig.m_pelvis) }
         };
 
         public Transform FollowTarget { get => followTarget; }

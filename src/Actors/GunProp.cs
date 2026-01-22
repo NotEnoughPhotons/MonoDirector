@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NEP.MonoDirector.Data;
 
-using BoneLib.Nullables;
-
-using NEP.MonoDirector.Data;
-using NEP.MonoDirector.Core;
-
-using SLZ.Marrow.Data;
-using SLZ.Marrow.Pool;
-using SLZ.Marrow.Warehouse;
-using SLZ.Props.Weapons;
-
-using UnityEngine;
-using SLZ.Interaction;
-using SLZ.Props;
-using static SLZ.Props.Weapons.Gun;
+using Il2CppSLZ.Marrow;
+using Il2CppSLZ.Marrow.Warehouse;
+using Il2CppSLZ.Marrow.Data;
+using Il2CppSLZ.Marrow.Combat;
+using Il2CppSLZ.Marrow.Pool;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -47,7 +37,7 @@ namespace NEP.MonoDirector.Actors
 
         public void GunFakeFire()
         {
-            gun.cartridgeState = CartridgeStates.SPENT;
+            gun.cartridgeState = Gun.CartridgeStates.SPENT;
             gun.UpdateArt();
             
             MuzzleFlash();
@@ -81,15 +71,10 @@ namespace NEP.MonoDirector.Actors
                 crateRef = gun.muzzleFlareSpawnable.crateRef
             };
             AssetSpawner.Register(muzzleFlashSpawnable);
-            NullableMethodExtensions.PoolManager_Spawn(
-                muzzleFlashSpawnable,
+
+            AssetSpawner.Spawn(muzzleFlashSpawnable,
                 gun.firePointTransform.position,
-                gun.firePointTransform.rotation,
-                null,
-                false,
-                null,
-                null,
-                null);
+                gun.firePointTransform.rotation);
         }
 
         private void EjectCasing()
@@ -99,15 +84,10 @@ namespace NEP.MonoDirector.Actors
                 crateRef = gun.defaultCartridge.cartridgeCaseSpawnable.crateRef
             };
             AssetSpawner.Register(cartridgeSpawnable);
-            NullableMethodExtensions.PoolManager_Spawn(
-                cartridgeSpawnable,
+
+            AssetSpawner.Spawn(cartridgeSpawnable,
                 gun.shellSpawnTransform.position,
-                gun.shellOrientationTransform.rotation,
-                null,
-                false,
-                null,
-                null,
-                null);
+                gun.shellOrientationTransform.rotation);
         }
 
         public void InsertMagState(CartridgeData cartridgeData, MagazineData magazineData, int count)
@@ -127,13 +107,13 @@ namespace NEP.MonoDirector.Actors
                 gun.MagazineState = magazineState;
             }
 
-            gun.UpdateMagazineArt();
+            // gun.UpdateMagazineArt();
         }
 
         public void AddMagState(CartridgeData cartridgeData, int amount)
         {
             gun.MagazineState.AddCartridge(amount, cartridgeData);
-            gun.UpdateMagazineArt();
+            // gun.UpdateMagazineArt();
         }
 
         private int _prevInternalMagazineAmmoCount;

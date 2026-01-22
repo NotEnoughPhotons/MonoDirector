@@ -1,12 +1,11 @@
-﻿using SLZ.Marrow.Warehouse;
-
-using UnityEngine.Experimental.Rendering;
-using UnityEngine.Rendering.Universal;
+﻿using UnityEngine.Rendering.Universal;
 using UnityEngine;
 
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+using Il2CppInterop.Runtime;
+
+using Il2CppSLZ.Marrow.Warehouse;
+
+using MarrowAvatar = Il2CppSLZ.VRMK.Avatar;
 
 namespace NEP.MonoDirector.Data
 {
@@ -38,7 +37,7 @@ namespace NEP.MonoDirector.Data
             {
                 foreach (var crate in pallet.Crates)
                 {
-                    if (crate.GetIl2CppType() != UnhollowerRuntimeLib.Il2CppType.Of<AvatarCrate>())
+                    if (crate.GetIl2CppType() != Il2CppType.Of<AvatarCrate>())
                     {
                         continue;
                     }
@@ -61,7 +60,7 @@ namespace NEP.MonoDirector.Data
                     }
                     else
                     {
-                        crate.LoadAsset(new System.Action<Object>((obj) => CreateDummyAvatarObject(obj, crateTitle)));
+                        crate.LoadAsset(new Action<UnityEngine.Object>((obj) => CreateDummyAvatarObject(obj, crateTitle)));
                     }
                 }
             }
@@ -71,7 +70,7 @@ namespace NEP.MonoDirector.Data
             initialized = true;
         }
 
-        private static void CreateDummyAvatarObject(Object obj, string crateTitle)
+        private static void CreateDummyAvatarObject(UnityEngine.Object obj, string crateTitle)
         {
             GameObject avatarInstance = GameObject.FindObjectFromInstanceID(obj.GetInstanceID()).Cast<GameObject>();
             avatarInstance.transform.position = Vector3.zero;
@@ -91,7 +90,7 @@ namespace NEP.MonoDirector.Data
         {
             GameObject copiedAvatar = GameObject.Instantiate(avatarObject);
 
-            SLZ.VRMK.Avatar avatar = copiedAvatar.GetComponent<SLZ.VRMK.Avatar>();
+            MarrowAvatar avatar = copiedAvatar.GetComponent<MarrowAvatar>();
 
             RenderTexture input = new RenderTexture(256, 256, -1, RenderTextureFormat.ARGB32);
 

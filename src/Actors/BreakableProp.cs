@@ -1,10 +1,8 @@
-﻿using SLZ.Props;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 using NEP.MonoDirector.Data;
-using NEP.MonoDirector.Core;
+
+using Il2CppSLZ.Marrow;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -13,7 +11,7 @@ namespace NEP.MonoDirector.Actors
     {
         public BreakableProp(IntPtr ptr) : base(ptr) { }
 
-        public ObjectDestructable breakableProp;
+        public ObjectDestructible breakableProp;
 
         protected override void Awake()
         {
@@ -33,7 +31,7 @@ namespace NEP.MonoDirector.Actors
             }
         }
 
-        public void SetBreakableObject(ObjectDestructable destructable)
+        public void SetBreakableObject(ObjectDestructible destructable)
         {
             this.breakableProp = destructable;
         }

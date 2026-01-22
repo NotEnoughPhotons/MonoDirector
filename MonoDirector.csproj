@@ -1,230 +1,204 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{788BC472-59F7-46F6-B760-65C18BA74389}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NEP.MonoDirector</RootNamespace>
-    <AssemblyName>MonoDirector</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>None</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>Output\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <OutputPath>Output\Debug\</OutputPath>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>DEBUG</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="src\Actors\ActorSkeleton.cs" />
-    <Compile Include="src\Audio\*.cs" />
-    <Compile Include="src\Data\IBinaryData.cs" />
-    <Compile Include="src\Data\IJSONData.cs" />
-    <Compile Include="src\Data\AvatarPhotoBuilder.cs" />
-    <Compile Include="src\Data\ManagedQuaternion.cs" />
-    <Compile Include="src\Data\ManagedVector.cs" />
-    <Compile Include="src\Patches\VRMK\PlayerAvatarArt.cs" />
-    <Compile Include="src\Proxy\ActorProxy.cs" />
-    <Compile Include="src\Actors\GripEventListener.cs" />
-    <Compile Include="src\Actors\MagazineProp.cs" />
-    <Compile Include="src\Actors\Trackable.cs" />
-    <Compile Include="src\Actors\BreakableProp.cs" />
-    <Compile Include="src\Actors\GunProp.cs" />
-    <Compile Include="src\Actors\Prop.cs" />
-    <Compile Include="src\Actors\ActorNPC.cs" />
-    <Compile Include="src\Actors\ActorNPCBuilder.cs" />
-    <Compile Include="src\Actors\Actor.cs" />
-    <Compile Include="src\Actors\TrackedVehicle.cs" />
-    <Compile Include="src\Actors\PropBuilder.cs" />
-    <Compile Include="src\Audio\ActorSpeech.cs" />
-    <Compile Include="src\Audio\Spectrum.cs" />
-    <Compile Include="src\Camera\CameraDamp.cs" />
-    <Compile Include="src\Camera\CameraDisplay.cs" />
-    <Compile Include="src\Camera\FOVController.cs" />
-    <Compile Include="src\Camera\HandheldCamera.cs" />
-    <Compile Include="src\Camera\InputController.cs" />
-    <Compile Include="src\Camera\CameraRigManager.cs" />
-    <Compile Include="src\Camera\CameraVolume.cs" />
-    <Compile Include="src\Camera\FollowCamera.cs" />
-    <Compile Include="src\Actors\ActorBody.cs" />
-    <Compile Include="src\Data\*.cs" />
-    <Compile Include="src\Constants.cs" />
-    <Compile Include="src\Events.cs" />
-    <Compile Include="src\Director.cs" />
-    <Compile Include="src\Camera\FreeCamera.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Main.cs" />
-    <Compile Include="src\Patches\Guns\InventoryAmmoReciever.cs" />
-    <Compile Include="src\Patches\Interaction\SimpleGripEvents.cs" />
-    <Compile Include="src\Patches\Rig\RigManager.cs" />
-    <Compile Include="src\Patches\Guns\Gun.cs" />
-    <Compile Include="src\Patches\SFX\HandSFX.cs" />
-    <Compile Include="src\Patches\SFX\GunSFX.cs" />
-    <Compile Include="src\Patches\ObjectDestructable.cs" />
-    <Compile Include="src\Patches\Vehicles\Atv.cs" />
-    <Compile Include="src\Photographer.cs" />
-    <Compile Include="src\Playback.cs" />
-    <Compile Include="src\Proxy\TrackableProxy.cs" />
-    <Compile Include="src\Recorder.cs" />
-    <Compile Include="src\Settings.cs" />
-    <Compile Include="src\Spline\SplineNode.cs" />
-    <Compile Include="src\State\BodyPart.cs" />
-    <Compile Include="src\State\CameraMode.cs" />
-    <Compile Include="src\State\CaptureState.cs" />
-    <Compile Include="src\State\PlayState.cs" />
-    <Compile Include="src\Tools\*.cs" />
-    <Compile Include="src\UI\Main\*.cs" />
-    <Compile Include="src\UI\MDBoneMenu.cs" />
-    <Compile Include="src\UI\PropMarkerManager.cs" />
-    <Compile Include="src\UI\InformationInterface.cs" />
-    <Compile Include="src\UI\InfoInterfaceManager.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>.\Links\MelonLoader\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="AudioImportLib">
-      <HintPath>.\Links\Mods\AudioImportLib.dll</HintPath>
-    </Reference>
-    <Reference Include="BoneLib">
-      <HintPath>.\Links\Mods\BoneLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Il2Cppmscorlib, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
-    </Reference>
-    <Reference Include="Il2CppSystem, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\Il2CppSystem.dll</HintPath>
-    </Reference>
-    <Reference Include="Il2CppSystem.Core, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\Il2CppSystem.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="JeviLib, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\Mods\JeviLib.dll</HintPath>
-    </Reference>
-    <Reference Include="MelonLoader, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\MelonLoader.dll</HintPath>
-    </Reference>
-    <Reference Include="SLZ.Marrow, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\SLZ.Marrow.dll</HintPath>
-    </Reference>
-    <Reference Include="SLZ.Marrow.SDK, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\SLZ.Marrow.SDK.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="UnhollowerBaseLib, Version=0.4.15.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnhollowerBaseLib.dll</HintPath>
-    </Reference>
-    <Reference Include="UnhollowerRuntimeLib, Version=0.4.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnhollowerRuntimeLib.dll</HintPath>
-    </Reference>
-    <Reference Include="UniTask, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UniTask.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Mathematics">
-      <HintPath>.\Links\MelonLoader\Managed\Unity.Mathematics.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.Runtime, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Splines">
-      <HintPath>.\Links\MelonLoader\Managed\Unity.Splines.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.AnimationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.AudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Program Files (x86)\Steam\steamapps\common\BONELAB\MelonLoader\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VFXModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Links\MelonLoader\Managed\UnityEngine.VFXModule.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\md_resources.pack" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<RootNamespace>NEP.MonoDirector</RootNamespace>
+		<LangVersion>default</LangVersion>
+		<IsPackable>false</IsPackable>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<AssemblyName>MonoDirector</AssemblyName>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Remove="img\**" />
+	  <None Remove="img\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove=".gitattributes" />
+	  <None Remove=".gitignore" />
+	  <None Remove="build.py" />
+	  <None Remove="LICENSE.md" />
+	  <None Remove="NOTICE.txt" />
+	  <None Remove="quest_build.bat" />
+	  <None Remove="README.md" />
+	  <None Remove="run_build.bat" />
+	  <None Remove="setup_build.py" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="src\Actors\Actor.cs" />
+		<Compile Include="src\Actors\ActorBody.cs" />
+		<Compile Include="src\Actors\ActorNPC.cs" />
+		<Compile Include="src\Actors\ActorNPCBuilder.cs" />
+		<Compile Include="src\Actors\ActorSkeleton.cs" />
+		<Compile Include="src\Actors\BreakableProp.cs" />
+		<Compile Include="src\Actors\GripEventListener.cs" />
+		<Compile Include="src\Actors\GunProp.cs" />
+		<Compile Include="src\Actors\MagazineProp.cs" />
+		<Compile Include="src\Actors\Prop.cs" />
+		<Compile Include="src\Actors\PropBuilder.cs" />
+		<Compile Include="src\Actors\Trackable.cs" />
+		<Compile Include="src\Actors\TrackedVehicle.cs" />
+		<Compile Include="src\Audio\ActorSpeech.cs" />
+		<Compile Include="src\Audio\AudioManager.cs" />
+		<Compile Include="src\Audio\FeedbackSFX.cs" />
+		<Compile Include="src\Audio\PooledAudio.cs" />
+		<Compile Include="src\Audio\SoundHolder.cs" />
+		<Compile Include="src\Audio\SoundSource.cs" />
+		<Compile Include="src\Audio\SoundSource3D.cs" />
+		<Compile Include="src\Audio\Spectrum.cs" />
+		<Compile Include="src\BuildInfo.gen.cs" />
+		<Compile Include="src\Camera\CameraDamp.cs" />
+		<Compile Include="src\Camera\CameraDisplay.cs" />
+		<Compile Include="src\Camera\CameraRigManager.cs" />
+		<Compile Include="src\Camera\CameraVolume.cs" />
+		<Compile Include="src\Camera\FollowCamera.cs" />
+		<Compile Include="src\Camera\FOVController.cs" />
+		<Compile Include="src\Camera\FreeCamera.cs" />
+		<Compile Include="src\Camera\HandheldCamera.cs" />
+		<Compile Include="src\Camera\InputController.cs" />
+		<Compile Include="src\Constants.cs" />
+		<Compile Include="src\Data\ActionFrame.cs" />
+		<Compile Include="src\Data\AvatarPhotoBuilder.cs" />
+		<Compile Include="src\Data\BodyPartData.cs" />
+		<Compile Include="src\Data\CompressedQuaternion.cs" />
+		<Compile Include="src\Data\CompressedVector3.cs" />
+		<Compile Include="src\Data\FrameGroup.cs" />
+		<Compile Include="src\Data\IBinaryData.cs" />
+		<Compile Include="src\Data\IJSONData.cs" />
+		<Compile Include="src\Data\Interpolator.cs" />
+		<Compile Include="src\Data\ManagedQuaternion.cs" />
+		<Compile Include="src\Data\ManagedVector.cs" />
+		<Compile Include="src\Data\ObjectFrame.cs" />
+		<Compile Include="src\Data\WarehouseLoader.cs" />
+		<Compile Include="src\Director.cs" />
+		<Compile Include="src\Events.cs" />
+		<Compile Include="src\Main.cs" />
+		<Compile Include="src\Patches\Guns\Gun.cs" />
+		<Compile Include="src\Patches\Guns\InventoryAmmoReciever.cs" />
+		<Compile Include="src\Patches\Interaction\SimpleGripEvents.cs" />
+		<Compile Include="src\Patches\ObjectDestructable.cs" />
+		<Compile Include="src\Patches\Rig\RigManager.cs" />
+		<Compile Include="src\Patches\SFX\GunSFX.cs" />
+		<Compile Include="src\Patches\SFX\HandSFX.cs" />
+		<Compile Include="src\Patches\Test.cs" />
+		<Compile Include="src\Patches\Vehicles\Atv.cs" />
+		<Compile Include="src\Patches\VRMK\PlayerAvatarArt.cs" />
+		<Compile Include="src\Photographer.cs" />
+		<Compile Include="src\Playback.cs" />
+		<Compile Include="src\Proxy\ActorProxy.cs" />
+		<Compile Include="src\Proxy\TrackableProxy.cs" />
+		<Compile Include="src\Recorder.cs" />
+		<Compile Include="src\Settings.cs" />
+		<Compile Include="src\Spline\SplineNode.cs" />
+		<Compile Include="src\State\BodyPart.cs" />
+		<Compile Include="src\State\CameraMode.cs" />
+		<Compile Include="src\State\CaptureState.cs" />
+		<Compile Include="src\State\PlayState.cs" />
+		<Compile Include="src\Tools\OmniLight.cs" />
+		<Compile Include="src\Tools\Propifier.cs" />
+		<Compile Include="src\Tools\SpotLight.cs" />
+		<Compile Include="src\Tools\StudioLight.cs" />
+		<Compile Include="src\UI\InfoInterfaceManager.cs" />
+		<Compile Include="src\UI\InformationInterface.cs" />
+		<Compile Include="src\UI\Main\ActorDisplayPage.cs" />
+		<Compile Include="src\UI\Main\ActorEntry.cs" />
+		<Compile Include="src\UI\Main\ActorSettingsPage.cs" />
+		<Compile Include="src\UI\Main\ActorsPage.cs" />
+		<Compile Include="src\UI\Main\MDFooter.cs" />
+		<Compile Include="src\UI\Main\MDMenu.cs" />
+		<Compile Include="src\UI\Main\MenuPage.cs" />
+		<Compile Include="src\UI\Main\PlayheadPage.cs" />
+		<Compile Include="src\UI\Main\SettingsPage.cs" />
+		<Compile Include="src\UI\MDBoneMenu.cs" />
+		<Compile Include="src\UI\PropMarkerManager.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="0Harmony">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\0Harmony.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Assembly-CSharp">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Assembly-CSharp.dll</HintPath>
+	  </Reference>
+	  <Reference Include="AudioImportLib">
+	    <HintPath>$(BONELAB_DIR)\Mods\AudioImportLib.dll</HintPath>
+	  </Reference>
+	  <Reference Include="BoneLib">
+	    <HintPath>$(BONELAB_DIR)\Mods\BoneLib.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Il2CppInterop.Common">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\Il2CppInterop.Common.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Il2CppInterop.Runtime">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\Il2CppInterop.Runtime.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Il2Cppmscorlib">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Il2Cppmscorlib.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Il2CppSLZ.Marrow">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Il2CppSLZ.Marrow.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Il2CppSystem">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Il2CppSystem.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Il2CppSystem.Core">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Il2CppSystem.Core.dll</HintPath>
+	  </Reference>
+	  <Reference Include="MelonLoader">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\MelonLoader.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Newtonsoft.Json">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\Newtonsoft.Json.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Unity.RenderPipelines.Core.Runtime">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Unity.TextMeshPro">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Unity.TextMeshPro.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.AnimationModule">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.AnimationModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.AssetBundleModule">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.AssetBundleModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.AudioModule">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.AudioModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.CoreModule">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.CoreModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.ImageConversionModule">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.ImageConversionModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.InputLegacyModule">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.InputLegacyModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.PhysicsModule">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.PhysicsModule.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.UI">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.UI.dll</HintPath>
+	  </Reference>
+	  <Reference Include="UnityEngine.UIModule">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.UIModule.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
 </Project>

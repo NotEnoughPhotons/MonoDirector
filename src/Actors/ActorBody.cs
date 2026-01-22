@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Il2CppInterop.Runtime.InteropTypes.Arrays;
 
 using NEP.MonoDirector.Audio;
 
-
-using SLZ.Combat;
-using SLZ.Rig;
-using SLZ.SFX;
-
 using UnityEngine;
 
-using Avatar = SLZ.VRMK.Avatar;
+using Il2CppSLZ.Marrow;
+using Il2CppSLZ.Marrow.Audio;
+
+using MarrowAvatar = Il2CppSLZ.VRMK.Avatar;
+using Random = UnityEngine.Random;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -141,14 +140,14 @@ namespace NEP.MonoDirector.Actors
             leftHand.transform.rotation = Quaternion.identity;
             rightHand.transform.rotation = Quaternion.identity;
 
-            ImpactPropertiesManager vfxManager = physicsRig.GetComponent<ImpactPropertiesManager>();
-
-            headVFX.surfaceData = vfxManager.surfaceData;
-            chestVFX.surfaceData = vfxManager.surfaceData;
-            spineVFX.surfaceData = vfxManager.surfaceData;
-            hipVFX.surfaceData = vfxManager.surfaceData;
-            leftHandVFX.surfaceData = vfxManager.surfaceData;
-            rightHandVFX.surfaceData = vfxManager.surfaceData;
+            // ImpactPropertiesManager vfxManager = physicsRig.GetComponent<ImpactPropertiesManager>();
+            // 
+            // headVFX.surfaceData = vfxManager.surfaceData;
+            // chestVFX.surfaceData = vfxManager.surfaceData;
+            // spineVFX.surfaceData = vfxManager.surfaceData;
+            // hipVFX.surfaceData = vfxManager.surfaceData;
+            // leftHandVFX.surfaceData = vfxManager.surfaceData;
+            // rightHandVFX.surfaceData = vfxManager.surfaceData;
         }
 
         private void SetupAudio()
@@ -157,10 +156,11 @@ namespace NEP.MonoDirector.Actors
             footstepJogAudio = new List<AudioClip>();
             landingAudio = new List<AudioClip>();
 
-            Avatar avatar = actor.PlayerAvatar;
+            MarrowAvatar avatar = actor.PlayerAvatar;
 
-            UnhollowerBaseLib.Il2CppReferenceArray<AudioClip> avatarWalkingClips = avatar.footstepsWalk?.audioClips;
-            UnhollowerBaseLib.Il2CppReferenceArray<AudioClip> avatarJoggingClips = avatar.footstepsJog?.audioClips;
+
+            Il2CppReferenceArray<AudioClip> avatarWalkingClips = avatar.footstepsWalk?.audioClips;
+            Il2CppReferenceArray<AudioClip> avatarJoggingClips = avatar.footstepsJog?.audioClips;
 
             FootstepSFX sfx = GameObject.FindObjectOfType<FootstepSFX>();
 

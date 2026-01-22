@@ -1,37 +1,36 @@
 ﻿using NEP.MonoDirector.Actors;
-using NEP.MonoDirector.Core;
 
-using SLZ.Marrow.Data;
-using static MelonLoader.MelonLogger;
+using Il2CppSLZ.Marrow;
+using Il2CppSLZ.Marrow.Data;
 
 namespace NEP.MonoDirector.Patches
 {
-    internal static class Gun
+    internal static class GunPatches
     {
-        [HarmonyLib.HarmonyPatch(typeof(SLZ.Props.Weapons.Gun), nameof(SLZ.Props.Weapons.Gun.OnFire))]
+        [HarmonyLib.HarmonyPatch(typeof(Gun), nameof(Gun.OnFire))]
         internal static class OnFire
         {
-            internal static void Postfix(SLZ.Props.Weapons.Gun __instance)
+            internal static void Postfix(Gun __instance)
             {
                 var gunProp = __instance.gameObject.GetComponent<GunProp>();
                 gunProp?.RecordAction(new System.Action(() => gunProp.GunFakeFire()));
             }
         }
 
-        [HarmonyLib.HarmonyPatch(typeof(SLZ.Props.Weapons.Gun), nameof(SLZ.Props.Weapons.Gun.SetAnimationState))]
+        [HarmonyLib.HarmonyPatch(typeof(Gun), nameof(Gun.SetAnimationState))]
         internal static class PlayAnimationState
         {
-            internal static void Postfix(SLZ.Props.Weapons.Gun __instance, SLZ.Props.Weapons.Gun.AnimationStates state, float perc)
+            internal static void Postfix(Gun __instance, Gun.AnimationStates state, float perc)
             {
                 var gunProp = __instance.gameObject.GetComponent<GunProp>();
                 gunProp?.RecordAction(() => __instance.SetAnimationState(state, perc));
             }
         }
 
-        [HarmonyLib.HarmonyPatch(typeof(SLZ.Props.Weapons.Gun), nameof(SLZ.Props.Weapons.Gun.OnMagazineInserted))]
+        [HarmonyLib.HarmonyPatch(typeof(Gun), nameof(Gun.OnMagazineInserted))]
         internal static class OnMagazineInserted
         {
-            internal static void Postfix(SLZ.Props.Weapons.Gun __instance)
+            internal static void Postfix(Gun __instance)
             {
                 if (__instance._magState != null)
                 {
@@ -44,20 +43,20 @@ namespace NEP.MonoDirector.Patches
             }
         }
 
-        [HarmonyLib.HarmonyPatch(typeof(SLZ.Props.Weapons.Gun), nameof(SLZ.Props.Weapons.Gun.OnMagazineRemoved))]
+        [HarmonyLib.HarmonyPatch(typeof(Gun), nameof(Gun.OnMagazineRemoved))]
         internal static class OnMagazineRemoved
         {
-            internal static void Postfix(SLZ.Props.Weapons.Gun __instance)
+            internal static void Postfix(Gun __instance)
             {
                 var gunProp = __instance.gameObject.GetComponent<GunProp>();
                 gunProp?.RecordAction(new System.Action(() => gunProp.RemoveMagState()));
             }
         }
 
-        [HarmonyLib.HarmonyPatch(typeof(SLZ.Props.Weapons.Gun), nameof(SLZ.Props.Weapons.Gun.UpdateArt))]
+        [HarmonyLib.HarmonyPatch(typeof(Gun), nameof(Gun.UpdateArt))]
         internal static class UpdateArt
         {
-            internal static void Postfix(SLZ.Props.Weapons.Gun __instance)
+            internal static void Postfix(Gun __instance)
             {
                 var gunProp = __instance.gameObject.GetComponent<GunProp>();
                 gunProp?.RecordAction(new System.Action(() => __instance.UpdateArt()));

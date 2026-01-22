@@ -1,7 +1,4 @@
-﻿using NEP.MonoDirector.Actors;
-using UnityEngine;
-using static NEP.MonoDirector.Settings;
-using static RootMotion.FinalIK.RagdollUtility;
+﻿using UnityEngine;
 
 namespace NEP.MonoDirector.Cameras
 {

@@ -9,7 +9,7 @@ using NEP.MonoDirector.State;
 
 using UnityEngine;
 
-using Avatar = SLZ.VRMK.Avatar;
+using MarrowAvatar = Il2CppSLZ.VRMK.Avatar;
 
 namespace NEP.MonoDirector.Core
 {
@@ -52,7 +52,7 @@ namespace NEP.MonoDirector.Core
 
         private int recordTick;
 
-        public void SetActor(Avatar avatar)
+        public void SetActor(MarrowAvatar avatar)
         {
             lastActor = activeActor;
             activeActor = new Actor(avatar);
@@ -120,7 +120,7 @@ namespace NEP.MonoDirector.Core
 
             recordingTime = 0f;
 
-            SetActor(Constants.rigManager.avatar);
+            SetActor(Constants.RigManager.avatar);
 
             foreach (var castMember in Director.instance.Cast)
             {

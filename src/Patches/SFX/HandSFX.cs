@@ -1,17 +1,19 @@
-﻿using NEP.MonoDirector.Core;
-using UnityEngine;
+﻿using UnityEngine;
 
-using BoneLib.Nullables;
 using NEP.MonoDirector.Audio;
+
+using Il2CppSLZ.Marrow;
+
+using Random = UnityEngine.Random;
 
 namespace NEP.MonoDirector.Patches
 {
-    internal class HandSFX
+    internal class HandSFXPatches
     {
-        [HarmonyLib.HarmonyPatch(typeof(SLZ.SFX.HandSFX), nameof(SLZ.SFX.HandSFX.Grab))]
+        [HarmonyLib.HarmonyPatch(typeof(HandSFX), nameof(HandSFX.Grab))]
         internal static class Grab
         {
-            internal static void Postfix(SLZ.SFX.HandSFX __instance)
+            internal static void Postfix(HandSFX __instance)
             {
                 /* var activeActor = Recorder.instance.ActiveActor;
 
@@ -26,7 +28,7 @@ namespace NEP.MonoDirector.Patches
                 } */
             }
 
-            internal static void PlaySFX(SLZ.SFX.HandSFX hand, Vector3 position)
+            internal static void PlaySFX(HandSFX hand, Vector3 position)
             {
                 int rand = Random.Range(0, hand.grab.Count);
 
