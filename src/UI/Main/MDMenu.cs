@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using BoneLib;
-using SLZ.Interaction;
 using UnityEngine;
+
+using Il2CppSLZ.Marrow;
 
 namespace NEP.MonoDirector.UI
 {
@@ -78,8 +77,8 @@ namespace NEP.MonoDirector.UI
 
         private void OnEnable()
         {
-            transform.position = Player.physicsRig.m_chest.position + Vector3.forward;
-            transform.LookAt(Player.playerHead);
+            transform.position = Player.PhysicsRig.m_chest.position + Vector3.forward;
+            transform.LookAt(Player.Head);
 
             if(lastPage == null)
             {   
