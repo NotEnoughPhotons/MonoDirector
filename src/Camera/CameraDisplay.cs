@@ -4,10 +4,8 @@ using UnityEngine;
 namespace NEP.MonoDirector.Cameras
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class CameraDisplay : MonoBehaviour
+    public class CameraDisplay(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public CameraDisplay(System.IntPtr ptr) : base(ptr) { }
-
         public FOVController FOVController { get; private set; }
         public FollowCamera FollowCamera { get; private set; }
         public CameraVolume CameraVolume { get; private set; }

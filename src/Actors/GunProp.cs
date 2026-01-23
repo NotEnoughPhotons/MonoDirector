@@ -9,10 +9,8 @@ using Il2CppSLZ.Marrow.Pool;
 namespace NEP.MonoDirector.Actors
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class GunProp : Prop
+    public class GunProp(IntPtr ptr) : Prop(ptr)
     {
-        public GunProp(IntPtr ptr) : base(ptr) { }
-
         public Gun Gun { get => gun; }
 
         private Gun gun;

@@ -4,10 +4,7 @@ using UnityEngine;
 namespace NEP.MonoDirector.Proxy
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class TrackableProxy : MonoBehaviour
+    public class TrackableProxy(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public TrackableProxy(IntPtr ptr) : base(ptr) { }
-
-
     }
 }

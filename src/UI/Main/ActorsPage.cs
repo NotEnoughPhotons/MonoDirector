@@ -7,10 +7,8 @@ using NEP.MonoDirector.Actors;
 namespace NEP.MonoDirector.UI
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class ActorsPage : MonoBehaviour
+    public class ActorsPage(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public ActorsPage(System.IntPtr ptr) : base(ptr) { }
-
         public int PageIndex => pageIndex + 1;
         public int PageCount => displayPages.Count;
 

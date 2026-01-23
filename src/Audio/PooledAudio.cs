@@ -5,10 +5,8 @@ using UnityEngine;
 namespace NEP.MonoDirector.Audio
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class PooledAudio : MonoBehaviour
+    public class PooledAudio(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public PooledAudio(System.IntPtr ptr) : base(ptr) { }
-
         private AudioSource source;
         private float time;
 

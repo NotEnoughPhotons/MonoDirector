@@ -6,10 +6,8 @@ using static MelonLoader.MelonLogger;
 namespace NEP.MonoDirector.Audio
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class AudioManager : MonoBehaviour
+    public class AudioManager(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public AudioManager(System.IntPtr ptr) : base(ptr) { }
-
         public static AudioManager Instance { get; private set; }
 
         private List<GameObject> _pooledObjects;

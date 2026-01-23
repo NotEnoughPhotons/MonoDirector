@@ -7,10 +7,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.Cameras
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class HandheldCamera : MonoBehaviour
+    public class HandheldCamera(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public HandheldCamera(System.IntPtr ptr) : base(ptr) { }
-
         private CylinderGrip leftHandle;
         private CylinderGrip rightHandle;
 

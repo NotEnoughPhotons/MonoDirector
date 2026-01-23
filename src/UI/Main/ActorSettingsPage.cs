@@ -8,10 +8,8 @@ using NEP.MonoDirector.Core;
 namespace NEP.MonoDirector.UI
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class ActorSettingsPage : MonoBehaviour
+    public class ActorSettingsPage(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public ActorSettingsPage(System.IntPtr ptr) : base(ptr) { }
-
         private MDMenu menu;
 
         private RawImage actorPortrait;

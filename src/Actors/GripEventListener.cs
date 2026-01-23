@@ -6,10 +6,8 @@ using Il2CppSLZ.Bonelab;
 namespace NEP.MonoDirector.Actors
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class GripEventListener : MonoBehaviour
+    public class GripEventListener(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public GripEventListener(IntPtr ptr) : base(ptr) { }
-
         private SimpleGripEvents gripEvents;
 
         private Prop prop;

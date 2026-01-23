@@ -7,10 +7,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.Actors
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class BreakableProp : Prop
+    public class BreakableProp(IntPtr ptr) : Prop(ptr)
     {
-        public BreakableProp(IntPtr ptr) : base(ptr) { }
-
         public ObjectDestructible breakableProp;
 
         protected override void Awake()

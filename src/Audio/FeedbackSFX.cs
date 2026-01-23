@@ -5,10 +5,8 @@ using UnityEngine;
 namespace NEP.MonoDirector.Audio
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class FeedbackSFX : MonoBehaviour
+    public class FeedbackSFX(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public FeedbackSFX(System.IntPtr ptr) : base(ptr) { }
-
         private AudioSource source;
 
         private AudioClip sfx_preroll = API.LoadAudioClip(Constants.dirSFX + "preroll.wav");

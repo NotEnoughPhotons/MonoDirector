@@ -6,10 +6,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.Tools
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class OmniLight : MonoBehaviour
+    public class OmniLight(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public OmniLight(System.IntPtr ptr) : base(ptr) { }
-
         public static List<OmniLight> ComponentCache { get; private set; }
 
         public float Range { get; private set; }

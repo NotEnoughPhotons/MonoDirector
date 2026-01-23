@@ -6,10 +6,8 @@ using UnityEngine.UI;
 namespace NEP.MonoDirector.UI
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class PlayheadPage : MonoBehaviour
+    public class PlayheadPage(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public PlayheadPage(System.IntPtr ptr) : base(ptr) { }
-
         private Button button_Record;
         private Button button_Play;
         private Button button_Stop;

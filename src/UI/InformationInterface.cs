@@ -7,10 +7,8 @@ using NEP.MonoDirector.State;
 namespace NEP.MonoDirector.UI
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class InformationInterface : MonoBehaviour
+    public class InformationInterface(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public InformationInterface(System.IntPtr ptr) : base(ptr) { }
-
         public static InformationInterface Instance { get; private set; }
 
         public bool ShowUI

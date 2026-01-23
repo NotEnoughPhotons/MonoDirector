@@ -6,10 +6,8 @@ using UnityEngine;
 namespace NEP.MonoDirector.Cameras
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class FollowCamera : MonoBehaviour
+    public class FollowCamera(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public FollowCamera(System.IntPtr ptr) : base(ptr) { }
-
         public readonly Dictionary<BodyPart, BodyPartData> FollowPoints = new Dictionary<BodyPart, BodyPartData>()
         {
             { BodyPart.Head, new BodyPartData(CameraRigManager.Instance.RigScreenOptions.TargetTransform) },

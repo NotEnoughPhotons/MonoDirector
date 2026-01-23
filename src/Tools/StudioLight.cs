@@ -5,10 +5,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.Tools
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class StudioLight : MonoBehaviour
+    public class StudioLight(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public StudioLight(System.IntPtr ptr) : base(ptr) { }
-
         private Color[] colors = new Color[]
         {
             Color.white,

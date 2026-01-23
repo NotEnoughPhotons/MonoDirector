@@ -8,10 +8,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.Actors
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class Prop : MonoBehaviour
+    public class Prop(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public Prop(System.IntPtr ptr) : base(ptr) { }
-
         public Trackable Actor { get => actor; }
 
         public List<ObjectFrame> PropFrames { get => propFrames; }

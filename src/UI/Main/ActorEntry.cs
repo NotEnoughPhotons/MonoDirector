@@ -7,10 +7,8 @@ using NEP.MonoDirector.Actors;
 namespace NEP.MonoDirector.UI
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class ActorEntry : MonoBehaviour
+    public class ActorEntry(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public ActorEntry(System.IntPtr ptr) : base(ptr) { }
-
         public RawImage avatarImage;
         public TextMeshProUGUI avatarNameText;
         public Button avatarButton;

@@ -6,10 +6,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.Audio
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class SoundSource : MonoBehaviour
+    public class SoundSource(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public SoundSource(System.IntPtr ptr) : base(ptr) { }
-
         private AudioSource source;
         private GameObject sprite;
         private GameObject frame;

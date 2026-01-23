@@ -3,10 +3,8 @@
 namespace NEP.MonoDirector.Cameras
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class FOVController : MonoBehaviour
+    public class FOVController(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public FOVController(System.IntPtr ptr) : base(ptr) { }
-
         public float fovChangeSmoothing = 10f;
         public float fovChangeRate = 4f;
 

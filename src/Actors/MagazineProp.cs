@@ -2,7 +2,8 @@
 
 namespace NEP.MonoDirector.Actors
 {
-    public class MagazineProp : MonoBehaviour
+    [MelonLoader.RegisterTypeInIl2Cpp]
+    public class MagazineProp(IntPtr ptr) : MonoBehaviour(ptr)
     {
 
     }

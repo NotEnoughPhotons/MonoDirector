@@ -6,10 +6,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.Tools
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class SpotLight : MonoBehaviour
+    public class SpotLight(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public SpotLight(System.IntPtr ptr) : base(ptr) { }
-
         public static List<SpotLight> ComponentCache { get; private set; }
 
         public float Range { get; private set; }

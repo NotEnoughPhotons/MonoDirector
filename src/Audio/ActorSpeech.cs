@@ -8,10 +8,8 @@ using MarrowAvatar = Il2CppSLZ.VRMK.Avatar;
 namespace NEP.MonoDirector.Audio
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class ActorSpeech : MonoBehaviour
+    public class ActorSpeech(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public ActorSpeech(System.IntPtr ptr) : base(ptr) { }
-
         private MarrowAvatar avatar;
 
         private AudioClip clip;

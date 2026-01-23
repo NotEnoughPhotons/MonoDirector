@@ -8,10 +8,8 @@ using UnityEngine.UI;
 namespace NEP.MonoDirector.UI
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class MDFooter : MonoBehaviour
+    public class MDFooter(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public MDFooter(System.IntPtr ptr) : base(ptr) { }
-
         private Button previousPageButton;
         private Button nextPageButton;
         private Button goBackButton;

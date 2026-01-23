@@ -4,10 +4,8 @@ using UnityEngine;
 namespace NEP.MonoDirector.Cameras
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class CameraDamp : MonoBehaviour
+    public class CameraDamp(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public CameraDamp(System.IntPtr ptr) : base(ptr) { }
-
         public float delta = 4f;
 
         private Quaternion lastRotation;

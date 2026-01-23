@@ -7,10 +7,8 @@ using Il2CppMK.Glow.URP;
 namespace NEP.MonoDirector.Cameras
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class CameraVolume : MonoBehaviour
+    public class CameraVolume(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public CameraVolume(System.IntPtr ptr) : base(ptr) { }
-
         public Volume RenderingVolume { get; private set; }
 
         public LensDistortion LensDistortion { get; private set; }

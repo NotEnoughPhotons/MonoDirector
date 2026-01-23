@@ -6,10 +6,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.UI
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class MDMenu : MonoBehaviour
+    public class MDMenu(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public MDMenu(System.IntPtr ptr) : base(ptr) { }
-        
         public static MDMenu instance { get; private set; }
 
         private GameObject page_Menu;

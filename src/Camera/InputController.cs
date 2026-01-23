@@ -3,10 +3,8 @@
 namespace NEP.MonoDirector.Cameras
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class InputController : MonoBehaviour
+    public class InputController(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public InputController(System.IntPtr ptr) : base(ptr) { }
-
         public float mouseSensitivity = 1f;
         public float mouseSmoothness = 4f;
 

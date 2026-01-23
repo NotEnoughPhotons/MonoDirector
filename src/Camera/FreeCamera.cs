@@ -6,7 +6,7 @@ namespace NEP.MonoDirector.Cameras
     /// Simple camera controller.
     /// </summary>
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class FreeCamera : MonoBehaviour
+    public class FreeCamera(IntPtr ptr) : MonoBehaviour(ptr)
     {
         public class Settings
         {
@@ -25,8 +25,6 @@ namespace NEP.MonoDirector.Cameras
 
             public float shakeMultiplier;
         }
-
-        public FreeCamera(System.IntPtr ptr) : base(ptr) { }
 
         public Settings CameraSettings;
 

@@ -7,10 +7,8 @@ using Il2CppSLZ.Marrow.Pool;
 namespace NEP.MonoDirector.Audio
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class SoundHolder : MonoBehaviour
+    public class SoundHolder(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public SoundHolder(System.IntPtr ptr) : base(ptr) { }
-
         public static Dictionary<string, AudioClip> LoadedClips;
 
         private Poolee poolee;

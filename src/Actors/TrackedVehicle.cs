@@ -6,10 +6,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.Actors
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class TrackedVehicle : Prop
+    public class TrackedVehicle(IntPtr ptr) : Prop(ptr)
     {
-        public TrackedVehicle(IntPtr ptr) : base(ptr) { }
-
         public Atv Vehicle { get => vehicle; }
 
         protected Atv vehicle;

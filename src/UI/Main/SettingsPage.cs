@@ -6,10 +6,8 @@ using UnityEngine.UI;
 namespace NEP.MonoDirector.UI
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class SettingsPage : MonoBehaviour
+    public class SettingsPage(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public SettingsPage(System.IntPtr ptr) : base(ptr) { }
-
         private MDMenu menu;
 
         private Button button_Audio;

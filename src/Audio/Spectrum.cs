@@ -7,10 +7,8 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 namespace NEP.MonoDirector.Audio
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class Spectrum : MonoBehaviour
+    public class Spectrum(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public Spectrum(System.IntPtr ptr) : base(ptr) { }
-
         /* https://answers.unity.com/questions/139323/any-way-of-quotautomaticquot-lip-syncing.html */
         public float volume = 100;
         public float freqLow = 300f;

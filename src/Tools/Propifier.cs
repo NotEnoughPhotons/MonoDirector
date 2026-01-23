@@ -6,10 +6,8 @@ using Il2CppSLZ.Marrow;
 namespace NEP.MonoDirector.Tools
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
-    public class Propifier : MonoBehaviour
+    public class Propifier(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public Propifier(System.IntPtr ptr) : base(ptr) { }
-
         public enum Mode
         {
             Prop,
