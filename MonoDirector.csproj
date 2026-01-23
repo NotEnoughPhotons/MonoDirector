@@ -201,4 +201,8 @@
 	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\UnityEngine.UIModule.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="ECHO Copying $(ProjectName).dll to $(BONELAB_DIR)\Mods&#xD;&#xA;COPY &quot;$(TargetPath)&quot; &quot;$(BONELAB_DIR)\Mods\$(ProjectName).dll&quot;" />
+	</Target>
 </Project>
