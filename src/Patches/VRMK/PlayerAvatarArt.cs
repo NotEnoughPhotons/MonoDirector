@@ -16,13 +16,17 @@ namespace NEP.MonoDirector.Patches
             
             internal static void Prefix(PlayerAvatarArt __instance)
             {
-                Transform head = __instance._openCtrlRig.avatar.animator.GetBoneTransform(HumanBodyBones.Head);
+                RigManager manager = __instance._openCtrlRig.manager;
+
+                Transform head = manager.avatar.animator.GetBoneTransform(HumanBodyBones.Head);
                 preTransformHead = head.position;
             }
 
             internal static void Postfix(PlayerAvatarArt __instance)
             {
-                Transform head = __instance._openCtrlRig.avatar.animator.GetBoneTransform(HumanBodyBones.Head);
+                RigManager manager = __instance._openCtrlRig.manager;
+
+                Transform head = manager.avatar.animator.GetBoneTransform(HumanBodyBones.Head);
                 postTransformHead = head.position;
 
                 calculatedHeadOffset = preTransformHead - postTransformHead;
