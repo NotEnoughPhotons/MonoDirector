@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using MelonLoader;
 
-[assembly: AssemblyTitle(NEP.MonoDirector.BuildInfo.Description)]
+[assembly: AssemblyTitle(NEP.MonoDirector.BuildInfo.Name)]
 [assembly: AssemblyDescription(NEP.MonoDirector.BuildInfo.Description)]
 [assembly: AssemblyCompany(NEP.MonoDirector.BuildInfo.Company)]
 [assembly: AssemblyProduct(NEP.MonoDirector.BuildInfo.Name)]
@@ -10,7 +10,6 @@ using MelonLoader;
 [assembly: AssemblyVersion(NEP.MonoDirector.BuildInfo.Version)]
 [assembly: AssemblyFileVersion(NEP.MonoDirector.BuildInfo.Version)]
 [assembly: MelonInfo(typeof(NEP.MonoDirector.Main), NEP.MonoDirector.BuildInfo.Name, NEP.MonoDirector.BuildInfo.Version, NEP.MonoDirector.BuildInfo.Author, NEP.MonoDirector.BuildInfo.DownloadLink)]
-[assembly: MelonColor(System.ConsoleColor.DarkMagenta)]
 
 // Create and Setup a MelonGame Attribute to mark a Melon as Universal or Compatible with specific Games.
 // If no MelonGame Attribute is found or any of the Values for any MelonGame Attribute on the Melon is null or empty it will be assumed the Melon is Universal.

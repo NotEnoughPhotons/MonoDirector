@@ -2,20 +2,15 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>disable</Nullable>
-		<RootNamespace>NEP.MonoDirector</RootNamespace>
-		<LangVersion>default</LangVersion>
-		<IsPackable>false</IsPackable>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<FileVersion>1.0.0.0</FileVersion>
-		<NeutralLanguage>en-US</NeutralLanguage>
-		<AssemblyName>MonoDirector</AssemblyName>
-		<LangVersion>latest</LangVersion>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<LangVersion>12.0</LangVersion>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<RootNamespace>NEP.MonoDirector</RootNamespace>
+		<AssemblyTitle>MonoDirector</AssemblyTitle>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -31,11 +26,13 @@
 	  <None Remove="NOTICE.txt" />
 	  <None Remove="quest_build.bat" />
 	  <None Remove="README.md" />
+	  <None Remove="Resources\md_resources.pack" />
 	  <None Remove="run_build.bat" />
 	  <None Remove="setup_build.py" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Include="Properties\AssemblyInfo.cs" />
 		<Compile Include="src\Actors\Actor.cs" />
 		<Compile Include="src\Actors\ActorBody.cs" />
 		<Compile Include="src\Actors\ActorNPC.cs" />
@@ -91,7 +88,6 @@
 		<Compile Include="src\Patches\Rig\RigManager.cs" />
 		<Compile Include="src\Patches\SFX\GunSFX.cs" />
 		<Compile Include="src\Patches\SFX\HandSFX.cs" />
-		<Compile Include="src\Patches\Test.cs" />
 		<Compile Include="src\Patches\Vehicles\Atv.cs" />
 		<Compile Include="src\Patches\VRMK\PlayerAvatarArt.cs" />
 		<Compile Include="src\Photographer.cs" />
@@ -100,7 +96,6 @@
 		<Compile Include="src\Proxy\TrackableProxy.cs" />
 		<Compile Include="src\Recorder.cs" />
 		<Compile Include="src\Settings.cs" />
-		<Compile Include="src\Spline\SplineNode.cs" />
 		<Compile Include="src\State\BodyPart.cs" />
 		<Compile Include="src\State\CameraMode.cs" />
 		<Compile Include="src\State\CaptureState.cs" />
@@ -122,6 +117,12 @@
 		<Compile Include="src\UI\Main\SettingsPage.cs" />
 		<Compile Include="src\UI\MDBoneMenu.cs" />
 		<Compile Include="src\UI\PropMarkerManager.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\md_resources.pack">
+	    <CustomToolNamespace></CustomToolNamespace>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
