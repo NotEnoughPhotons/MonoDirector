@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace NEP.MonoDirector.Patches
 {
-    internal class HandSFXPatches
+    internal static class HandSFXPatches
     {
         [HarmonyLib.HarmonyPatch(typeof(HandSFX), nameof(HandSFX.Grab))]
         internal static class Grab

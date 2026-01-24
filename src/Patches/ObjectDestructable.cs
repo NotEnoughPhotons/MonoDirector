@@ -5,7 +5,7 @@ using Il2CppSLZ.Marrow;
 
 namespace NEP.MonoDirector.Patches
 {
-    internal class ObjectDestructiblePatches
+    internal static class ObjectDestructiblePatches
     {
         [HarmonyLib.HarmonyPatch(typeof(ObjectDestructible), nameof(ObjectDestructible.Awake))]
         internal static class TakeDamage
