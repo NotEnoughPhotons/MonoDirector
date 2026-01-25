@@ -1,4 +1,0 @@
-namespace NEP.MonoDirector.Cameras
-{
-
-}
