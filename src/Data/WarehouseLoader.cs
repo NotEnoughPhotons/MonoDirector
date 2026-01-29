@@ -13,13 +13,13 @@ namespace NEP.MonoDirector.Data
         internal static Dictionary<string, AudioClip> soundTable;
         internal static List<AudioClip> sounds;
 
-        internal static readonly string companyCode = "NotEnoughPhotons.";
+        internal static readonly string companyCode = "NEP.";
         internal static readonly string modCode = "MonoDirector.";
         internal static readonly string typeCode = "Spawnable.";
 
-        internal static readonly string propMarkerBarcode = CreateFullBarcode("PropMarker");
-        internal static readonly string infoInterfaceBarcode = CreateFullBarcode("InformationInterface");
-        internal static readonly string mainMenuBarcode = CreateFullBarcode("MonoDirectorMenu");
+        internal static readonly Barcode propMarkerBarcode = CreateFullBarcode("PropMarker");
+        internal static readonly Barcode infoInterfaceBarcode = CreateFullBarcode("InformationInterface");
+        internal static readonly Barcode mainMenuBarcode = CreateFullBarcode("MonoDirectorMenu");
 
         internal static List<AudioClip> GetSounds()
         {
@@ -56,7 +56,7 @@ namespace NEP.MonoDirector.Data
                 return;
             }
 
-            Barcode mainBarcode = (Barcode)"NotEnoughPhotons.MonoDirector";
+            Barcode mainBarcode = new Barcode("NEP.MonoDirector");
             if (!AssetWarehouse.Instance.HasPallet(mainBarcode))
             {
                 Main.Logger.Error("Pallet doesn't exist in registry.");
@@ -70,14 +70,14 @@ namespace NEP.MonoDirector.Data
                 Main.Logger.Error("Pallet manifest is null.");
                 return;
             }
-
+            
             Pallet pallet = palletManifest.Pallet;
 
             SpawnableCrate spawnable = null;
             foreach (Crate crate in pallet.Crates)
             {
                 Main.Logger.Msg(crate.Barcode);
-                if (crate.Barcode == (Barcode)CreateFullBarcode("SoundHolder"))
+                if (crate.Barcode == CreateFullBarcode("SoundHolder"))
                 {
                     spawnable = crate.Cast<SpawnableCrate>();
                     break;
@@ -95,7 +95,7 @@ namespace NEP.MonoDirector.Data
                 SpawnableCrate copyCrate = new SpawnableCrate()
                 {
                     Title = $"SFX - {sound.name}",
-                    Barcode = (Barcode)$"NotEnoughPhotons.MonoDirector.Spawnables.SFX{sound.name}",
+                    Barcode = new Barcode($"NEP.MonoDirector.Spawnables.SFX{sound.name}"),
                     Description = sound.name,
                     Pallet = spawnable.Pallet,
                     _packedAssets = spawnable.PackedAssets,
@@ -110,10 +110,10 @@ namespace NEP.MonoDirector.Data
             }
         }
 
-        internal static GameObject SpawnFromBarcode(string barcode, bool active = false)
+        internal static GameObject SpawnFromBarcode(Barcode barcode, bool active = false)
         {
             GameObject spawnedObject = null;
-            HelperMethods.SpawnCrate(barcode, Vector3.zero, Quaternion.identity, Vector3.one, false, (obj) =>
+            HelperMethods.SpawnCrate(barcode.ID, Vector3.zero, Quaternion.identity, Vector3.one, false, (obj) =>
             {
                 spawnedObject = obj;
                 spawnedObject.SetActive(active);
@@ -122,13 +122,13 @@ namespace NEP.MonoDirector.Data
             return spawnedObject;
         }
 
-        internal static List<GameObject> SpawnFromBarcode(string barcode, int amount, bool active = false)
+        internal static List<GameObject> SpawnFromBarcode(Barcode barcode, int amount, bool active = false)
         {
             List<GameObject> spawnedObjects = new List<GameObject>();
 
             for (int i = 0; i < amount; i++)
             {
-                var obj = SpawnFromBarcode(barcode, active);
+                var obj = SpawnFromBarcode(new Barcode(barcode), active);
                 obj.SetActive(active);
                 spawnedObjects.Add(obj);
             }
@@ -136,9 +136,9 @@ namespace NEP.MonoDirector.Data
             return spawnedObjects;
         }
 
-        private static string CreateFullBarcode(string spawnableName)
+        private static Barcode CreateFullBarcode(string spawnableName)
         {
-            return companyCode + modCode + typeCode + spawnableName;
+            return new Barcode(companyCode + modCode + typeCode + spawnableName);
         }
     }
 }
