@@ -1,7 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.IO;
 
 using MelonLoader;
 using UnityEngine;
@@ -10,23 +8,19 @@ using NEP.MonoDirector.Audio;
 using NEP.MonoDirector.Cameras;
 using NEP.MonoDirector.Core;
 using NEP.MonoDirector.UI;
-using NEP.MonoDirector.State;
 
-using BoneLib.BoneMenu;
 using NEP.MonoDirector.Data;
-using Il2CppSLZ.Marrow.Warehouse;
-using Harmony;
 
 namespace NEP.MonoDirector
 {
     public static partial class BuildInfo
     {
-        public const string Name = "MonoDirector"; // Name of the Mod.  (MUST BE SET)
-        public const string Description = "A movie/photo making utility for BONELAB!"; // Description for the Mod.  (Set as null if none)
-        public const string Author = "Not Enough Photons"; // Author of the Mod.  (MUST BE SET)
-        public const string Company = null; // Company that made the Mod.  (Set as null if none)
-        public const string Version = "0.0.1"; // Version of the Mod.  (MUST BE SET)
-        public const string DownloadLink = null; // Download Link for the Mod.  (Set as null if none)
+        public const string Name = "MonoDirector";
+        public const string Description = "A movie/photo making utility for BONELAB!";
+        public const string Author = "Not Enough Photons";
+        public const string Company = "Not Enough Photons";
+        public const string Version = "1.1.2";
+        public const string DownloadLink = "https://bonelab.thunderstore.io/c/bonelab/p/NotEnoughPhotons/MonoDirector";
     }
 
     public class Main : MelonMod
@@ -40,7 +34,7 @@ namespace NEP.MonoDirector
         public static FreeCamera camera;
 
         public static FeedbackSFX feedbackSFX;
-        public static MDMenu mainMenu;
+        // public static MDMenu mainMenu;
 
         public static AssetBundle bundle;
 
@@ -120,7 +114,7 @@ namespace NEP.MonoDirector
         private void MonoDirectorInitialize()
         {
             ResetInstances();
-            CreateCameraManager();
+            // CreateCameraManager();
             CreateDirector();
             CreateSFX();
             CreateUI();
