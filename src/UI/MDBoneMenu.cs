@@ -281,14 +281,13 @@ namespace NEP.MonoDirector.UI
                 64f,
                 value => CameraRigManager.Instance.CameraSmoothness = value
             );
-            
-            // TODO: Fix this
-            /*headModeCategory.CreateEnum(
+
+            headModeCategory.CreateEnum(
                 "Position", 
                 Color.white, 
                 BodyPart.Head,
-                bone => CameraRigManager.Instance.FollowCamera.SetFollowBone(bone)
-            );*/
+                bone => CameraRigManager.Instance.FollowCamera.SetFollowBone((BodyPart)bone)
+            );
         }
 
         private static void BuildFreeModeCategory(Page freeModeCategory)
