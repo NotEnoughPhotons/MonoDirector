@@ -16,6 +16,7 @@ namespace NEP.MonoDirector.Cameras
         private Transform rightHandleTransform;
 
         private Camera sensorCamera;
+        private Camera camera;
 
         private GameObject backViewfinderScreen;
         private GameObject frontViewfinderScreen;
@@ -31,6 +32,7 @@ namespace NEP.MonoDirector.Cameras
             rightHandleTransform = transform.Find("Grips/Right Handle");
 
             sensorCamera = transform.Find("Sensor").GetComponent<Camera>();
+            camera = transform.Find("Camera").GetComponent<Camera>();
             backViewfinderScreen = transform.Find("Viewfinder_Back").gameObject;
             frontViewfinderScreen = transform.Find("Viewfinder_Front").gameObject;
             displayScreen = transform.Find("Screen").gameObject;
@@ -43,7 +45,7 @@ namespace NEP.MonoDirector.Cameras
 
         private void OnEnable()
         {
-            Events.OnCameraModeSet += OnCameraModeChanged;
+            OnCameraModeChanged(CameraMode.Handheld);
 
             leftHandle.attachedUpdateDelegate += new System.Action<Hand>(LeftHandUpdate);
             rightHandle.attachedUpdateDelegate += new System.Action<Hand>(RightHandUpdate);
@@ -53,7 +55,7 @@ namespace NEP.MonoDirector.Cameras
 
         private void OnDisable()
         {
-            Events.OnCameraModeSet -= OnCameraModeChanged;
+            OnCameraModeChanged(CameraMode.Head);
 
             leftHandle.attachedUpdateDelegate -= new System.Action<Hand>(LeftHandUpdate);
             rightHandle.attachedUpdateDelegate -= new System.Action<Hand>(RightHandUpdate);
@@ -69,10 +71,10 @@ namespace NEP.MonoDirector.Cameras
                 backViewfinderScreen.active = true;
                 frontViewfinderScreen.active = true;
 
-                CameraRigManager.Instance.ClonedCamera.targetTexture = displayTexture;
-                CameraRigManager.Instance.ClonedCamera.gameObject.SetActive(true);
-                CameraRigManager.Instance.FollowCamera.SetFollowTarget(sensorCamera.transform);
-                CameraRigManager.Instance.CameraDisplay.FollowCamera.SetFollowTarget(sensorCamera.transform);
+                // camera.targetTexture = displayTexture;
+                camera.gameObject.SetActive(true);
+                // CameraRigManager.Instance.FollowCamera.SetFollowTarget(sensorCamera.transform);
+                // CameraRigManager.Instance.CameraDisplay.FollowCamera.SetFollowTarget(sensorCamera.transform);
             }
             else
             {
@@ -80,8 +82,10 @@ namespace NEP.MonoDirector.Cameras
                 backViewfinderScreen.active = false;
                 frontViewfinderScreen.active = false;
 
-                CameraRigManager.Instance.ClonedCamera.gameObject.SetActive(false);
-                CameraRigManager.Instance.FollowCamera.SetDefaultTarget();
+                camera.gameObject.SetActive(false);
+
+                // CameraRigManager.Instance.ClonedCamera.gameObject.SetActive(false);
+                // CameraRigManager.Instance.FollowCamera.SetDefaultTarget();
             }
         }
 
@@ -91,10 +95,13 @@ namespace NEP.MonoDirector.Cameras
 
             if (hand.GetIndexTriggerAxis() > 0.25f)
             {
-                float rate = CameraRigManager.Instance.FOVController.fovChangeRate;
+                float rate = 4f;
 
-                CameraRigManager.Instance.CameraDisplay.FOVController.SetFOV(-(hand.GetIndexTriggerAxis() * rate / 10f));
-                CameraRigManager.Instance.FOVController.SetFOV(-(hand.GetIndexTriggerAxis() * rate / 10f));
+                camera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f) * Time.deltaTime;
+                sensorCamera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f) * Time.deltaTime;
+
+                // CameraRigManager.Instance.CameraDisplay.FOVController.SetFOV(-(hand.GetIndexTriggerAxis() * rate / 10f));
+                // CameraRigManager.Instance.FOVController.SetFOV(-(hand.GetIndexTriggerAxis() * rate / 10f));
             }
         }
          
@@ -104,10 +111,13 @@ namespace NEP.MonoDirector.Cameras
 
             if (hand.GetIndexTriggerAxis() > 0.25f)
             {
-                float rate = CameraRigManager.Instance.FOVController.fovChangeRate;
+                float rate = 4f;
 
-                CameraRigManager.Instance.CameraDisplay.FOVController.SetFOV(hand.GetIndexTriggerAxis() * rate / 10f);
-                CameraRigManager.Instance.FOVController.SetFOV(hand.GetIndexTriggerAxis() * rate / 10f);
+                camera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f) * Time.deltaTime;
+                sensorCamera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f) * Time.deltaTime;
+
+                // CameraRigManager.Instance.CameraDisplay.FOVController.SetFOV(hand.GetIndexTriggerAxis() * rate / 10f);
+                // CameraRigManager.Instance.FOVController.SetFOV(hand.GetIndexTriggerAxis() * rate / 10f);
             }
         }
 
