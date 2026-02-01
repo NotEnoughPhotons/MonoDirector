@@ -13,14 +13,6 @@ namespace NEP.MonoDirector.Tools
         public float Range { get; private set; }
         public float Intensity { get; private set; }
 
-        private Rigidbody rb;
-
-        private GameObject sprite;
-
-        private Grip lightGrip;
-
-        private GameObject arrow;
-
         protected override void Awake()
         {
             base.Awake();
