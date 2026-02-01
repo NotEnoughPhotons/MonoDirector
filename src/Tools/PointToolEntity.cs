@@ -30,7 +30,7 @@ namespace NEP.MonoDirector.Tools
             m_OnHandDetached = new Action<Hand>(OnHandDetached);
         }
 
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
             base.OnEnable();
 
@@ -38,7 +38,7 @@ namespace NEP.MonoDirector.Tools
             m_grip.detachedHandDelegate += m_OnHandDetached;
         }
 
-        protected virtual void OnDisable()
+        protected override void OnDisable()
         {
             base.OnDisable();
 
@@ -46,7 +46,7 @@ namespace NEP.MonoDirector.Tools
             m_grip.detachedHandDelegate -= m_OnHandDetached;
         }
 
-        protected virtual void OnPlayStateSet(PlayState playState)
+        protected override void OnPlayStateSet(PlayState playState)
         {
             if (playState == PlayState.Preplaying
             || playState == PlayState.Playing
