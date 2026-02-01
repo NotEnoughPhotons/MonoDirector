@@ -51,8 +51,9 @@
 		<Compile Include="src\Audio\FeedbackSFX.cs" />
 		<Compile Include="src\Audio\PooledAudio.cs" />
 		<Compile Include="src\Audio\SoundHolder.cs" />
-		<Compile Include="src\Audio\SoundSource.cs" />
-		<Compile Include="src\Audio\SoundSource3D.cs" />
+		<Compile Include="src\Tools\DirectedComponent.cs" />
+		<Compile Include="src\Tools\SoundSource.cs" />
+		<Compile Include="src\Tools\SoundSource3D.cs" />
 		<Compile Include="src\Audio\Spectrum.cs" />
 		<Compile Include="src\BuildInfo.gen.cs" />
 		<Compile Include="src\Camera\CameraDamp.cs" />
@@ -101,6 +102,7 @@
 		<Compile Include="src\State\CaptureState.cs" />
 		<Compile Include="src\State\PlayState.cs" />
 		<Compile Include="src\Tools\OmniLight.cs" />
+		<Compile Include="src\Tools\PointToolEntity.cs" />
 		<Compile Include="src\Tools\Propifier.cs" />
 		<Compile Include="src\Tools\SpotLight.cs" />
 		<Compile Include="src\Tools\StudioLight.cs" />
