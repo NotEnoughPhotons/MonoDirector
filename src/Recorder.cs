@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Collections;
+
 using MelonLoader;
 using NEP.MonoDirector.Actors;
+using NEP.MonoDirector.Audio;
 using NEP.MonoDirector.State;
 
 using UnityEngine;
@@ -139,6 +137,7 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnPostRecord()
         {
+            activeActor?.Microphone?.SetCorrectionMode(Audio.ActorSpeech.AudioCorrectionMode.Corrected);
             activeActor?.Microphone?.RecordMicrophone();
 
             foreach (Trackable castMember in Director.instance.Cast)

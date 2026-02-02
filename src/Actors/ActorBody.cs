@@ -102,6 +102,15 @@ namespace NEP.MonoDirector.Actors
             leftHandCollider = leftHand.AddComponent<BoxCollider>();
             rightHandCollider = rightHand.AddComponent<BoxCollider>();
 
+            head.AddComponent<Rigidbody>().isKinematic = true;
+            chest.AddComponent<Rigidbody>().isKinematic = true;
+            spine.AddComponent<Rigidbody>().isKinematic = true;
+            hips.AddComponent<Rigidbody>().isKinematic = true;
+            leftHand.AddComponent<Rigidbody>().isKinematic = true;
+            rightHand.AddComponent<Rigidbody>().isKinematic = true;
+            leftFoot.AddComponent<Rigidbody>().isKinematic = true;
+            rightFoot.AddComponent<Rigidbody>().isKinematic = true;
+
             ImpactProperties headVFX = head.AddComponent<ImpactProperties>();
             ImpactProperties chestVFX = chest.AddComponent<ImpactProperties>();
             ImpactProperties spineVFX = spine.AddComponent<ImpactProperties>();

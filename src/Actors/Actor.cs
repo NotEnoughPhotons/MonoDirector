@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using MelonLoader;
+﻿using System.Text;
 using NEP.MonoDirector.Audio;
 using NEP.MonoDirector.Core;
 using NEP.MonoDirector.Data;
-
-using Il2CppSLZ.Marrow;
 
 using UnityEngine;
 
 using MarrowAvatar = Il2CppSLZ.VRMK.Avatar;
 using MarrowSeat = Il2CppSLZ.Marrow.Seat;
+using Il2CppSLZ.Marrow.Interaction;
+using NEP.MonoDirector.Proxy;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -78,6 +73,8 @@ namespace NEP.MonoDirector.Actors
         public MarrowAvatar ClonedAvatar { get => clonedAvatar; }
         public Transform[] AvatarBones { get => avatarBones; }
 
+        public MarrowEntity MarrowEntity { get => marrowEntity; }
+
         public IReadOnlyList<FrameGroup> Frames => avatarFrames.AsReadOnly();
 
         public ActorBody ActorBody { get => body; }
@@ -89,8 +86,11 @@ namespace NEP.MonoDirector.Actors
         protected List<FrameGroup> avatarFrames;
 
         private ActorBody body;
+        private ActorProxy proxy;
         private ActorSpeech microphone;
         private Texture2D avatarPortrait;
+
+        private MarrowEntity marrowEntity;
 
         private MarrowSeat activeSeat;
 
@@ -249,6 +249,12 @@ namespace NEP.MonoDirector.Actors
             clonedAvatar.gameObject.SetActive(true);
 
             // avatarPortrait = AvatarPhotoBuilder.avatarPortraits[actorName];
+
+            proxy = clonedAvatarObject.AddComponent<ActorProxy>();
+            proxy.SetActor(this);
+
+            marrowEntity = clonedAvatarObject.AddComponent<MarrowEntity>();
+            marrowEntity.Validate();
 
             Events.OnActorCasted?.Invoke(this);
         }

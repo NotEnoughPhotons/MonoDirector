@@ -104,6 +104,7 @@
 		<Compile Include="src\Tools\OmniLight.cs" />
 		<Compile Include="src\Tools\PointToolEntity.cs" />
 		<Compile Include="src\Tools\Propifier.cs" />
+		<Compile Include="src\Tools\SoundSourceTether.cs" />
 		<Compile Include="src\Tools\SpotLight.cs" />
 		<Compile Include="src\Tools\StudioLight.cs" />
 		<Compile Include="src\UI\InfoInterfaceManager.cs" />

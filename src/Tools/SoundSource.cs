@@ -9,7 +9,10 @@ namespace NEP.MonoDirector.Tools
     [RegisterTypeInIl2Cpp]
     public class SoundSource(IntPtr ptr) : PointToolEntity(ptr)
     {
+        public AudioClip Clip { get => m_clip; }
+
         protected AudioSource m_source;
+        protected AudioClip m_clip;
 
         protected override void Awake()
         {
@@ -28,6 +31,7 @@ namespace NEP.MonoDirector.Tools
             }
 
             m_source.clip = soundHolder.GetSound();
+            m_clip = m_source.clip;
             soundHolder.gameObject.SetActive(false);
             Main.feedbackSFX.LinkAudio();
         }
@@ -38,6 +42,9 @@ namespace NEP.MonoDirector.Tools
 
         protected override void OnStartRecording() => m_source.Play();
 
-        protected override  void OnStopRecording() => m_source.Stop();
+        protected override void OnStopRecording() => m_source.Stop();
+
+        public void Mute() => m_source.volume = 0f;
+        public void Unmute() => m_source.volume = 1f;
     }
 }

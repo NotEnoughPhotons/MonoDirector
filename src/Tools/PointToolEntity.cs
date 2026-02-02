@@ -49,8 +49,7 @@ namespace NEP.MonoDirector.Tools
         protected override void OnPlayStateSet(PlayState playState)
         {
             if (playState == PlayState.Preplaying
-            || playState == PlayState.Playing
-            || playState == PlayState.Stopped)
+            || playState == PlayState.Playing)
             {
                 Hide();
             }

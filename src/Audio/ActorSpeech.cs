@@ -10,6 +10,12 @@ namespace NEP.MonoDirector.Audio
     [MelonLoader.RegisterTypeInIl2Cpp]
     public class ActorSpeech(IntPtr ptr) : MonoBehaviour(ptr)
     {
+        public enum AudioCorrectionMode
+        {
+            NonCorrected,
+            Corrected
+        }
+
         private MarrowAvatar avatar;
 
         private AudioClip clip;
@@ -25,6 +31,8 @@ namespace NEP.MonoDirector.Audio
         private float desyncTolerance = 3f;
 
         private bool beginPlay;
+
+        private AudioCorrectionMode mode;
 
         private void Awake()
         {
@@ -56,6 +64,7 @@ namespace NEP.MonoDirector.Audio
         public void AssignSound(AudioClip sound)
         {
             this.clip = sound;
+            source.clip = clip;
         }
 
         public void UpdateJaw()
@@ -79,16 +88,24 @@ namespace NEP.MonoDirector.Audio
                 return;
             }
 
-            // special thanks to wnp and someone somewhere for this suggestion
-            // stops desyncs of mic recordings, and also allows for slow motion playback!
-            float tolerance = Time.deltaTime * desyncTolerance;
-            float time = Mathf.Abs(source.time - Core.Playback.Instance.PlaybackTime);
-
-            if(time > tolerance)
+            if (mode == AudioCorrectionMode.Corrected)
             {
-                source.time = Core.Playback.Instance.PlaybackTime;
-                source.pitch = Time.timeScale * Core.Playback.Instance.PlaybackRate;
+                // special thanks to wnp and someone somewhere for this suggestion
+                // stops desyncs of mic recordings, and also allows for slow motion playback!
+                float tolerance = Time.deltaTime * desyncTolerance;
+                float time = Mathf.Abs(source.time - Core.Playback.Instance.PlaybackTime);
+
+                if (time > tolerance)
+                {
+                    source.time = Core.Playback.Instance.PlaybackTime;
+                    source.pitch = Time.timeScale * Core.Playback.Instance.PlaybackRate;
+                }
             }
+        }
+
+        public void SetCorrectionMode(AudioCorrectionMode correctionMode)
+        {
+            mode = correctionMode;
         }
 
         public void StopPlayback()
