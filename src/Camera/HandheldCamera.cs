@@ -63,6 +63,11 @@ namespace NEP.MonoDirector.Cameras
             leftHandle.detachedHandDelegate -= new System.Action<Hand>(RightHandDetached);
         }
 
+        private void LateUpdate()
+        {
+
+        }
+
         private void OnCameraModeChanged(CameraMode mode)
         {
             if(mode == CameraMode.Handheld)
@@ -97,8 +102,8 @@ namespace NEP.MonoDirector.Cameras
             {
                 float rate = 4f;
 
-                camera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f) * Time.deltaTime;
-                sensorCamera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f) * Time.deltaTime;
+                camera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f);
+                sensorCamera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f);
 
                 // CameraRigManager.Instance.CameraDisplay.FOVController.SetFOV(-(hand.GetIndexTriggerAxis() * rate / 10f));
                 // CameraRigManager.Instance.FOVController.SetFOV(-(hand.GetIndexTriggerAxis() * rate / 10f));
@@ -113,8 +118,8 @@ namespace NEP.MonoDirector.Cameras
             {
                 float rate = 4f;
 
-                camera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f) * Time.deltaTime;
-                sensorCamera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f) * Time.deltaTime;
+                camera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f);
+                sensorCamera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f);
 
                 // CameraRigManager.Instance.CameraDisplay.FOVController.SetFOV(hand.GetIndexTriggerAxis() * rate / 10f);
                 // CameraRigManager.Instance.FOVController.SetFOV(hand.GetIndexTriggerAxis() * rate / 10f);
