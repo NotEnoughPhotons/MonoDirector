@@ -1,4 +1,5 @@
 using Il2CppSLZ.Marrow;
+using Il2CppTMPro;
 using MelonLoader;
 using NEP.MonoDirector.Audio;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace NEP.MonoDirector.Tools
         protected AudioSource m_source;
         protected AudioClip m_clip;
 
+        protected TextMeshPro m_nameText;
+
         protected override void Awake()
         {
             base.Awake();
@@ -21,6 +24,19 @@ namespace NEP.MonoDirector.Tools
             m_source = GetComponent<AudioSource>();
             m_source.playOnAwake = false;
             m_source.dopplerLevel = 0f;
+
+            m_nameText = transform.Find("SoundName").GetComponent<TextMeshPro>();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            m_nameText.text = "N/A";
         }
 
         private void OnTriggerEnter(Collider other)
@@ -34,6 +50,7 @@ namespace NEP.MonoDirector.Tools
 
             m_source.clip = soundHolder.GetSound();
             m_clip = m_source.clip;
+            m_nameText.text = m_clip.name;
             soundHolder.gameObject.SetActive(false);
             Main.feedbackSFX.LinkAudio();
         }
