@@ -33,14 +33,14 @@ namespace NEP.MonoDirector.Tools
         {
             base.Hide();
             m_lineRenderer.enabled = false;
-            m_tether.gameObject.SetActive(false);
+            m_tether.Hide();
         }
 
         protected override void Show()
         {
             base.Show();
             m_lineRenderer.enabled = true;
-            m_tether.gameObject.SetActive(true);
+            m_tether.Show();
         }
     }
 }
