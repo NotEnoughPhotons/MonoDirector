@@ -37,6 +37,15 @@ namespace NEP.MonoDirector.Actors
             SetupAudio();
         }
 
+        public GameObject Head { get => head; }
+        public GameObject Chest { get => chest; }
+        public GameObject Spine { get => spine; }
+        public GameObject Hips { get => hips; }
+        public GameObject LeftHand {  get => leftHand; }
+        public GameObject RightHand { get => rightHand; }
+        public GameObject LeftFoot { get => leftFoot; }
+        public GameObject RightFoot { get => rightFoot; }
+
         private List<AudioClip> footstepWalkAudio;
         private List<AudioClip> footstepJogAudio;
         private List<AudioClip> landingAudio;
