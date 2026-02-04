@@ -3,6 +3,7 @@ using NEP.MonoDirector.Data;
 using UnityEngine;
 
 using Il2CppSLZ.Marrow.Pool;
+using Il2CppTMPro;
 
 namespace NEP.MonoDirector.Audio
 {
@@ -15,10 +16,18 @@ namespace NEP.MonoDirector.Audio
 
         private AudioClip sound;
 
+        private TextMeshPro nameText;
+
         private void Start()
         {
             poolee = GetComponent<Poolee>();
+            nameText = transform.Find("DisplayName").GetComponent<TextMeshPro>();
             AssignSound(WarehouseLoader.soundTable[poolee.SpawnableCrate.Description]);
+        }
+
+        private void OnEnable()
+        {
+            nameText.text = sound.name;
         }
 
         private void OnDisable()
@@ -29,6 +38,7 @@ namespace NEP.MonoDirector.Audio
         public void AssignSound(AudioClip sound)
         {
             this.sound = sound;
+            nameText.text = sound.name;
         }
 
         public AudioClip GetSound()
