@@ -82,11 +82,13 @@ namespace NEP.MonoDirector.Tools
         protected virtual void Show()
         {
             m_frame.SetActive(true);
+            m_grip.enabled = true;
         }
 
         protected virtual void Hide()
         {
             m_frame.SetActive(false);
+            m_grip.enabled = false;
         }
     }
 }
