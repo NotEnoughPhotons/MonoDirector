@@ -19,6 +19,8 @@ namespace NEP.MonoDirector.Tools
             base.Awake();
 
             m_source = GetComponent<AudioSource>();
+            m_source.playOnAwake = false;
+            m_source.dopplerLevel = 0f;
         }
 
         private void OnTriggerEnter(Collider other)
