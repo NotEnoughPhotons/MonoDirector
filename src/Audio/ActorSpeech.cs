@@ -18,6 +18,10 @@ namespace NEP.MonoDirector.Audio
 
         private MarrowAvatar avatar;
 
+        private float jawLerp = 16f;
+        private float lowBand = 0f;
+        private float highBand = 44100f;
+
         private AudioClip clip;
         private AudioSource source;
 
@@ -41,8 +45,8 @@ namespace NEP.MonoDirector.Audio
 
             spectrum = gameObject.AddComponent<Spectrum>();
             spectrum.source = source;
-            spectrum.freqLow = 0f;
-            spectrum.freqHigh = 44100f;
+            spectrum.freqLow = lowBand;
+            spectrum.freqHigh = highBand;
         }
 
         public void SetAvatar(MarrowAvatar avatar)
@@ -75,8 +79,8 @@ namespace NEP.MonoDirector.Audio
             }
 
             Quaternion lastJawRotation = jaw.localRotation;
-            Quaternion nextJawRotation = Quaternion.Euler(new Vector3(initialJawRotation.x, initialJawRotation.y, initialJawRotation.z + spectrum.BandVol(0f, 44100f) * 10000f));
-            jaw.localRotation = Quaternion.Slerp(lastJawRotation, nextJawRotation, 8f * Time.deltaTime);
+            Quaternion nextJawRotation = Quaternion.Euler(new Vector3(initialJawRotation.x, initialJawRotation.y, initialJawRotation.z + spectrum.BandVol(lowBand, highBand) * 10000f));
+            jaw.localRotation = Quaternion.Slerp(lastJawRotation, nextJawRotation, jawLerp * Time.deltaTime);
         }
 
         public void Playback()
