@@ -1,9 +1,7 @@
-using Il2CppSLZ.Marrow;
 using Il2CppTMPro;
 using MelonLoader;
 using NEP.MonoDirector.Audio;
 using UnityEngine;
-using static Il2CppSLZ.Marrow.LadderInfo;
 
 namespace NEP.MonoDirector.Tools
 {
@@ -37,6 +35,18 @@ namespace NEP.MonoDirector.Tools
         {
             base.OnDisable();
             m_nameText.text = "N/A";
+        }
+
+        protected override void Show()
+        {
+            base.Show();
+            m_nameText.gameObject.SetActive(true);
+        }
+
+        protected override void Hide()
+        {
+            base.Hide();
+            m_nameText.gameObject.SetActive(false);
         }
 
         private void OnTriggerEnter(Collider other)
