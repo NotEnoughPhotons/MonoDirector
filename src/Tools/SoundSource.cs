@@ -12,18 +12,21 @@ namespace NEP.MonoDirector.Tools
 
         protected AudioSource m_source;
         protected AudioClip m_clip;
-
         protected TextMeshPro m_nameText;
+        private SoundSourceTether m_tether;
+        private LineRenderer m_lineRenderer;
 
         protected override void Awake()
         {
             base.Awake();
 
             m_source = GetComponent<AudioSource>();
-            m_source.playOnAwake = false;
-            m_source.dopplerLevel = 0f;
-
             m_nameText = transform.Find("SoundName").GetComponent<TextMeshPro>();
+
+            Transform tether = transform.Find("TetherGizmo");
+            m_tether = tether.GetComponent<SoundSourceTether>();
+
+            m_lineRenderer = transform.Find("Line").GetComponent<LineRenderer>();
         }
 
         protected override void OnEnable()
@@ -41,12 +44,23 @@ namespace NEP.MonoDirector.Tools
         {
             base.Show();
             m_nameText.gameObject.SetActive(true);
+            m_lineRenderer.enabled = true;
+            m_tether.Show();
         }
 
         protected override void Hide()
         {
             base.Hide();
             m_nameText.gameObject.SetActive(false);
+            m_lineRenderer.enabled = false;
+            m_tether.Hide();
+        }
+
+        private void Update()
+        {
+            float distance = Vector3.Distance(m_tether.transform.position, transform.position);
+
+            m_lineRenderer.SetPosition(1, m_tether.transform.localPosition);
         }
 
         private void OnTriggerEnter(Collider other)
