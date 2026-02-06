@@ -11,7 +11,7 @@ namespace NEP.MonoDirector.Tools
     [MelonLoader.RegisterTypeInIl2Cpp]
     public class SoundSourceTether(IntPtr ptr) : ToolGizmo(ptr)
     {
-        private SoundSource3D m_source;
+        private SoundSource m_source;
 
         private Rigidbody m_originalConnectedBody;
 
@@ -21,7 +21,7 @@ namespace NEP.MonoDirector.Tools
         protected override void Awake()
         {
             base.Awake();
-            m_source = transform.parent.GetComponent<SoundSource3D>();
+            m_source = transform.parent.GetComponent<SoundSource>();
 
             m_originalConnectedBody = m_joint.connectedBody;
         }

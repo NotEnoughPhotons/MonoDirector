@@ -60,7 +60,6 @@
 		<Compile Include="src\Tools\Gizmos\LightRadiusGizmo.cs" />
 		<Compile Include="src\Tools\Gizmos\ToolGizmo.cs" />
 		<Compile Include="src\Tools\SoundSource.cs" />
-		<Compile Include="src\Tools\SoundSource3D.cs" />
 		<Compile Include="src\Audio\Spectrum.cs" />
 		<Compile Include="src\BuildInfo.gen.cs" />
 		<Compile Include="src\Camera\CameraDamp.cs" />
