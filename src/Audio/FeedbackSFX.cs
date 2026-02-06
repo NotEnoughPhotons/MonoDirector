@@ -1,81 +1,77 @@
 ﻿using AudioImportLib;
-using MelonLoader;
 using UnityEngine;
+
+using BoneLib;
+using UnityEngine.Audio;
 
 namespace NEP.MonoDirector.Audio
 {
-    [MelonLoader.RegisterTypeInIl2Cpp]
-    public class FeedbackSFX(IntPtr ptr) : MonoBehaviour(ptr)
+    public static class FeedbackSFX
     {
-        private AudioSource source;
+        private static bool m_init;
 
-        private AudioClip sfx_preroll = API.LoadAudioClip(Constants.dirSFX + "preroll.wav");
-        private AudioClip sfx_postroll = API.LoadAudioClip(Constants.dirSFX + "postroll.wav");
-        private AudioClip sfx_beep = API.LoadAudioClip(Constants.dirSFX + "beep.wav");
-        private AudioClip sfx_linkedaudio = API.LoadAudioClip(Constants.dirSFX + "linkaudio.wav");
+        private static AudioClip m_sfxPreroll;
+        private static AudioClip m_sfxPostroll;
+        private static AudioClip m_sfxBeep;
+        private static AudioClip m_sfxLinkedAudio;
 
-        private void Awake()
+        internal static void Initialize()
         {
-            source = gameObject.AddComponent<AudioSource>();
-        }
+            if (!m_init)
+            {
+                m_sfxPreroll = API.LoadAudioClip(Constants.dirSFX + "preroll.wav");
+                m_sfxPostroll = API.LoadAudioClip(Constants.dirSFX + "postroll.wav");
+                m_sfxBeep = API.LoadAudioClip(Constants.dirSFX + "beep.wav");
+                m_sfxLinkedAudio = API.LoadAudioClip(Constants.dirSFX + "linkaudio.wav");
+                m_init = true;
+            }
 
-        private void OnEnable()
-        {
             Events.OnStopRecording += Beep;
             Events.OnStopPlayback += Beep;
             Events.OnTimerCountdown += Beep;
         }
 
-        private void OnDisable()
+        internal static void Shutdown()
         {
-            Events.OnStartRecording -= Preroll;
             Events.OnStopRecording -= Beep;
-
-            Events.OnPlay -= Postroll;
             Events.OnStopPlayback -= Beep;
-
-            Events.OnPreSnapshot -= Preroll;
-
             Events.OnTimerCountdown -= Beep;
         }
 
-        public void Play(AudioClip clip)
+        public static void Play(AudioClip clip, float pitch = 1.0f)
         {
-            source.clip = clip;
-            source.PlayOneShot(clip);
+            AudioMixerGroup mixer = BoneLib.Audio.UI;
+            BoneLib.Audio.Play2DOneShot(clip, mixer, 1f, pitch);
         }
 
-        private void Preroll()
+        private static void Preroll()
         {
-            Play(sfx_preroll);
+            Play(m_sfxPreroll);
         }
 
-        public void Beep()
+        public static void Beep()
         {
-            source.pitch = 1f;
-            Play(sfx_beep);
+            Play(m_sfxBeep, 1f);
         }
 
-        public void BeepLow()
+        public static void BeepLow()
         {
-            source.pitch = 0.5f;
-            Play(sfx_beep);
+            Play(m_sfxBeep, 0.5f);
         }
 
-        public void BeepHigh()
+        public static void BeepHigh()
         {
-            source.pitch = 2f;
-            Play(sfx_beep);
+            Play(m_sfxBeep, 2f);
         }
 
-        public void LinkAudio()
+        public static void LinkAudio()
         {
-            Play(sfx_linkedaudio);
+            Play(m_sfxLinkedAudio);
         }
 
-        private void Postroll() 
+        private static void Postroll() 
         {
-            Play(sfx_postroll);
+            Play(m_sfxPostroll);
         }
     }
 }

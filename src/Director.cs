@@ -9,53 +9,48 @@ using BoneLib;
 
 namespace NEP.MonoDirector.Core
 {
-    [MelonLoader.RegisterTypeInIl2Cpp]
-    public class Director(System.IntPtr ptr) : MonoBehaviour(ptr)
+    public static class Director
     {
-        public static Director instance { get; private set; }
+        public static Playback Playback { get => m_playback; }
+        public static Recorder Recorder { get => m_recorder; }
 
-        public Playback playback;
-        public Recorder recorder;
+        public static FreeCamera Camera { get => m_camera; }
+        public static CameraVolume Volume { get => m_camera.GetComponent<CameraVolume>(); }
 
-        public FreeCamera Camera { get => camera; }
-        public CameraVolume Volume { get => camera.GetComponent<CameraVolume>(); }
+        public static PlayState PlayState { get => m_playState; }
+        public static PlayState LastPlayState { get => m_lastPlayState; }
+        public static CaptureState CaptureState { get => m_captureState; }
 
-        public static PlayState PlayState { get => playState; }
-        public static PlayState LastPlayState { get => lastPlayState; }
-        public static CaptureState CaptureState { get => captureState; }
+        public static List<Actor> Cast;
+        public static List<ActorNPC> NPCCast;
 
-        public List<Actor> Cast;
-        public List<ActorNPC> NPCCast;
+        public static List<Prop> WorldProps;
+        public static List<Prop> RecordingProps;
+        public static List<Prop> LastRecordedProps;
 
-        public List<Prop> WorldProps;
-        public List<Prop> RecordingProps;
-        public List<Prop> LastRecordedProps;
+        public static int WorldTick { get => m_worldTick; }
 
-        public int WorldTick { get => worldTick; }
+        private static Playback m_playback;
+        private static Recorder m_recorder;
 
-        private static PlayState playState = PlayState.Stopped;
-        private static PlayState lastPlayState;
-        private static CaptureState captureState = CaptureState.CaptureActor;
+        private static PlayState m_playState = PlayState.Stopped;
+        private static PlayState m_lastPlayState;
+        private static CaptureState m_captureState = CaptureState.CaptureActor;
 
-        private FreeCamera camera;
+        private static FreeCamera m_camera;
 
-        private int worldTick;
+        private static int m_worldTick;
 
-        private void Awake()
+        internal static void Initialize()
         {
-            instance = this;
-
-            playback = new Playback();
-            recorder = new Recorder();
+            m_playback = new Playback();
+            m_recorder = new Recorder();
 
             Cast = new List<Actor>();
             NPCCast = new List<ActorNPC>();
             WorldProps = new List<Prop>();
             RecordingProps = new List<Prop>();
-        }
 
-        private void Start()
-        {
             Events.OnPrePlayback += () => SetPlayState(PlayState.Preplaying);
             Events.OnPreRecord += () => SetPlayState(PlayState.Prerecording);
 
@@ -63,7 +58,16 @@ namespace NEP.MonoDirector.Core
             Events.OnStartRecording += () => SetPlayState(PlayState.Recording);
         }
 
-        private void Update()
+        internal static void Shutdown()
+        {
+            Events.OnPrePlayback -= () => SetPlayState(PlayState.Preplaying);
+            Events.OnPreRecord -= () => SetPlayState(PlayState.Prerecording);
+
+            Events.OnPlay -= () => SetPlayState(PlayState.Playing);
+            Events.OnStartRecording -= () => SetPlayState(PlayState.Recording);
+        }
+
+        private static void Update()
         {
             if (!Settings.Debug.useKeys)
             {
@@ -98,22 +102,22 @@ namespace NEP.MonoDirector.Core
             }
         }
 
-        public void Play()
+        public static void Play()
         {
-            playback.BeginPlayback();
+            Playback.BeginPlayback();
         }
 
-        public void Pause()
+        public static void Pause()
         {
             SetPlayState(PlayState.Paused);
         }
 
-        public void Record()
+        public static void Record()
         {
-            recorder.StartRecordRoutine();
+            Recorder.StartRecordRoutine();
         }
 
-        public void Recast(Actor actor)
+        public static void Recast(Actor actor)
         {
             Vector3 actorPosition = actor.Frames[0].TransformFrames[0].position;
             Constants.RigManager.Teleport(actorPosition, true);
@@ -140,25 +144,25 @@ namespace NEP.MonoDirector.Core
             Record();
         }
 
-        public void Stop()
+        public static void Stop()
         {
             SetPlayState(PlayState.Stopped);
         }
 
-        public void SetCamera(FreeCamera camera)
+        public static void SetCamera(FreeCamera camera)
         {
-            this.camera = camera;
+            m_camera = camera;
         }
 
-        public void RemoveActor(Actor actor)
+        public static void RemoveActor(Actor actor)
         {
             Cast.Remove(actor);
             actor.Delete();
         }
 
-        public void RemoveLastActor()
+        public static void RemoveLastActor()
         {
-            RemoveActor(Recorder.instance.LastActor);
+            RemoveActor(Recorder.Instance.LastActor);
 
             foreach(var prop in LastRecordedProps)
             {
@@ -168,9 +172,9 @@ namespace NEP.MonoDirector.Core
             }
         }
 
-        public void RemoveAllActors()
+        public static void RemoveAllActors()
         {
-            playState = PlayState.Stopped;
+            m_playState = PlayState.Stopped;
 
             for (int i = 0; i < Cast.Count; i++)
             {
@@ -180,7 +184,7 @@ namespace NEP.MonoDirector.Core
             Cast.Clear();
         }
         
-        public void ClearLastProps()
+        public static void ClearLastProps()
         {
             foreach(var prop in LastRecordedProps)
             {
@@ -192,7 +196,7 @@ namespace NEP.MonoDirector.Core
             LastRecordedProps.Clear();
         }
 
-        public void ClearScene()
+        public static void ClearScene()
         {
             RemoveAllActors();
             
@@ -205,10 +209,10 @@ namespace NEP.MonoDirector.Core
             WorldProps.Clear();
         }
 
-        public void SetPlayState(PlayState state)
+        public static void SetPlayState(PlayState state)
         {
-            lastPlayState = playState;
-            playState = state;
+            m_lastPlayState = m_playState;
+            m_playState = state;
             Events.OnPlayStateSet?.Invoke(state);
         }
     }

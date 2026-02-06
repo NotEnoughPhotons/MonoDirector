@@ -19,13 +19,13 @@ namespace NEP.MonoDirector
 
         public int Delay { get; set; }
 
-        private Actor activeActor;
-        private Actor lastActor;
+        private Actor m_activeActor;
+        private Actor m_lastActor;
 
         public void SetActor(MarrowAvatar avatar)
         {
-            lastActor = activeActor;
-            activeActor = new Actor(avatar);
+            m_lastActor = m_activeActor;
+            m_activeActor = new Actor(avatar);
         }
 
         public void OnPrePhotograph()

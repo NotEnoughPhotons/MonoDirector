@@ -36,12 +36,12 @@ namespace NEP.MonoDirector.Actors
 
             if (Prop.EligibleWithType<Gun>(rigidbody))
             {
-                Main.Logger.Msg($"Adding gun component to {gameObject.name}");
+                Logging.Msg($"Adding gun component to {gameObject.name}");
 
                 var actorProp = gameObject.AddComponent<GunProp>();
                 actorProp.SetRigidbody(rigidbody);
                 actorProp.SetGun(gameObject.GetComponent<Gun>());
-                Director.instance.RecordingProps.Add(actorProp);
+                Director.RecordingProps.Add(actorProp);
 
                 vfxBlip?.CallSpawnEffect();
 
@@ -51,13 +51,13 @@ namespace NEP.MonoDirector.Actors
 
             if (Prop.EligibleWithType<ObjectDestructible>(rigidbody))
             {
-                Main.Logger.Msg($"Adding destructable component to {gameObject.name}");
+                Logging.Msg($"Adding destructable component to {gameObject.name}");
 
                 var destructableProp = gameObject.AddComponent<BreakableProp>();
                 destructableProp.SetRigidbody(rigidbody);
                 destructableProp.SetBreakableObject(gameObject.GetComponent<ObjectDestructible>());
 
-                Director.instance.RecordingProps.Add(destructableProp);
+                Director.RecordingProps.Add(destructableProp);
 
                 vfxBlip?.CallSpawnEffect();
 
@@ -67,12 +67,12 @@ namespace NEP.MonoDirector.Actors
 
             if (Prop.EligibleWithType<Magazine>(rigidbody))
             {
-                Main.Logger.Msg($"Adding magazine component to {gameObject.name}");
+                Logging.Msg($"Adding magazine component to {gameObject.name}");
 
                 var magazineProp = gameObject.AddComponent<Prop>();
                 magazineProp.SetRigidbody(rigidbody);
 
-                Director.instance.RecordingProps.Add(magazineProp);
+                Director.RecordingProps.Add(magazineProp);
 
                 vfxBlip?.CallSpawnEffect();
 
@@ -82,13 +82,13 @@ namespace NEP.MonoDirector.Actors
 
             if (Prop.EligibleWithType<Atv>(rigidbody))
             {
-                Main.Logger.Msg($"Adding vehicle component to {gameObject.name}");
+                Logging.Msg($"Adding vehicle component to {gameObject.name}");
 
                 var vehicle = gameObject.AddComponent<TrackedVehicle>();
                 vehicle.SetRigidbody(rigidbody);
                 vehicle.SetVehicle(rigidbody.GetComponent<Atv>());
 
-                Director.instance.RecordingProps.Add(vehicle);
+                Director.RecordingProps.Add(vehicle);
                 vfxBlip?.CallSpawnEffect();
 
                 Events.OnPropCreated?.Invoke(vehicle);
@@ -97,11 +97,11 @@ namespace NEP.MonoDirector.Actors
 
             if (Prop.IsActorProp(rigidbody))
             {
-                Main.Logger.Msg($"Adding prop component to {rigidbody.name}");
+                Logging.Msg($"Adding prop component to {rigidbody.name}");
 
                 var actorProp = gameObject.AddComponent<Prop>();
                 actorProp.SetRigidbody(rigidbody);
-                Director.instance.RecordingProps.Add(actorProp);
+                Director.RecordingProps.Add(actorProp);
 
                 vfxBlip?.CallSpawnEffect();
 
@@ -123,7 +123,7 @@ namespace NEP.MonoDirector.Actors
 
                 var prop = actorProp;
                 prop.InteractableRigidbody.isKinematic = false;
-                Director.instance.RecordingProps.Remove(prop);
+                Director.RecordingProps.Remove(prop);
                 GameObject.Destroy(prop);
                 vfxBlip?.CallDespawnEffect();
 

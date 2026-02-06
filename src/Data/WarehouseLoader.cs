@@ -6,6 +6,8 @@ using MelonLoader.Utils;
 
 using Il2CppSLZ.Marrow.Warehouse;
 
+using NEP.MonoDirector.Core;
+
 namespace NEP.MonoDirector.Data
 {
     public static class WarehouseLoader
@@ -59,7 +61,7 @@ namespace NEP.MonoDirector.Data
             Barcode mainBarcode = new Barcode("NEP.MonoDirector");
             if (!AssetWarehouse.Instance.HasPallet(mainBarcode))
             {
-                Main.Logger.Error("Pallet doesn't exist in registry.");
+                Logging.Error("Pallet doesn't exist in registry.");
                 return;
             }
 
@@ -67,7 +69,7 @@ namespace NEP.MonoDirector.Data
 
             if (palletManifest == null)
             {
-                Main.Logger.Error("Pallet manifest is null.");
+                Logging.Error("Pallet manifest is null.");
                 return;
             }
             
@@ -76,7 +78,7 @@ namespace NEP.MonoDirector.Data
             SpawnableCrate spawnable = null;
             foreach (Crate crate in pallet.Crates)
             {
-                Main.Logger.Msg(crate.Barcode);
+                Logging.Msg(crate.Barcode.ID);
                 if (crate.Barcode == CreateFullBarcode("SoundHolder"))
                 {
                     spawnable = crate.Cast<SpawnableCrate>();
@@ -86,7 +88,7 @@ namespace NEP.MonoDirector.Data
 
             if (spawnable == null)
             {
-                Main.Logger.Error("Sound holder spawnable is null.");
+                Logging.Error("Sound holder spawnable is null.");
                 return;
             }
 

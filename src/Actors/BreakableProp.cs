@@ -15,15 +15,15 @@ namespace NEP.MonoDirector.Actors
         {
             base.Awake();
 
-            propFrames = new List<ObjectFrame>();
-            actionFrames = new List<ActionFrame>();
+            m_propFrames = new List<ObjectFrame>();
+            m_actionFrames = new List<ActionFrame>();
         }
 
         public override void OnSceneBegin()
         {
             base.OnSceneBegin();
 
-            foreach(ActionFrame actionFrame in actionFrames)
+            foreach(ActionFrame actionFrame in m_actionFrames)
             {
                 actionFrame.Reset();
             }

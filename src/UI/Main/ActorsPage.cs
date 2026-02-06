@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using NEP.MonoDirector.Actors;
+using NEP.MonoDirector.Core;
 
 namespace NEP.MonoDirector.UI
 {
@@ -95,7 +96,7 @@ namespace NEP.MonoDirector.UI
 
             if (target == null)
             {
-                Main.Logger.Warning("Target actor entry not found! There might be a problem with the UI.");
+                Logging.Warn("Target actor entry not found! There might be a problem with the UI.");
                 return;
             }
 

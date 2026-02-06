@@ -65,10 +65,10 @@ namespace NEP.MonoDirector.Actors
                 position = InteractableRigidbody.position,
                 rotation = InteractableRigidbody.rotation,
                 rigidbodyVelocity = InteractableRigidbody.velocity,
-                frameTime = Recorder.instance.RecordingTime
+                frameTime = Recorder.Instance.RecordingTime
             };
 
-            propFrames.Add(objectFrame);
+            m_propFrames.Add(objectFrame);
         }
     }
 }

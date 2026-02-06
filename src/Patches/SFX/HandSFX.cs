@@ -32,7 +32,7 @@ namespace NEP.MonoDirector.Patches
             {
                 int rand = Random.Range(0, hand.grab.Count);
 
-                AudioManager.Instance.PlayAtPosition(hand.grab[rand], position);
+                // AudioManager.Instance.PlayAtPosition(hand.grab[rand], position);
             }
         }
     }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.IO;
-using Il2CppSystem;
 using MelonLoader;
 using NEP.MonoDirector.Actors;
+using NEP.MonoDirector.Audio;
 using NEP.MonoDirector.State;
 
 using UnityEngine;
@@ -22,15 +21,12 @@ namespace NEP.MonoDirector.Core
             Events.OnStopPlayback += OnStopPlayback;
         }
 
-        public static Playback Instance;
-
-
-        private float playbackTime;
+        public static Playback Instance { get; private set; }
         
         /// <summary>
         /// The current time stamp of the playhead
         /// </summary>
-        public float PlaybackTime => playbackTime;
+        public float PlaybackTime => m_playbackTime;
         
         /// <summary>
         /// The rate at which the playhead seeks, similar to Time.timeScale
@@ -40,14 +36,15 @@ namespace NEP.MonoDirector.Core
 
         public int Countdown { get; private set; }
 
-        private Coroutine playRoutine;
+        private float m_playbackTime;
+        private Coroutine m_playRoutine;
 
         //
         // Playback modification methods
         //
-        public void ResetPlayhead() => playbackTime = 0f;
+        public void ResetPlayhead() => m_playbackTime = 0f;
 
-        public void MovePlayhead(float amount) => playbackTime += amount;
+        public void MovePlayhead(float amount) => m_playbackTime += amount;
 
         //
         // Playback methods
@@ -72,12 +69,12 @@ namespace NEP.MonoDirector.Core
         {
             if (Director.LastPlayState == PlayState.Paused)
             {
-                Director.instance.SetPlayState(PlayState.Playing);
+                Director.SetPlayState(PlayState.Playing);
                 return;
             }
 
-            if (playRoutine == null)
-                playRoutine = MelonCoroutines.Start(PlayRoutine()) as Coroutine;
+            if (m_playRoutine == null)
+                m_playRoutine = MelonCoroutines.Start(PlayRoutine()) as Coroutine;
         }
 
         /// <summary>
@@ -88,12 +85,12 @@ namespace NEP.MonoDirector.Core
         {
             ResetPlayhead();
 
-            foreach (var castMember in Director.instance.Cast)
+            foreach (var castMember in Director.Cast)
             {
                 castMember.OnSceneBegin();
             }
 
-            foreach (var prop in Director.instance.WorldProps)
+            foreach (var prop in Director.WorldProps)
             {
                 prop.OnSceneBegin();
                 prop.gameObject.SetActive(true);
@@ -105,7 +102,7 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnPlay()
         {
-            foreach(var actor in Director.instance.Cast)
+            foreach(var actor in Director.Cast)
             {
                 if(actor is Actor actorPlayer)
                 {
@@ -126,7 +123,7 @@ namespace NEP.MonoDirector.Core
 
             AnimateAll();
             
-            playbackTime += PlaybackRate * Time.deltaTime;
+            m_playbackTime += PlaybackRate * Time.deltaTime;
         }
 
         /// <summary>
@@ -134,7 +131,7 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnStopPlayback()
         {
-            foreach (Trackable castMember in Director.instance.Cast)
+            foreach (Trackable castMember in Director.Cast)
             {
                 if (castMember != null && castMember is Actor actorPlayer)
                 {
@@ -142,10 +139,10 @@ namespace NEP.MonoDirector.Core
                 }
             }
 
-            if (playRoutine != null)
+            if (m_playRoutine != null)
             {
-                MelonCoroutines.Stop(playRoutine);
-                playRoutine = null;
+                MelonCoroutines.Stop(m_playRoutine);
+                m_playRoutine = null;
             }
         }
 
@@ -159,15 +156,15 @@ namespace NEP.MonoDirector.Core
             if (Director.PlayState != PlayState.Stopped)
                 return;
 
-            if (playbackTime <= 0f)
-                playbackTime = 0f;
+            if (m_playbackTime <= 0f)
+                m_playbackTime = 0f;
 
-            if (playbackTime >= Recorder.instance.TakeTime)
-                playbackTime = Recorder.instance.TakeTime;
+            if (m_playbackTime >= Recorder.Instance.TakeTime)
+                m_playbackTime = Recorder.Instance.TakeTime;
 
             AnimateAll();
 
-            playbackTime += amount;
+            m_playbackTime += amount;
         }
 
         /// <summary>
@@ -176,10 +173,10 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void AnimateAll()
         {
-            foreach (var castMember in Director.instance.Cast)
+            foreach (var castMember in Director.Cast)
                 AnimateActor(castMember);
 
-            foreach (var prop in Director.instance.WorldProps)
+            foreach (var prop in Director.WorldProps)
                 AnimateProp(prop);
         }
         
@@ -219,7 +216,7 @@ namespace NEP.MonoDirector.Core
                 yield return new WaitForSeconds(1);
             }
 
-            Main.feedbackSFX.BeepHigh();
+            FeedbackSFX.BeepHigh();
 
             Events.OnPlay?.Invoke();
 
@@ -229,7 +226,7 @@ namespace NEP.MonoDirector.Core
                 while (Director.PlayState == PlayState.Paused)
                     yield return null;
 
-                if (PlaybackTime >= Recorder.instance.TakeTime)
+                if (PlaybackTime >= Recorder.Instance.TakeTime)
                     break;
 
                 Tick();

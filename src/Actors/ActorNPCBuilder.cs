@@ -15,7 +15,7 @@ namespace NEP.MonoDirector.Actors
         public static void BuildNPCActor(Poolee pooleeObject)
         {
             ActorNPC test = new ActorNPC(pooleeObject.transform);
-            Director.instance.NPCCast.Add(test);
+            Director.NPCCast.Add(test);
         }
 
         public static void RemoveNPCActor(Poolee pooleeObject)
@@ -32,7 +32,7 @@ namespace NEP.MonoDirector.Actors
 
                 var prop = actorProp;
                 prop.InteractableRigidbody.isKinematic = false;
-                Director.instance.RecordingProps.Remove(prop);
+                Director.RecordingProps.Remove(prop);
                 GameObject.Destroy(prop);
                 vfxBlip?.CallDespawnEffect();
             }

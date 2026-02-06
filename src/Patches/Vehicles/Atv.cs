@@ -13,8 +13,8 @@ public static class SeatPatches
     {
         public static void Postfix(Seat __instance, RigManager rM)
         {
-            Main.Logger.Msg("Register Rig");
-            Actor activeActor = Recorder.instance.ActiveActor;
+            Logging.Msg("Register Rig");
+            Actor activeActor = Recorder.Instance.ActiveActor;
 
             if(activeActor == null)
             {
@@ -31,9 +31,9 @@ public static class SeatPatches
     {
         public static void Postfix()
         {
-            Main.Logger.Msg("Deregister Rig");
+            Logging.Msg("Deregister Rig");
 
-            Actor activeActor = Recorder.instance.ActiveActor;
+            Actor activeActor = Recorder.Instance.ActiveActor;
 
             if (activeActor == null)
             {

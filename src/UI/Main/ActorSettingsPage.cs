@@ -59,17 +59,17 @@ namespace NEP.MonoDirector.UI
         public void OnDeleteButtonClicked()
         {
             actor.Delete();
-            MDMenu.instance.PreviousPage();
+            MDMenu.Instance.PreviousPage();
         }
 
         public void OnDeletePropsButtonClicked()
         {
-            Director.instance.ClearLastProps();
+            Director.ClearLastProps();
         }
 
         public void OnRecastButtonClicked()
         {
-            Director.instance.Recast(actor);
+            Director.Recast(actor);
         }
 
         public void OnShowButtonClicked()

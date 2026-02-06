@@ -40,19 +40,19 @@ namespace NEP.MonoDirector.UI
             category.CreateFunction(
                 "Record", 
                 Color.red, 
-                () => Director.instance.Record()
+                () => Director.Record()
             );
             
             category.CreateFunction(
                 "Play", 
                 Color.green, 
-                () => Director.instance.Play()
+                () => Director.Play()
             );
             
             category.CreateFunction(
                 "Stop", 
                 Color.red, 
-                () => Director.instance.Stop()
+                () => Director.Stop()
             );
         }
 
@@ -63,7 +63,7 @@ namespace NEP.MonoDirector.UI
                 Color.white,
                 () => 
                 {
-                    MDMenu.instance.gameObject.SetActive(true);
+                    MDMenu.Instance.gameObject.SetActive(true);
                 }
             );
             
@@ -77,14 +77,14 @@ namespace NEP.MonoDirector.UI
 
                     DialogData data = new()
                     {
-                        Confirm = () => Director.instance.RemoveAllActors(),
+                        Confirm = () => Director.RemoveAllActors(),
                         Message = "Are you sure? This cannot be undone.",
                         Primary = primary,
                         Secondary = secondary
                     };
 
                     Menu.DisplayDialog(data);
-                    Director.instance.RemoveAllActors();
+                    Director.RemoveAllActors();
                 }
             );
             
@@ -98,7 +98,7 @@ namespace NEP.MonoDirector.UI
 
                     DialogData data = new()
                     {
-                        Confirm = () => Director.instance.ClearScene(),
+                        Confirm = () => Director.ClearScene(),
                         Message = "Are you sure? This cannot be undone.",
                         Primary = primary,
                         Secondary = secondary

@@ -121,7 +121,7 @@ namespace NEP.MonoDirector.Tools
 
             m_joint.connectedBody = m_hoveredActor.ActorBody.Head.GetComponent<Rigidbody>();
 
-            Main.feedbackSFX.LinkAudio();
+            FeedbackSFX.LinkAudio();
             m_hoveredActor = null;
 
             m_source.Mute();

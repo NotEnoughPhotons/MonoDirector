@@ -62,7 +62,7 @@ namespace NEP.MonoDirector.Tools
             m_clip = m_source.clip;
             m_nameText.text = m_clip.name;
             soundHolder.gameObject.SetActive(false);
-            Main.feedbackSFX.LinkAudio();
+            FeedbackSFX.LinkAudio();
         }
 
         protected override void OnStartPlayback() => m_source.Play();

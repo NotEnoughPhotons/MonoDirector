@@ -91,7 +91,7 @@ namespace NEP.MonoDirector.Actors
         {
             if (Director.PlayState == State.PlayState.Recording)
             {
-                actionFrames.Add(new ActionFrame(action, Recorder.instance.RecordingTime));
+                actionFrames.Add(new ActionFrame(action, Recorder.Instance.RecordingTime));
             }
         }
 

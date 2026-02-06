@@ -10,10 +10,10 @@ namespace NEP.MonoDirector.Actors
     [MelonLoader.RegisterTypeInIl2Cpp]
     public class Prop(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public Trackable Actor { get => actor; }
+        public Trackable Actor { get => m_actor; }
 
-        public List<ObjectFrame> PropFrames { get => propFrames; }
-        public Rigidbody InteractableRigidbody { get => interactableRigidbody; }
+        public List<ObjectFrame> PropFrames { get => m_propFrames; }
+        public Rigidbody InteractableRigidbody { get => m_interactableRigidbody; }
         public bool isRecording;
 
         public static readonly Il2CppSystem.Type[] whitelistedTypes = new Il2CppSystem.Type[]
@@ -24,19 +24,19 @@ namespace NEP.MonoDirector.Actors
             Il2CppInterop.Runtime.Il2CppType.Of<Atv>()
         };
 
-        private Trackable actor;
-        private Rigidbody interactableRigidbody;
+        private Trackable m_actor;
+        private Rigidbody m_interactableRigidbody;
 
-        protected int stateTick;
-        protected int recordedTicks;
+        protected int m_stateTick;
+        protected int m_recordedTicks;
 
-        protected List<ObjectFrame> propFrames;
-        protected List<ActionFrame> actionFrames;
+        protected List<ObjectFrame> m_propFrames;
+        protected List<ActionFrame> m_actionFrames;
 
         protected virtual void Awake()
         {
-            propFrames = new List<ObjectFrame>();
-            actionFrames = new List<ActionFrame>();
+            m_propFrames = new List<ObjectFrame>();
+            m_actionFrames = new List<ActionFrame>();
         }
 
         public static bool IsActorProp(Rigidbody rigidbody)
@@ -76,17 +76,17 @@ namespace NEP.MonoDirector.Actors
 
         public void SetRigidbody(Rigidbody rigidbody)
         {
-            interactableRigidbody = rigidbody;
+            m_interactableRigidbody = rigidbody;
         }
 
         public void SetActor(Trackable actor)
         {
-            this.actor = actor;
+            this.m_actor = actor;
         }
 
         public void SetPhysicsActive(bool enable)
         {
-            interactableRigidbody.isKinematic = enable;
+            m_interactableRigidbody.isKinematic = enable;
         }
 
         public virtual void OnSceneBegin()
@@ -105,9 +105,9 @@ namespace NEP.MonoDirector.Actors
             transform.rotation = PropFrames[0].rotation;
             transform.localScale = PropFrames[0].scale;
 
-            if(interactableRigidbody != null)
+            if(m_interactableRigidbody != null)
             {
-                interactableRigidbody.isKinematic = true;
+                m_interactableRigidbody.isKinematic = true;
             }
         }
 
@@ -115,19 +115,19 @@ namespace NEP.MonoDirector.Actors
         {
             gameObject.SetActive(true);
 
-            if(interactableRigidbody == null)
+            if(m_interactableRigidbody == null)
             {
-                interactableRigidbody = GetComponent<Rigidbody>();
+                m_interactableRigidbody = GetComponent<Rigidbody>();
             }
             else
             {
-                interactableRigidbody.isKinematic = true;
+                m_interactableRigidbody.isKinematic = true;
             }
 
             transform.position = Interpolator.InterpolatePosition(PropFrames);
             transform.rotation = Interpolator.InterpolateRotation(PropFrames);
 
-            foreach(var actionFrame in actionFrames)
+            foreach(var actionFrame in m_actionFrames)
             {
                 if (Playback.Instance.PlaybackTime < actionFrame.timestamp)
                 {
@@ -150,17 +150,17 @@ namespace NEP.MonoDirector.Actors
                 position = transform.position,
                 rotation = transform.rotation,
                 scale = transform.localScale,
-                frameTime = Recorder.instance.RecordingTime
+                frameTime = Recorder.Instance.RecordingTime
             };
 
-            if (frame == 0 || interactableRigidbody != null && interactableRigidbody.IsSleeping())
+            if (frame == 0 || m_interactableRigidbody != null && m_interactableRigidbody.IsSleeping())
             {
-                propFrames.Add(objectFrame);
+                m_propFrames.Add(objectFrame);
             }
             else
             {
-                propFrames.Add(objectFrame);
-                recordedTicks++;
+                m_propFrames.Add(objectFrame);
+                m_recordedTicks++;
             }
         }
 
@@ -168,18 +168,18 @@ namespace NEP.MonoDirector.Actors
         {
             if (Director.PlayState == State.PlayState.Recording)
             {
-                if (!Director.instance.RecordingProps.Contains(this))
+                if (!Director.RecordingProps.Contains(this))
                 {
                     return;
                 }
 
-                actionFrames.Add(new ActionFrame(action, Recorder.instance.RecordingTime));
+                m_actionFrames.Add(new ActionFrame(action, Recorder.Instance.RecordingTime));
             }
         }
 
         public void ResetTicks()
         {
-            stateTick = 0;
+            m_stateTick = 0;
         }
     }
 }

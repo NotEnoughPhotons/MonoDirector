@@ -51,6 +51,8 @@
 		<Compile Include="src\Audio\FeedbackSFX.cs" />
 		<Compile Include="src\Audio\PooledAudio.cs" />
 		<Compile Include="src\Audio\SoundHolder.cs" />
+		<Compile Include="src\Bootstrap.cs" />
+		<Compile Include="src\Logging.cs" />
 		<Compile Include="src\Tools\DirectedComponent.cs" />
 		<Compile Include="src\Tools\Gizmos\LightAngleGizmo.cs" />
 		<Compile Include="src\Tools\Gizmos\LightColorGizmo.cs" />

@@ -8,7 +8,7 @@ namespace NEP.MonoDirector.UI
     [MelonLoader.RegisterTypeInIl2Cpp]
     public class MDMenu(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public static MDMenu instance { get; private set; }
+        public static MDMenu Instance { get; private set; }
 
         private GameObject page_Menu;
         private GameObject page_Playhead;
@@ -29,7 +29,7 @@ namespace NEP.MonoDirector.UI
         
         private void Awake()
         {
-            instance = this;
+            Instance = this;
 
             rb = GetComponent<Rigidbody>();
 

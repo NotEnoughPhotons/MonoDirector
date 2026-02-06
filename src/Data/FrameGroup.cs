@@ -1,8 +1,4 @@
-﻿using System;
-using UnityEngine;
-
-using System.Collections.Generic;
-using System.IO;
+﻿using NEP.MonoDirector.Core;
 
 namespace NEP.MonoDirector.Data
 {
@@ -61,7 +57,7 @@ namespace NEP.MonoDirector.Data
         
         public void FromBinary(Stream stream)
         {
-            //Main.Logger.Msg($"[FrameGroup]: FromBinary() Called!");
+            //Logging.Msg($"[FrameGroup]: FromBinary() Called!");
             
             // Check the version number
             byte[] versionBytes = new byte[sizeof(short)];
@@ -83,8 +79,8 @@ namespace NEP.MonoDirector.Data
                 int numFrames = BitConverter.ToInt32(headerBytes, sizeof(float));
 
 #if DEBUG
-                Main.Logger.Msg($"[ACTOR]: GrFrameDT is {FrameTime}");
-                Main.Logger.Msg($"[ACTOR]: GrOfCount is {numFrames}");
+                Logging.Msg($"[ACTOR]: GrFrameDT is {FrameTime}");
+                Logging.Msg($"[ACTOR]: GrOfCount is {numFrames}");
 #endif
                 
                 TransformFrames = new ObjectFrame[numFrames];

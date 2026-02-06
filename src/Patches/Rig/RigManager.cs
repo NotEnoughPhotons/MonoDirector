@@ -19,11 +19,11 @@ namespace NEP.MonoDirector.Patches
                     return;
                 }
 
-                var activeActor = Recorder.instance.ActiveActor;
+                var activeActor = Recorder.Instance.ActiveActor;
                 activeActor.RecordAction(new System.Action(() => activeActor.SwitchToActor(activeActor)));
                 activeActor.CloneAvatar();
-                Recorder.instance.ActiveActors.Add(activeActor);
-                Recorder.instance.SetActor(newAvatar);
+                Recorder.Instance.ActiveActors.Add(activeActor);
+                Recorder.Instance.SetActor(newAvatar);
             }
         }
     }

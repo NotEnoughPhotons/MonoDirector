@@ -1,5 +1,6 @@
 ﻿using NEP.MonoDirector.Data;
 using NEP.MonoDirector.State;
+using NEP.MonoDirector.Core;
 
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace NEP.MonoDirector.Cameras
         {
             if(followTarget == null)
             {
-                Main.Logger.Msg("Follow target is null!");
+                Logging.Msg("Follow target is null!");
                 return;
             }
 

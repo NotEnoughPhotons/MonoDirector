@@ -15,7 +15,7 @@ namespace NEP.MonoDirector.Core
     {
         public Recorder()
         {
-            instance = this;
+            Instance = this;
 
             Events.OnPreRecord += OnPreRecord;
             Events.OnStartRecording += OnPostRecord;
@@ -23,37 +23,37 @@ namespace NEP.MonoDirector.Core
             Events.OnStopRecording += OnStopRecording;
         }
 
-        public static Recorder instance;
+        public static Recorder Instance { get; private set; }
 
-        public float RecordingTime { get => recordingTime; }
+        public float RecordingTime { get => m_recordingTime; }
         public float TakeTime;
 
-        public int RecordTick { get => recordTick; }
+        public int RecordTick { get => m_recordTick; }
 
         public int Countdown { get; private set; }
 
         public List<Actor> ActiveActors = new List<Actor>();
 
-        public Actor ActiveActor { get => activeActor; }
-        public Actor LastActor { get => lastActor; }
+        public Actor ActiveActor { get => m_activeActor; }
+        public Actor LastActor { get => m_lastActor; }
 
-        private Actor activeActor;
-        private Actor lastActor;
+        private Actor m_activeActor;
+        private Actor m_lastActor;
 
-        private Coroutine recordRoutine;
+        private Coroutine m_recordRoute;
 
-        private float fpsTimer = 0f;
+        private float m_fpsTimer = 0f;
 
-        private float recordingTime;
+        private float m_recordingTime;
 
-        private float timeSinceLastTick = 0;
+        private float m_timeSinceLastTick = 0;
 
-        private int recordTick;
+        private int m_recordTick;
 
         public void SetActor(MarrowAvatar avatar)
         {
-            lastActor = activeActor;
-            activeActor = new Actor(avatar);
+            m_lastActor = m_activeActor;
+            m_activeActor = new Actor(avatar);
         }
 
         public void Tick()
@@ -68,15 +68,15 @@ namespace NEP.MonoDirector.Core
 
         public void StartRecordRoutine()
         {
-            if (recordRoutine == null)
+            if (m_recordRoute == null)
             {
-                recordRoutine = MelonCoroutines.Start(RecordRoutine()) as Coroutine;
+                m_recordRoute = MelonCoroutines.Start(RecordRoutine()) as Coroutine;
             }
         }
 
         public void RecordCamera()
         {
-            foreach (var castMember in Director.instance.Cast)
+            foreach (var castMember in Director.Cast)
             {
                 castMember?.Act();
             }
@@ -84,19 +84,19 @@ namespace NEP.MonoDirector.Core
 
         public void RecordActor()
         {
-            activeActor.RecordFrame();
+            m_activeActor.RecordFrame();
 
-            foreach (var prop in Director.instance.RecordingProps)
+            foreach (var prop in Director.RecordingProps)
             {
-                prop.Record(recordTick);
+                prop.Record(m_recordTick);
             }
 
-            foreach (var castMember in Director.instance.Cast)
+            foreach (var castMember in Director.Cast)
             {
                 Playback.Instance.AnimateActor(castMember);
             }
 
-            foreach(var prop in Director.instance.WorldProps)
+            foreach(var prop in Director.WorldProps)
             {
                 Playback.Instance.AnimateProp(prop);
             }
@@ -107,25 +107,25 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnPreRecord()
         {
-            if (recordTick > 0)
+            if (m_recordTick > 0)
             {
-                recordTick = 0;
+                m_recordTick = 0;
             }
 
             Playback.Instance.ResetPlayhead();
 
-            fpsTimer = 0f;
+            m_fpsTimer = 0f;
 
-            recordingTime = 0f;
+            m_recordingTime = 0f;
 
             SetActor(Constants.RigManager.avatar);
 
-            foreach (var castMember in Director.instance.Cast)
+            foreach (var castMember in Director.Cast)
             {
                 castMember.OnSceneBegin();
             }
 
-            foreach(var prop in Director.instance.WorldProps)
+            foreach(var prop in Director.WorldProps)
             {
                 prop.OnSceneBegin();
                 prop.gameObject.SetActive(true);
@@ -137,10 +137,10 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnPostRecord()
         {
-            activeActor?.Microphone?.SetCorrectionMode(Audio.ActorSpeech.AudioCorrectionMode.Corrected);
-            activeActor?.Microphone?.RecordMicrophone();
+            m_activeActor?.Microphone?.SetCorrectionMode(Audio.ActorSpeech.AudioCorrectionMode.Corrected);
+            m_activeActor?.Microphone?.RecordMicrophone();
 
-            foreach (Trackable castMember in Director.instance.Cast)
+            foreach (Trackable castMember in Director.Cast)
             {
                 if (castMember != null && castMember is Actor actorPlayer)
                 {
@@ -159,16 +159,16 @@ namespace NEP.MonoDirector.Core
                 return;
             }
 
-            recordTick++;
-            recordingTime += timeSinceLastTick;
+            m_recordTick++;
+            m_recordingTime += m_timeSinceLastTick;
 
             // keep up!
-            if (recordingTime > TakeTime)
+            if (m_recordingTime > TakeTime)
             {
-                TakeTime = recordingTime;
+                TakeTime = m_recordingTime;
             }
 
-            Playback.Instance.MovePlayhead(timeSinceLastTick);
+            Playback.Instance.MovePlayhead(m_timeSinceLastTick);
 
             if (Director.CaptureState == CaptureState.CaptureCamera)
             {
@@ -180,7 +180,7 @@ namespace NEP.MonoDirector.Core
                 RecordActor();
             }
 
-            foreach (var castMember in Director.instance.Cast)
+            foreach (var castMember in Director.Cast)
             {
                 if (castMember != null)
                 {
@@ -194,9 +194,9 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnStopRecording()
         {
-            activeActor?.Microphone?.StopRecording();
+            m_activeActor?.Microphone?.StopRecording();
 
-            foreach (Trackable castMember in Director.instance.Cast)
+            foreach (Trackable castMember in Director.Cast)
             {
                 if (castMember != null && castMember is Actor actorPlayer)
                 {
@@ -242,23 +242,23 @@ namespace NEP.MonoDirector.Core
             */
 #endif
             
-            activeActor.CloneAvatar();
-            Director.instance.Cast.Add(activeActor);
-            lastActor = activeActor;
+            m_activeActor.CloneAvatar();
+            Director.Cast.Add(m_activeActor);
+            m_lastActor = m_activeActor;
 
-            activeActor = null;
+            m_activeActor = null;
 
-            Director.instance.Cast.AddRange(ActiveActors);
+            Director.Cast.AddRange(ActiveActors);
             ActiveActors.Clear();
 
-            Director.instance.WorldProps.AddRange(Director.instance.RecordingProps);
-            Director.instance.LastRecordedProps = Director.instance.RecordingProps;
-            Director.instance.RecordingProps.Clear();
+            Director.WorldProps.AddRange(Director.RecordingProps);
+            Director.LastRecordedProps = Director.RecordingProps;
+            Director.RecordingProps.Clear();
 
-            if (recordRoutine != null)
+            if (m_recordRoute != null)
             {
-                MelonCoroutines.Stop(recordRoutine);
-                recordRoutine = null;
+                MelonCoroutines.Stop(m_recordRoute);
+                m_recordRoute = null;
             }
         }
 
@@ -272,7 +272,7 @@ namespace NEP.MonoDirector.Core
                 yield return new WaitForSeconds(1);
             }
 
-            Main.feedbackSFX.BeepHigh();
+            FeedbackSFX.BeepHigh();
 
             Events.OnStartRecording?.Invoke();
             
@@ -287,21 +287,21 @@ namespace NEP.MonoDirector.Core
                 // Ignoring slomo means using deltaTime to store our recorded time
                 // Therefore data is scaled with timescale
                 if (Settings.World.ignoreSlomo) 
-                    timeSinceLastTick += Time.deltaTime;
+                    m_timeSinceLastTick += Time.deltaTime;
                 else
-                    timeSinceLastTick += Time.unscaledDeltaTime;
+                    m_timeSinceLastTick += Time.unscaledDeltaTime;
                 
                 // Temporal scaling increases the resolution when changing timescale
                 if (Settings.World.temporalScaling) 
-                    fpsTimer += Time.unscaledDeltaTime;
+                    m_fpsTimer += Time.unscaledDeltaTime;
                 else
-                    fpsTimer += Time.deltaTime;
+                    m_fpsTimer += Time.deltaTime;
 
-                if (fpsTimer > perTick)
+                if (m_fpsTimer > perTick)
                 {
                     Tick();
-                    fpsTimer = 0f;
-                    timeSinceLastTick = 0;
+                    m_fpsTimer = 0f;
+                    m_timeSinceLastTick = 0;
                 }
 
                 yield return null;
