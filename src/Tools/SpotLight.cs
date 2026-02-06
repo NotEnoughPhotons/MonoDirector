@@ -8,9 +8,6 @@ namespace NEP.MonoDirector.Tools
     {
         public static List<SpotLight> ComponentCache { get; private set; }
 
-        public float Range { get; private set; }
-        public float Intensity { get; private set; }
-
         private Light m_light;
         private LightRadiusGizmo m_radiusGizmo;
         private LightAngleGizmo m_angleGizmo;

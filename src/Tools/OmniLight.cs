@@ -11,12 +11,12 @@ namespace NEP.MonoDirector.Tools
     {
         public static List<OmniLight> ComponentCache { get; private set; }
 
-        public float Range { get; private set; }
-        public float Intensity { get; private set; }
-
         private Light m_light;
         private LightRadiusGizmo m_radiusGizmo;
+        private LightIntensityGizmo m_intensityGizmo;
+        private LightColorGizmo m_colorGizmo;
         private LineRenderer m_lineRenderer;
+        private MeshRenderer m_spriteRenderer;
 
         protected override void Awake()
         {
@@ -24,8 +24,11 @@ namespace NEP.MonoDirector.Tools
             ComponentCache = new List<OmniLight>();
             m_light = GetComponent<Light>();
 
+            m_spriteRenderer = transform.Find("Frame/Sprite").GetComponent<MeshRenderer>();
             m_radiusGizmo = transform.Find("RadiusGizmo").GetComponent<LightRadiusGizmo>();
             m_lineRenderer = transform.Find("RadiusLine").GetComponent<LineRenderer>();
+            m_intensityGizmo = transform.Find("IntensityDial/IntensityGizmo").GetComponent<LightIntensityGizmo>();
+            m_colorGizmo = transform.Find("ColorSlider/ColorGizmo").GetComponent<LightColorGizmo>();
         }
 
         protected override void OnEnable()
@@ -44,13 +47,20 @@ namespace NEP.MonoDirector.Tools
         {
             m_lineRenderer.SetPosition(1, m_radiusGizmo.transform.localPosition);
             m_light.range = m_radiusGizmo.Distance;
+            m_light.intensity = m_intensityGizmo.Intensity;
+            m_light.color = m_colorGizmo.Color;
+            m_spriteRenderer.material.SetColor("_BaseColor", m_light.color);
         }
 
         protected override void OnHandAttached(Hand hand)
         {
             base.OnHandAttached(hand);
             m_radiusGizmo.Body.isKinematic = false;
+            m_colorGizmo.Body.isKinematic = false;
+
             m_radiusGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
+
+            m_colorGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
         }
 
         protected override void OnHandDetached(Hand hand)
@@ -62,21 +72,27 @@ namespace NEP.MonoDirector.Tools
 
             base.OnHandDetached(hand);
             m_radiusGizmo.Body.isKinematic = true;
+            m_colorGizmo.Body.isKinematic = true;
+
             m_radiusGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
+
+            m_colorGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
         }
 
         protected override void Hide()
         {
             base.Hide();
-            m_radiusGizmo.Hide();
             m_lineRenderer.enabled = false;
+            m_radiusGizmo.Hide();
+            m_colorGizmo.Hide();
         }
 
         protected override void Show()
         {
             base.Show();
-            m_radiusGizmo.Show();
             m_lineRenderer.enabled = true;
+            m_radiusGizmo.Show();
+            m_colorGizmo.Show();
         }
     }
 }
