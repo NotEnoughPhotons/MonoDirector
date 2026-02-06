@@ -1,6 +1,4 @@
 using Il2CppSLZ.Marrow;
-using Il2CppTMPro;
-using NEP.MonoDirector.State;
 using UnityEngine;
 
 namespace NEP.MonoDirector.Tools
@@ -14,104 +12,103 @@ namespace NEP.MonoDirector.Tools
         public float Intensity { get; private set; }
 
         private Light m_light;
-
-        private Grip m_radiusControlGrip;
-        private Rigidbody m_radiusControlBody;
-        private ConfigurableJoint m_radiusControlJoint;
+        private LightRadiusGizmo m_radiusGizmo;
+        private LightAngleGizmo m_angleGizmo;
+        private LightIntensityGizmo m_intensityGizmo;
+        private LightColorGizmo m_colorGizmo;
         private LineRenderer m_lineRenderer;
-
-        private TextMeshPro m_distanceText;
-
-        private Action<Hand> m_OnRadiusControlGrabbed;
-        private Action<Hand> m_OnRadiusControlReleased;
+        private MeshRenderer m_spriteRenderer;
 
         protected override void Awake()
         {
             base.Awake();
             ComponentCache = new List<SpotLight>();
 
-            m_OnRadiusControlGrabbed = OnRadiusControlGrabbed;
-            m_OnRadiusControlReleased = OnRadiusControlReleased;
-
             m_light = GetComponent<Light>();
 
-            Transform radiusControl = transform.Find("RadiusControl");
-            m_radiusControlGrip = radiusControl.GetComponent<Grip>();
-            m_radiusControlBody = radiusControl.GetComponent<Rigidbody>();
-            m_radiusControlJoint = radiusControl.GetComponent<ConfigurableJoint>();
-            m_distanceText = radiusControl.Find("DistanceText").GetComponent<TextMeshPro>();
-
-            m_lineRenderer = transform.Find("Line").GetComponent<LineRenderer>();
+            m_spriteRenderer = transform.Find("Frame/Sprite").GetComponent<MeshRenderer>();
+            m_radiusGizmo = transform.Find("RadiusGizmo").GetComponent<LightRadiusGizmo>();
+            m_angleGizmo = transform.Find("LeftAngleGizmo").GetComponent<LightAngleGizmo>();
+            m_lineRenderer = transform.Find("RadiusLine").GetComponent<LineRenderer>();
+            m_intensityGizmo = transform.Find("IntensityDial/IntensityGizmo").GetComponent<LightIntensityGizmo>();
+            m_colorGizmo = transform.Find("ColorSlider/ColorGizmo").GetComponent<LightColorGizmo>();
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
             ComponentCache.Add(this);
-
-            m_radiusControlGrip.attachedHandDelegate += m_OnRadiusControlGrabbed;
-            m_radiusControlGrip.detachedHandDelegate += m_OnRadiusControlReleased;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             ComponentCache.Remove(this);
-
-            m_radiusControlGrip.attachedHandDelegate -= m_OnRadiusControlGrabbed;
-            m_radiusControlGrip.detachedHandDelegate -= m_OnRadiusControlReleased;
         }
 
         protected virtual void Update()
         {
-            float distance = Vector3.Distance(m_radiusControlBody.position, transform.position);
-
-            m_lineRenderer.SetPosition(1, m_radiusControlBody.transform.localPosition);
-            Range = distance * 2f;
-            m_light.range = Range;
-            m_distanceText.text = distance.ToString("0.00") + "m";
+            m_lineRenderer.SetPosition(1, m_radiusGizmo.transform.localPosition);
+            m_light.range = m_radiusGizmo.Distance;
+            m_light.spotAngle = m_angleGizmo.Angle;
+            m_light.intensity = m_intensityGizmo.Intensity;
+            m_light.color = m_colorGizmo.Color;
+            m_spriteRenderer.material.SetColor("_BaseColor", m_light.color);
         }
 
         protected override void OnHandAttached(Hand hand)
         {
             base.OnHandAttached(hand);
-            m_radiusControlBody.isKinematic = false;
-            m_radiusControlJoint.zMotion = ConfigurableJointMotion.Limited;
+            m_radiusGizmo.Body.isKinematic = false;
+            m_angleGizmo.Body.isKinematic = false;
+            m_colorGizmo.Body.isKinematic = false;
+
+            m_radiusGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
+
+            m_angleGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
+            m_angleGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
+            m_angleGizmo.Joint.angularYMotion = ConfigurableJointMotion.Limited;
+
+            m_colorGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
         }
 
         protected override void OnHandDetached(Hand hand)
         {
+            if (GetAttachedHands() > 1)
+            {
+                return;
+            }
+
             base.OnHandDetached(hand);
-            m_radiusControlBody.isKinematic = true;
-            m_radiusControlJoint.zMotion = ConfigurableJointMotion.Limited;
+            m_radiusGizmo.Body.isKinematic = true;
+            m_angleGizmo.Body.isKinematic = true;
+            m_colorGizmo.Body.isKinematic = true;
+
+            m_radiusGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
+
+            m_angleGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
+            m_angleGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
+            m_angleGizmo.Joint.angularYMotion = ConfigurableJointMotion.Limited;
+
+            m_colorGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
         }
 
         protected override void Hide()
         {
             base.Hide();
             m_lineRenderer.enabled = false;
-            m_radiusControlBody.gameObject.SetActive(false);
+            m_radiusGizmo.Hide();
+            m_angleGizmo.Hide();
+            m_colorGizmo.Hide();
         }
 
         protected override void Show()
         {
             base.Show();
             m_lineRenderer.enabled = true;
-            m_radiusControlBody.gameObject.SetActive(true);
-        }
-
-        private void OnRadiusControlGrabbed(Hand hand)
-        {
-            m_radiusControlBody.isKinematic = false;
-            m_radiusControlJoint.zMotion = ConfigurableJointMotion.Free;
-        }
-
-        private void OnRadiusControlReleased(Hand hand)
-        {
-            m_radiusControlJoint.connectedAnchor = m_radiusControlBody.transform.localPosition;
-            m_radiusControlJoint.targetPosition = m_radiusControlBody.transform.localPosition;
-            m_radiusControlBody.isKinematic = true;
-            m_radiusControlJoint.zMotion = ConfigurableJointMotion.Limited;
+            m_radiusGizmo.Show();
+            m_angleGizmo.Show();
+            m_colorGizmo.Show();
         }
     }
 }

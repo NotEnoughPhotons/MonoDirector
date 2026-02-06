@@ -16,7 +16,7 @@ namespace NEP.MonoDirector.Tools
             base.Awake();
             m_source.spatialBlend = 1f;
 
-            Transform tether = transform.Find("Tether");
+            Transform tether = transform.Find("TetherGizmo");
             m_tether = tether.GetComponent<SoundSourceTether>();
 
             m_lineRenderer = transform.Find("Line").GetComponent<LineRenderer>();

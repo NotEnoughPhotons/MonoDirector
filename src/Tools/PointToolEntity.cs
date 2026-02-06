@@ -66,6 +66,11 @@ namespace NEP.MonoDirector.Tools
 
         protected virtual void OnHandDetached(Hand hand)
         {
+            if (GetAttachedHands() > 1)
+            {
+                return;
+            }
+
             m_rigidbody.isKinematic = true;
         }
 
@@ -89,6 +94,11 @@ namespace NEP.MonoDirector.Tools
         {
             m_frame.SetActive(false);
             m_grip.enabled = false;
+        }
+
+        protected int GetAttachedHands()
+        {
+            return m_grip.attachedHands.Count;
         }
     }
 }

@@ -52,6 +52,11 @@
 		<Compile Include="src\Audio\PooledAudio.cs" />
 		<Compile Include="src\Audio\SoundHolder.cs" />
 		<Compile Include="src\Tools\DirectedComponent.cs" />
+		<Compile Include="src\Tools\Gizmos\LightAngleGizmo.cs" />
+		<Compile Include="src\Tools\Gizmos\LightColorGizmo.cs" />
+		<Compile Include="src\Tools\Gizmos\LightIntensityGizmo.cs" />
+		<Compile Include="src\Tools\Gizmos\LightRadiusGizmo.cs" />
+		<Compile Include="src\Tools\Gizmos\ToolGizmo.cs" />
 		<Compile Include="src\Tools\SoundSource.cs" />
 		<Compile Include="src\Tools\SoundSource3D.cs" />
 		<Compile Include="src\Audio\Spectrum.cs" />
@@ -104,7 +109,7 @@
 		<Compile Include="src\Tools\OmniLight.cs" />
 		<Compile Include="src\Tools\PointToolEntity.cs" />
 		<Compile Include="src\Tools\Propifier.cs" />
-		<Compile Include="src\Tools\SoundSourceTether.cs" />
+		<Compile Include="src\Tools\Gizmos\SoundSourceTether.cs" />
 		<Compile Include="src\Tools\SpotLight.cs" />
 		<Compile Include="src\Tools\StudioLight.cs" />
 		<Compile Include="src\UI\InfoInterfaceManager.cs" />
