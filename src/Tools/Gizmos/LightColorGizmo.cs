@@ -17,6 +17,7 @@ namespace NEP.MonoDirector.Tools
         private Vector3 m_maxPosition;
 
         private float m_sliderMax;
+        private bool m_reset;
 
         protected override void Awake()
         {
@@ -30,6 +31,8 @@ namespace NEP.MonoDirector.Tools
             float x1 = m_startPosition.x;
             float x2 = m_maxPosition.x;
             m_sliderMax = Mathf.Sqrt(Mathf.Pow(x1 - x2, 2));
+
+            m_color = Color.white;
         }
 
         protected override void OnHandAttached(Hand hand)
@@ -40,29 +43,35 @@ namespace NEP.MonoDirector.Tools
         protected override void OnHandDetached(Hand hand)
         {
             m_body.isKinematic = true;
+            m_reset = false;
         }
 
         protected override void OnHandAttachedUpdate(Hand hand)
         {
             base.OnHandAttachedUpdate(hand);
 
-            float x1 = transform.localPosition.x;
-            float x2 = m_maxPosition.x;
-            float target = Mathf.Sqrt(Mathf.Pow(x1 - x2, 2)) / m_sliderMax;
+            if (!m_reset)
+            {
+                float x1 = transform.localPosition.x;
+                float x2 = m_maxPosition.x;
+                float target = Mathf.Sqrt(Mathf.Pow(x1 - x2, 2)) / m_sliderMax;
 
-            m_sliderValue = target;
-            m_sliderValue = Mathf.Max(0f, m_sliderValue);
+                m_sliderValue = target;
+                m_sliderValue = Mathf.Max(0f, m_sliderValue);
 
-            m_color = Color.HSVToRGB(m_sliderValue, 1f, 1f);
-            m_meshRenderer.material.SetColor("_Emission", m_color);
+                m_color = Color.HSVToRGB(m_sliderValue, 1f, 1f);
+                m_meshRenderer.material.SetColor("_Emission", m_color);
 
-            m_joint.targetPosition = transform.localPosition;
+                m_joint.targetPosition = transform.localPosition;
+            }
         }
 
         protected override void OnSecondaryButtonPressed()
         {
             m_color = Color.white;
+            m_meshRenderer.material.SetColor("_Emission", m_color);
             m_joint.targetPosition = m_startPosition;
+            m_reset = true;
         }
     }
 }
