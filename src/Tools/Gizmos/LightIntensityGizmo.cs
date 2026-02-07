@@ -12,7 +12,7 @@ namespace NEP.MonoDirector.Tools
     {
         public float Intensity { get => m_intensity; }
 
-        private float m_intensity;
+        private float m_intensity = 1f;
 
         private Vector3 m_lastUp;
 

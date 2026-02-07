@@ -11,7 +11,7 @@ namespace NEP.MonoDirector.Tools
     {
         public float Angle { get => m_angle; }
 
-        private float m_angle;
+        private float m_angle = 90f;
         private TextMeshPro m_angleText;
 
         protected override void Awake()

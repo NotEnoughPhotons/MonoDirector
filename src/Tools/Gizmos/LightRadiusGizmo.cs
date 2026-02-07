@@ -10,7 +10,7 @@ namespace NEP.MonoDirector.Tools
     {
         public float Distance { get => m_distance; }
 
-        private float m_distance;
+        private float m_distance = 0.1f;
         private TextMeshPro m_distanceText;
 
         protected override void Awake()
