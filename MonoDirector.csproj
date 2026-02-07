@@ -58,6 +58,7 @@
 		<Compile Include="src\Tools\Gizmos\LightColorGizmo.cs" />
 		<Compile Include="src\Tools\Gizmos\LightIntensityGizmo.cs" />
 		<Compile Include="src\Tools\Gizmos\LightRadiusGizmo.cs" />
+		<Compile Include="src\Tools\Gizmos\SoundVolumeGizmo.cs" />
 		<Compile Include="src\Tools\Gizmos\ToolGizmo.cs" />
 		<Compile Include="src\Tools\SoundSource.cs" />
 		<Compile Include="src\Audio\Spectrum.cs" />

@@ -14,6 +14,7 @@ namespace NEP.MonoDirector.Tools
         protected AudioClip m_clip;
         protected TextMeshPro m_nameText;
         private SoundSourceTether m_tether;
+        private SoundVolumeGizmo m_volumeGizmo;
         private LineRenderer m_lineRenderer;
 
         protected override void Awake()
@@ -25,6 +26,8 @@ namespace NEP.MonoDirector.Tools
 
             Transform tether = transform.Find("TetherGizmo");
             m_tether = tether.GetComponent<SoundSourceTether>();
+
+            m_volumeGizmo = transform.Find("VolumeDial/Gizmo").GetComponent<SoundVolumeGizmo>();
 
             m_lineRenderer = transform.Find("Line").GetComponent<LineRenderer>();
         }
@@ -61,6 +64,8 @@ namespace NEP.MonoDirector.Tools
             float distance = Vector3.Distance(m_tether.transform.position, transform.position);
 
             m_lineRenderer.SetPosition(1, m_tether.transform.localPosition);
+
+            m_source.volume = m_volumeGizmo.Volume;
         }
 
         private void OnTriggerEnter(Collider other)
