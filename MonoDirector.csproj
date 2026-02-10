@@ -26,7 +26,7 @@
 	  <None Remove="NOTICE.txt" />
 	  <None Remove="quest_build.bat" />
 	  <None Remove="README.md" />
-	  <None Remove="Resources\md_resources.pack" />
+	  <None Remove="Resources\md_ui_pc.bundle" />
 	  <None Remove="run_build.bat" />
 	  <None Remove="setup_build.py" />
 	</ItemGroup>
@@ -52,6 +52,7 @@
 		<Compile Include="src\Audio\PooledAudio.cs" />
 		<Compile Include="src\Audio\SoundHolder.cs" />
 		<Compile Include="src\Bootstrap.cs" />
+		<Compile Include="src\Data\BundleLoader.cs" />
 		<Compile Include="src\Logging.cs" />
 		<Compile Include="src\Tools\DirectedComponent.cs" />
 		<Compile Include="src\Tools\Gizmos\LightAngleGizmo.cs" />
@@ -114,6 +115,7 @@
 		<Compile Include="src\Tools\Gizmos\SoundSourceTether.cs" />
 		<Compile Include="src\Tools\SpotLight.cs" />
 		<Compile Include="src\Tools\StudioLight.cs" />
+		<Compile Include="src\UI\ActorFrameManager.cs" />
 		<Compile Include="src\UI\InfoInterfaceManager.cs" />
 		<Compile Include="src\UI\InformationInterface.cs" />
 		<Compile Include="src\UI\Main\ActorDisplayPage.cs" />
@@ -130,9 +132,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Resources\md_resources.pack">
-	    <CustomToolNamespace></CustomToolNamespace>
-	  </EmbeddedResource>
+	  <EmbeddedResource Include="Resources\md_ui_pc.bundle" />
 	</ItemGroup>
 
 	<ItemGroup>

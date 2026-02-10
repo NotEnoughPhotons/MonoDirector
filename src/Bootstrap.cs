@@ -28,6 +28,7 @@ namespace NEP.MonoDirector.Core
 
             FeedbackSFX.Initialize();
 
+            BundleLoader.Initialize();
 #if DEBUG
             TestDebugSerialize();
 #endif
@@ -48,6 +49,7 @@ namespace NEP.MonoDirector.Core
         {
             Events.FlushActions();
             // PropMarkerManager.CleanUp();
+            // ActorFrameManager.CleanUp();
 
             FeedbackSFX.Initialize();
 
@@ -61,6 +63,7 @@ namespace NEP.MonoDirector.Core
         {
             // PropMarkerManager.Initialize();
             InfoInterfaceManager.Initialize();
+            ActorFrameManager.Initialize();
             WarehouseLoader.SpawnFromBarcode(WarehouseLoader.mainMenuBarcode);
         }
 

@@ -33,7 +33,7 @@ namespace NEP.MonoDirector.Actors
             this.physicsRig = physicsRig;
 
             SetupCollisions();
-            SetupTriggerHull();
+            // SetupTriggerHull();
             SetupAudio();
         }
 
