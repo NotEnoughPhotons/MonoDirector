@@ -41,5 +41,19 @@ namespace NEP.MonoDirector.Tools
             m_distance = distance * 2f;
             m_distanceText.text = distance.ToString("0.00") + "m";
         }
+
+        public override void Hide()
+        {
+            base.Hide();
+
+            m_distanceText.gameObject.SetActive(false);
+        }
+
+        public override void Show()
+        {
+            base.Show();
+
+            m_distanceText.gameObject.SetActive(true);
+        }
     }
 }

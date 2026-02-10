@@ -17,6 +17,8 @@ namespace NEP.MonoDirector.Tools
         private LightColorGizmo m_colorGizmo;
         private LineRenderer m_lineRenderer;
         private MeshRenderer m_spriteRenderer;
+        private GameObject m_dial;
+        private GameObject m_rainbowStrip;
 
         protected override void Awake()
         {
@@ -27,8 +29,10 @@ namespace NEP.MonoDirector.Tools
             m_spriteRenderer = transform.Find("Frame/Sprite").GetComponent<MeshRenderer>();
             m_radiusGizmo = transform.Find("RadiusGizmo").GetComponent<LightRadiusGizmo>();
             m_lineRenderer = transform.Find("RadiusLine").GetComponent<LineRenderer>();
-            m_intensityGizmo = transform.Find("IntensityDial/IntensityGizmo").GetComponent<LightIntensityGizmo>();
+            m_intensityGizmo = transform.Find("IntensityDial/Gizmo").GetComponent<LightIntensityGizmo>();
             m_colorGizmo = transform.Find("ColorSlider/ColorGizmo").GetComponent<LightColorGizmo>();
+            m_dial = transform.Find("IntensityDial/Quad").gameObject;
+            m_rainbowStrip = transform.Find("ColorSlider/Plane").gameObject;
         }
 
         protected override void OnEnable()
@@ -85,6 +89,9 @@ namespace NEP.MonoDirector.Tools
             m_lineRenderer.enabled = false;
             m_radiusGizmo.Hide();
             m_colorGizmo.Hide();
+            m_intensityGizmo.Hide();
+            m_dial.SetActive(false);
+            m_rainbowStrip.SetActive(false);
         }
 
         protected override void Show()
@@ -93,6 +100,9 @@ namespace NEP.MonoDirector.Tools
             m_lineRenderer.enabled = true;
             m_radiusGizmo.Show();
             m_colorGizmo.Show();
+            m_intensityGizmo.Show();
+            m_dial.SetActive(true);
+            m_rainbowStrip.SetActive(true);
         }
     }
 }

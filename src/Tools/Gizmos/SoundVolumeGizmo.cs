@@ -41,5 +41,19 @@ namespace NEP.MonoDirector.Tools
 
             m_volumeText.text = m_volume.ToString("0.00");
         }
+
+        public override void Hide()
+        {
+            base.Hide();
+
+            m_volumeText.gameObject.SetActive(false);
+        }
+
+        public override void Show()
+        {
+            base.Show();
+
+            m_volumeText.gameObject.SetActive(true);
+        }
     }
 }

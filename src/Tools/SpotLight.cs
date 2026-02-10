@@ -15,6 +15,8 @@ namespace NEP.MonoDirector.Tools
         private LightColorGizmo m_colorGizmo;
         private LineRenderer m_lineRenderer;
         private MeshRenderer m_spriteRenderer;
+        private GameObject m_dial;
+        private GameObject m_rainbowStrip;
 
         protected override void Awake()
         {
@@ -27,8 +29,10 @@ namespace NEP.MonoDirector.Tools
             m_radiusGizmo = transform.Find("RadiusGizmo").GetComponent<LightRadiusGizmo>();
             m_angleGizmo = transform.Find("LeftAngleGizmo").GetComponent<LightAngleGizmo>();
             m_lineRenderer = transform.Find("RadiusLine").GetComponent<LineRenderer>();
-            m_intensityGizmo = transform.Find("IntensityDial/IntensityGizmo").GetComponent<LightIntensityGizmo>();
-            m_colorGizmo = transform.Find("ColorSlider/ColorGizmo").GetComponent<LightColorGizmo>();
+            m_intensityGizmo = transform.Find("IntensityDial/Gizmo").GetComponent<LightIntensityGizmo>();
+            m_colorGizmo = transform.Find("ColorGizmo").GetComponent<LightColorGizmo>();
+            m_dial = transform.Find("IntensityDial/Quad").gameObject;
+            m_rainbowStrip = transform.Find("ColorSlider/Plane").gameObject;
         }
 
         protected override void OnEnable()
@@ -48,6 +52,7 @@ namespace NEP.MonoDirector.Tools
             m_lineRenderer.SetPosition(1, m_radiusGizmo.transform.localPosition);
             m_light.range = m_radiusGizmo.Distance;
             m_light.spotAngle = m_angleGizmo.Angle;
+            m_light.innerSpotAngle = m_angleGizmo.Angle;
             m_light.intensity = m_intensityGizmo.Intensity;
             m_light.color = m_colorGizmo.Color;
             m_spriteRenderer.material.SetColor("_BaseColor", m_light.color);
@@ -57,15 +62,11 @@ namespace NEP.MonoDirector.Tools
         {
             base.OnHandAttached(hand);
             m_radiusGizmo.Body.isKinematic = false;
-            m_angleGizmo.Body.isKinematic = false;
+            // m_angleGizmo.Body.isKinematic = false;
             m_colorGizmo.Body.isKinematic = false;
 
             m_radiusGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
-
-            m_angleGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
-            m_angleGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
-            m_angleGizmo.Joint.angularYMotion = ConfigurableJointMotion.Limited;
-
+            // m_angleGizmo.Joint.angularYMotion = ConfigurableJointMotion.Limited;
             m_colorGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
         }
 
@@ -78,15 +79,11 @@ namespace NEP.MonoDirector.Tools
 
             base.OnHandDetached(hand);
             m_radiusGizmo.Body.isKinematic = true;
-            m_angleGizmo.Body.isKinematic = true;
+            // m_angleGizmo.Body.isKinematic = true;
             m_colorGizmo.Body.isKinematic = true;
 
             m_radiusGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
-
-            m_angleGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
-            m_angleGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
-            m_angleGizmo.Joint.angularYMotion = ConfigurableJointMotion.Limited;
-
+            // m_angleGizmo.Joint.angularYMotion = ConfigurableJointMotion.Limited;
             m_colorGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
         }
 
@@ -97,6 +94,9 @@ namespace NEP.MonoDirector.Tools
             m_radiusGizmo.Hide();
             m_angleGizmo.Hide();
             m_colorGizmo.Hide();
+            m_intensityGizmo.Hide();
+            m_dial.SetActive(false);
+            m_rainbowStrip.SetActive(false);
         }
 
         protected override void Show()
@@ -106,6 +106,9 @@ namespace NEP.MonoDirector.Tools
             m_radiusGizmo.Show();
             m_angleGizmo.Show();
             m_colorGizmo.Show();
+            m_intensityGizmo.Show();
+            m_dial.SetActive(true);
+            m_rainbowStrip.SetActive(true);
         }
     }
 }

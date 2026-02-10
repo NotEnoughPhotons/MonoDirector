@@ -22,7 +22,8 @@ namespace NEP.MonoDirector.Tools
         {
             base.Awake();
 
-            m_intensityText = transform.Find("IntensityText").GetComponent<TextMeshPro>();
+            m_intensityText = transform.Find("Text").GetComponent<TextMeshPro>();
+            m_body = transform.GetComponentInParent<Rigidbody>();
         }
 
         private void Update()
@@ -42,6 +43,20 @@ namespace NEP.MonoDirector.Tools
             m_intensity = Mathf.Max(0f, m_intensity);
 
             m_intensityText.text = m_intensity.ToString("0.00");
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
+
+            m_intensityText.gameObject.SetActive(false);
+        }
+
+        public override void Show()
+        {
+            base.Show();
+
+            m_intensityText.gameObject.SetActive(true);
         }
     }
 }
