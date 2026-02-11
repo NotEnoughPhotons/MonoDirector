@@ -2,6 +2,7 @@
 
 using MelonLoader;
 using Il2CppSLZ.Marrow;
+using Il2CppSLZ.Marrow.Interaction;
 
 namespace NEP.MonoDirector.Tools
 {
@@ -15,6 +16,7 @@ namespace NEP.MonoDirector.Tools
         protected Rigidbody m_body;
         protected ConfigurableJoint m_joint;
         protected MeshRenderer m_tetherMesh;
+        protected MarrowJoint m_marrowJoint;
 
         private Action<Hand> m_onHandAttached;
         private Action<Hand> m_onHandReleased;
@@ -30,6 +32,7 @@ namespace NEP.MonoDirector.Tools
             m_body = GetComponent<Rigidbody>();
             m_joint = GetComponent<ConfigurableJoint>();
             m_tetherMesh = GetComponentInChildren<MeshRenderer>();
+            m_marrowJoint = GetComponent<MarrowJoint>();
         }
 
         protected virtual void OnEnable()

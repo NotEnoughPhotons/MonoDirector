@@ -13,7 +13,9 @@ namespace NEP.MonoDirector.Tools
         private LightAngleGizmo m_angleGizmo;
         private LightIntensityGizmo m_intensityGizmo;
         private LightColorGizmo m_colorGizmo;
-        private LineRenderer m_lineRenderer;
+        private LineRenderer m_radiusLineRenderer;
+        private LineRenderer m_leftAngleLine;
+        private LineRenderer m_rightAngleLine;
         private MeshRenderer m_spriteRenderer;
         private GameObject m_dial;
         private GameObject m_rainbowStrip;
@@ -28,7 +30,9 @@ namespace NEP.MonoDirector.Tools
             m_spriteRenderer = transform.Find("Frame/Sprite").GetComponent<MeshRenderer>();
             m_radiusGizmo = transform.Find("RadiusGizmo").GetComponent<LightRadiusGizmo>();
             m_angleGizmo = transform.Find("LeftAngleGizmo").GetComponent<LightAngleGizmo>();
-            m_lineRenderer = transform.Find("RadiusLine").GetComponent<LineRenderer>();
+            m_radiusLineRenderer = transform.Find("RadiusLine").GetComponent<LineRenderer>();
+            m_leftAngleLine = transform.Find("LeftAngleLine").GetComponent<LineRenderer>();
+            m_rightAngleLine = transform.Find("RightAngleLine").GetComponent<LineRenderer>();
             m_intensityGizmo = transform.Find("IntensityDial/Gizmo").GetComponent<LightIntensityGizmo>();
             m_colorGizmo = transform.Find("ColorGizmo").GetComponent<LightColorGizmo>();
             m_dial = transform.Find("IntensityDial/Quad").gameObject;
@@ -49,24 +53,27 @@ namespace NEP.MonoDirector.Tools
 
         protected virtual void Update()
         {
-            m_lineRenderer.SetPosition(1, m_radiusGizmo.transform.localPosition);
+            m_radiusLineRenderer.SetPosition(1, m_radiusGizmo.transform.localPosition);
             m_light.range = m_radiusGizmo.Distance;
             m_light.spotAngle = m_angleGizmo.Angle;
             m_light.innerSpotAngle = m_angleGizmo.Angle;
             m_light.intensity = m_intensityGizmo.Intensity;
             m_light.color = m_colorGizmo.Color;
             m_spriteRenderer.material.SetColor("_BaseColor", m_light.color);
+
+            m_leftAngleLine.transform.localEulerAngles = new Vector3(0f, m_light.spotAngle / 2f, 0f);
+            m_rightAngleLine.transform.localEulerAngles = new Vector3(0f, -m_light.spotAngle / 2f, 0f);
         }
 
         protected override void OnHandAttached(Hand hand)
         {
             base.OnHandAttached(hand);
             m_radiusGizmo.Body.isKinematic = false;
-            // m_angleGizmo.Body.isKinematic = false;
+            m_angleGizmo.Body.isKinematic = false;
             m_colorGizmo.Body.isKinematic = false;
 
             m_radiusGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
-            // m_angleGizmo.Joint.angularYMotion = ConfigurableJointMotion.Limited;
+            m_angleGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
             m_colorGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
         }
 
@@ -79,18 +86,18 @@ namespace NEP.MonoDirector.Tools
 
             base.OnHandDetached(hand);
             m_radiusGizmo.Body.isKinematic = true;
-            // m_angleGizmo.Body.isKinematic = true;
+            m_angleGizmo.Body.isKinematic = true;
             m_colorGizmo.Body.isKinematic = true;
 
             m_radiusGizmo.Joint.zMotion = ConfigurableJointMotion.Limited;
-            // m_angleGizmo.Joint.angularYMotion = ConfigurableJointMotion.Limited;
+            m_angleGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
             m_colorGizmo.Joint.xMotion = ConfigurableJointMotion.Limited;
         }
 
         protected override void Hide()
         {
             base.Hide();
-            m_lineRenderer.enabled = false;
+            m_radiusLineRenderer.enabled = false;
             m_radiusGizmo.Hide();
             m_angleGizmo.Hide();
             m_colorGizmo.Hide();
@@ -102,7 +109,7 @@ namespace NEP.MonoDirector.Tools
         protected override void Show()
         {
             base.Show();
-            m_lineRenderer.enabled = true;
+            m_radiusLineRenderer.enabled = true;
             m_radiusGizmo.Show();
             m_angleGizmo.Show();
             m_colorGizmo.Show();
