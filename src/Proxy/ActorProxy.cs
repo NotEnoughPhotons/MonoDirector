@@ -1,4 +1,6 @@
 ﻿using NEP.MonoDirector.Actors;
+using NEP.MonoDirector.Audio;
+using NEP.MonoDirector.Core;
 using NEP.MonoDirector.Data;
 using NEP.MonoDirector.UI;
 using UnityEngine;
@@ -27,17 +29,16 @@ namespace NEP.MonoDirector.Proxy
             m_triggerHull = triggerHullObject.AddComponent<BoxCollider>();
             m_triggerHull.isTrigger = true;
             triggerHullObject.transform.SetParent(transform);
-            triggerHullObject.transform.localPosition = Vector3.zero;
+            triggerHullObject.transform.localPosition = Vector3.up;
             triggerHullObject.transform.localRotation = Quaternion.identity;
+            triggerHullObject.SetActive(false);
         }
 
         public void SetActor(Actor actor)
         {
             m_actor = actor;
 
-            float avatarHeight = m_actor.ClonedAvatar.height;
-            float avatarWidth = m_actor.ClonedAvatar._waistEllipseX + m_actor.ClonedAvatar._waistEllipseZ;
-            m_triggerHull.size = new Vector3(avatarWidth, 1f, avatarWidth);
+            m_triggerHull.size = m_actor.AvatarCrate.ColliderBounds.size;
 
             if (m_frame == null)
             {
@@ -47,6 +48,19 @@ namespace NEP.MonoDirector.Proxy
             {
                 m_frame.transform.localScale = m_triggerHull.size;
             }
+        }
+
+        public void OnSelected()
+        {
+            FeedbackSFX.LinkAudio();
+            m_triggerHull.gameObject.SetActive(true);
+            Director.SelectActor(m_actor);
+        }
+
+        public void OnDeselected()
+        {
+            m_triggerHull.gameObject.SetActive(false);
+            Director.DeselectActor(m_actor);
         }
     }
 }

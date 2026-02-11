@@ -54,6 +54,7 @@
 		<Compile Include="src\Bootstrap.cs" />
 		<Compile Include="src\Data\BundleLoader.cs" />
 		<Compile Include="src\Logging.cs" />
+		<Compile Include="src\Tools\ActorPen.cs" />
 		<Compile Include="src\Tools\DirectedComponent.cs" />
 		<Compile Include="src\Tools\Gizmos\LightAngleGizmo.cs" />
 		<Compile Include="src\Tools\Gizmos\LightColorGizmo.cs" />
@@ -115,7 +116,9 @@
 		<Compile Include="src\Tools\Gizmos\SoundSourceTether.cs" />
 		<Compile Include="src\Tools\SpotLight.cs" />
 		<Compile Include="src\Tools\StudioLight.cs" />
+		<Compile Include="src\Tools\ToolEntity.cs" />
 		<Compile Include="src\UI\ActorFrameManager.cs" />
+		<Compile Include="src\UI\ActorPanel.cs" />
 		<Compile Include="src\UI\InfoInterfaceManager.cs" />
 		<Compile Include="src\UI\InformationInterface.cs" />
 		<Compile Include="src\UI\Main\ActorDisplayPage.cs" />
@@ -168,6 +171,9 @@
 	  </Reference>
 	  <Reference Include="MelonLoader">
 	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\MelonLoader.dll</HintPath>
+	  </Reference>
+	  <Reference Include="NEDebug">
+	    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\BONELAB\Mods\NEDebug.dll</HintPath>
 	  </Reference>
 	  <Reference Include="Newtonsoft.Json">
 	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\Newtonsoft.Json.dll</HintPath>

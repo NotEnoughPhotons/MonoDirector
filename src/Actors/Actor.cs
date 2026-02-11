@@ -9,6 +9,7 @@ using MarrowAvatar = Il2CppSLZ.VRMK.Avatar;
 using MarrowSeat = Il2CppSLZ.Marrow.Seat;
 using Il2CppSLZ.Marrow.Interaction;
 using NEP.MonoDirector.Proxy;
+using Il2CppSLZ.Marrow.Warehouse;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -43,7 +44,7 @@ namespace NEP.MonoDirector.Actors
         
         public Actor(MarrowAvatar avatar) : this()
         {
-            avatarBarcode = Constants.RigManager.AvatarCrate.Barcode.ToString();
+            avatarCrate = Constants.RigManager.AvatarCrate.Crate;
             
             m_playerAvatar = avatar;
 
@@ -66,8 +67,8 @@ namespace NEP.MonoDirector.Actors
         };
 
 
-        private string avatarBarcode;
-        public string AvatarBarcode => avatarBarcode;
+        private AvatarCrate avatarCrate;
+        public AvatarCrate AvatarCrate => avatarCrate;
         
         public MarrowAvatar PlayerAvatar { get => m_playerAvatar; }
         public MarrowAvatar ClonedAvatar { get => m_clonedAvatar; }
@@ -390,11 +391,11 @@ namespace NEP.MonoDirector.Actors
             //
             bytes.AddRange(BitConverter.GetBytes((short)VersionNumber.V1));
             
-            byte[] encodedBarcode = Encoding.UTF8.GetBytes(avatarBarcode);
-            bytes.AddRange(BitConverter.GetBytes(encodedBarcode.Length));
-            bytes.AddRange(encodedBarcode);
-            bytes.AddRange(BitConverter.GetBytes(Recorder.Instance.TakeTime));
-            bytes.AddRange(BitConverter.GetBytes(m_avatarFrames.Count));
+            // byte[] encodedBarcode = Encoding.UTF8.GetBytes(avatarCrate);
+            // bytes.AddRange(BitConverter.GetBytes(encodedBarcode.Length));
+            // bytes.AddRange(encodedBarcode);
+            // bytes.AddRange(BitConverter.GetBytes(Recorder.Instance.TakeTime));
+            // bytes.AddRange(BitConverter.GetBytes(m_avatarFrames.Count));
 
             foreach (FrameGroup group in m_avatarFrames)
                 bytes.AddRange(group.ToBinary());
@@ -425,10 +426,11 @@ namespace NEP.MonoDirector.Actors
                 byte[] strBytes = new byte[strLen];
                 stream.Read(strBytes, 0, strBytes.Length);
 
-                avatarBarcode = Encoding.UTF8.GetString(strBytes);
+                // TODO: get crate based on serialized barcode
+                //avatarCrate = Encoding.UTF8.GetString(strBytes);
                 
 #if DEBUG
-                Logging.Msg($"[ACTOR]: Barcode: {avatarBarcode}");
+                Logging.Msg($"[ACTOR]: Barcode: {avatarCrate}");
 #endif
                 
                 // Then the take

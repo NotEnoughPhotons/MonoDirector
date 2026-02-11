@@ -23,6 +23,7 @@ namespace NEP.MonoDirector.Data
         internal static readonly Barcode infoInterfaceBarcode = CreateFullBarcode("InformationInterface");
         internal static readonly Barcode mainMenuBarcode = CreateFullBarcode("MonoDirectorMenu");
         internal static readonly Barcode frameBarcode = CreateFullBarcode("Frame");
+        internal static readonly Barcode actorPanelBarcode = CreateFullBarcode("ActorPanel");
 
         internal static List<AudioClip> GetSounds()
         {

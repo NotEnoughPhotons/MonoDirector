@@ -64,6 +64,7 @@ namespace NEP.MonoDirector.Core
             // PropMarkerManager.Initialize();
             InfoInterfaceManager.Initialize();
             ActorFrameManager.Initialize();
+            WarehouseLoader.SpawnFromBarcode(WarehouseLoader.actorPanelBarcode);
             WarehouseLoader.SpawnFromBarcode(WarehouseLoader.mainMenuBarcode);
         }
 

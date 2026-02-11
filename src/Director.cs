@@ -14,6 +14,8 @@ namespace NEP.MonoDirector.Core
         public static Playback Playback { get => m_playback; }
         public static Recorder Recorder { get => m_recorder; }
 
+        public static Actor SelectedActor { get => m_selectedActor; }
+
         public static FreeCamera Camera { get => m_camera; }
         public static CameraVolume Volume { get => m_camera.GetComponent<CameraVolume>(); }
 
@@ -29,6 +31,11 @@ namespace NEP.MonoDirector.Core
         public static List<Prop> LastRecordedProps;
 
         public static int WorldTick { get => m_worldTick; }
+
+        public static event Action<Actor> OnActorSelected;
+        public static event Action<Actor> OnActorDeselected;
+
+        private static Actor m_selectedActor;
 
         private static Playback m_playback;
         private static Recorder m_recorder;
@@ -152,6 +159,18 @@ namespace NEP.MonoDirector.Core
         public static void SetCamera(FreeCamera camera)
         {
             m_camera = camera;
+        }
+
+        public static void SelectActor(Actor actor)
+        {
+            m_selectedActor = actor;
+            OnActorSelected?.Invoke(actor);
+        }
+
+        public static void DeselectActor(Actor actor)
+        {
+            m_selectedActor = null;
+            OnActorDeselected?.Invoke(actor);
         }
 
         public static void RemoveActor(Actor actor)
