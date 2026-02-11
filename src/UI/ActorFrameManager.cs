@@ -2,6 +2,7 @@
 using Il2CppSLZ.Marrow.Data;
 using Il2CppSLZ.Marrow.Pool;
 using Il2CppSLZ.Marrow.Warehouse;
+using NEP.MonoDirector.Core;
 using NEP.MonoDirector.Data;
 using NEP.MonoDirector.Proxy;
 using UnityEngine;
@@ -22,12 +23,14 @@ namespace NEP.MonoDirector.UI
             activeFrames = new List<GameObject>();
 
             container = new GameObject("[MonoDirector] - Actor Frame Container");
+            container.transform.SetParent(Bootstrap.MainContainerObject.transform);
 
-            // Do the same shit AGAIN because the objects may not exist at the time AssetSpawner.Spawn was called. (so hacky..)
             for (int i = 0; i < 32; i++)
             {
                 GameObject obj = GameObject.Instantiate(BundleLoader.FrameObject);
                 obj.SetActive(false);
+                obj.transform.SetParent(container.transform);
+                obj.transform.localPosition = Vector3.zero;
                 loadedFrameObjects.Add(obj);
             }
         }

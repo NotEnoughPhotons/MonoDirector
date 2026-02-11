@@ -12,6 +12,8 @@ namespace NEP.MonoDirector.Core
 {
     public static class Bootstrap
     {
+        internal static GameObject MainContainerObject { get; private set; }
+
         internal static void Initialize()
         {
             Logging.Initialize();
@@ -47,6 +49,8 @@ namespace NEP.MonoDirector.Core
 
         internal static void OnLevelLoaded()
         {
+            MainContainerObject = new GameObject("[MonoDirector]");
+
             Events.FlushActions();
             // PropMarkerManager.CleanUp();
             // ActorFrameManager.CleanUp();
@@ -61,7 +65,7 @@ namespace NEP.MonoDirector.Core
 
         internal static void CreateUI()
         {
-            // PropMarkerManager.Initialize();
+            PropMarkerManager.Initialize();
             InfoInterfaceManager.Initialize();
             ActorFrameManager.Initialize();
             WarehouseLoader.SpawnFromBarcode(WarehouseLoader.actorPanelBarcode);

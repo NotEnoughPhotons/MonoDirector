@@ -1,24 +1,37 @@
-﻿using NEP.MonoDirector.Actors;
+﻿using Il2CppSLZ.Marrow.Pool;
+using NEP.MonoDirector.Actors;
+using NEP.MonoDirector.Core;
 using NEP.MonoDirector.Data;
+using NEP.MonoDirector.Proxy;
 using NEP.MonoDirector.State;
-
 using UnityEngine;
-
-using Il2CppSLZ.Marrow.Pool;
 
 namespace NEP.MonoDirector.UI
 {
     public static class PropMarkerManager
     {
+        private static GameObject container;
         private static Dictionary<Prop, GameObject> markers = new Dictionary<Prop, GameObject>();
         private static List<GameObject> loadedMarkerObjects = new List<GameObject>();
         private static List<GameObject> activeMarkers = new List<GameObject>();
 
         public static void Initialize()
         {
-            var list = WarehouseLoader.SpawnFromBarcode(WarehouseLoader.propMarkerBarcode, 32, false);
+            markers = new Dictionary<Prop, GameObject>();
+            loadedMarkerObjects = new List<GameObject>();
+            activeMarkers = new List<GameObject>();
 
-            loadedMarkerObjects = list;
+            container = new GameObject("[MonoDirector] - Prop Marker Container");
+            container.transform.SetParent(Bootstrap.MainContainerObject.transform);
+
+            for (int i = 0; i < 32; i++)
+            {
+                GameObject obj = GameObject.Instantiate(BundleLoader.PropMarkerObject);
+                obj.SetActive(false);
+                obj.transform.SetParent(container.transform);
+                obj.transform.localPosition = Vector3.zero;
+                loadedMarkerObjects.Add(obj);
+            }
 
             Events.OnPropCreated += AddMarkerToProp;
             Events.OnPropRemoved += RemoveMarkerFromProp;
@@ -50,7 +63,7 @@ namespace NEP.MonoDirector.UI
             asset.gameObject.SetActive(true);
 
             asset.transform.SetParent(prop.transform);
-            asset.transform.localPosition = new Vector3(0f, 1.25f, 0f);
+            asset.transform.localPosition = new Vector3(0f, 0.5f, 0f);
 
             markers.Add(prop, asset);
             activeMarkers.Add(asset);
