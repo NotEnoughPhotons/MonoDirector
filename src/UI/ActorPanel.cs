@@ -62,7 +62,7 @@ namespace NEP.MonoDirector.UI
         {
             m_root.gameObject.SetActive(true);
 
-            m_targetPosition = actor.ClonedAvatar.transform.position + (Vector3.right + Vector3.up);
+            m_targetPosition = actor.ActorBody.Chest.transform.position + Vector3.right;
 
             m_actorNameText.text = actor.ActorName;
         }

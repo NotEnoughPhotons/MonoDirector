@@ -38,7 +38,8 @@ namespace NEP.MonoDirector.Proxy
         {
             m_actor = actor;
 
-            m_triggerHull.size = m_actor.AvatarCrate.ColliderBounds.size;
+            m_triggerHull.size = new Vector3(0.5f, 1f, 0.5f);
+            m_triggerHull.transform.SetParent(m_actor.ClonedAvatar.animator.GetBoneTransform(HumanBodyBones.Hips));
 
             if (m_frame == null)
             {
