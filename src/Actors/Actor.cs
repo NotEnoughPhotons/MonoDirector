@@ -55,6 +55,8 @@ namespace NEP.MonoDirector.Actors
             m_microphone = micObject.AddComponent<ActorSpeech>();
 
             m_tempFrames = new ObjectFrame[m_avatarBones.Length];
+
+            m_ownedProps = new List<Prop>();
         }
 
         // For a traditional rig, this should be all the "head" bones
@@ -77,6 +79,7 @@ namespace NEP.MonoDirector.Actors
         public MarrowEntity MarrowEntity { get => m_marrowEntity; }
 
         public IReadOnlyList<FrameGroup> Frames => m_avatarFrames.AsReadOnly();
+        public IReadOnlyList<Prop> OwnedProps => m_ownedProps.AsReadOnly();
 
         public ActorBody ActorBody { get => m_body; }
         public ActorSpeech Microphone { get => m_microphone; }
@@ -90,6 +93,8 @@ namespace NEP.MonoDirector.Actors
         private ActorProxy m_proxy;
         private ActorSpeech m_microphone;
         private Texture2D m_avatarPortrait;
+
+        private List<Prop> m_ownedProps;
 
         private MarrowEntity m_marrowEntity;
 
@@ -264,6 +269,16 @@ namespace NEP.MonoDirector.Actors
         {
             m_clonedAvatar.gameObject.SetActive(false);
             actor.m_clonedAvatar.gameObject.SetActive(true);
+        }
+
+        public void OwnProp(Prop prop)
+        {
+            m_ownedProps.Add(prop);
+        }
+
+        public void DisownProp(Prop prop)
+        {
+            m_ownedProps.Remove(prop);
         }
 
         public override void Delete()

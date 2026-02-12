@@ -243,6 +243,12 @@ namespace NEP.MonoDirector.Core
 #endif
             
             m_activeActor.CloneAvatar();
+            
+            foreach (var recordedProp in Director.RecordingProps)
+            {
+                m_activeActor.OwnProp(recordedProp);
+            }
+
             Director.Cast.Add(m_activeActor);
             m_lastActor = m_activeActor;
 
