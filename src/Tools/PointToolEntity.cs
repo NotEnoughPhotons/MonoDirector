@@ -1,21 +1,18 @@
-﻿using System;
-
-using Il2CppSLZ.Marrow;
-
-using NEP.MonoDirector.State;
-
-using UnityEngine;
-
+﻿using Il2CppSLZ.Marrow;
+using Il2CppTMPro;
 using MelonLoader;
+using NEP.MonoDirector.State;
+using System;
+using UnityEngine;
 
 namespace NEP.MonoDirector.Tools
 {
     [RegisterTypeInIl2Cpp]
     public class PointToolEntity(IntPtr ptr) : DirectedComponent(ptr)
     {
-        private Rigidbody m_rigidbody;
-        private GameObject m_frame;
-        private Grip m_grip;
+        protected Rigidbody m_rigidbody;
+        protected GameObject m_frame;
+        protected Grip m_grip;
 
         private Action<Hand> m_OnHandAttached;
         private Action<Hand> m_OnHandDetached;

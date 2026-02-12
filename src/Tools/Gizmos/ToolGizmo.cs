@@ -61,13 +61,43 @@ namespace NEP.MonoDirector.Tools
 
         protected virtual void OnHandAttachedUpdate(Hand hand)
         {
+            if (hand.GetIndexButtonDown())
+            {
+                OnPrimaryButtonDown();
+            }
+
             if (hand.Controller.GetSecondaryInteractionButtonDown())
             {
                 OnSecondaryButtonPressed();
             }
+
+            if (hand.Controller.GetAButtonDown())
+            {
+                OnAButtonDown();
+            }
+
+            if (hand.Controller.GetBButtonDown())
+            {
+                OnBButtonDown();
+            }
+        }
+
+        protected virtual void OnPrimaryButtonDown()
+        {
+
         }
 
         protected virtual void OnSecondaryButtonPressed()
+        {
+
+        }
+
+        protected virtual void OnAButtonDown()
+        {
+
+        }
+
+        protected virtual void OnBButtonDown()
         {
 
         }
