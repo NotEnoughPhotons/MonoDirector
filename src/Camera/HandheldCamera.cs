@@ -9,85 +9,96 @@ namespace NEP.MonoDirector.Cameras
     [MelonLoader.RegisterTypeInIl2Cpp]
     public class HandheldCamera(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        private CylinderGrip leftHandle;
-        private CylinderGrip rightHandle;
+        private CylinderGrip m_leftHandle;
+        private CylinderGrip m_rightHandle;
 
-        private Transform leftHandleTransform;
-        private Transform rightHandleTransform;
+        private Transform m_leftHandleTransform;
+        private Transform m_rightHandleTransform;
 
-        private Camera sensorCamera;
-        private Camera camera;
+        private Camera m_camera;
+        private Camera m_screenCamera;
 
-        private GameObject backViewfinderScreen;
-        private GameObject frontViewfinderScreen;
-        private GameObject displayScreen;
+        private GameObject m_frontScreen;
+        private GameObject m_displayScreen;
 
-        private Rigidbody cameraRigidbody;
+        private Rigidbody m_rigidbody;
 
-        private RenderTexture displayTexture  => sensorCamera.targetTexture;
+        private Vector3 m_lastPosition;
+
+        private RenderTexture m_displayTexture  => m_screenCamera.targetTexture;
 
         private void Awake()
         {
-            leftHandleTransform = transform.Find("Grips/Left Handle");
-            rightHandleTransform = transform.Find("Grips/Right Handle");
+            m_leftHandleTransform = transform.Find("Grips/Left Handle");
+            m_rightHandleTransform = transform.Find("Grips/Right Handle");
 
-            sensorCamera = transform.Find("Sensor").GetComponent<Camera>();
-            camera = transform.Find("Camera").GetComponent<Camera>();
-            backViewfinderScreen = transform.Find("Viewfinder_Back").gameObject;
-            frontViewfinderScreen = transform.Find("Viewfinder_Front").gameObject;
-            displayScreen = transform.Find("Screen").gameObject;
+            m_camera = transform.Find("Camera").GetComponent<Camera>();
+            m_screenCamera = m_camera.transform.GetChild(0).GetComponent<Camera>();
+            m_frontScreen = transform.Find("ExternalScreen").gameObject;
+            m_displayScreen = transform.Find("Screen").gameObject;
 
-            leftHandle = leftHandleTransform.GetComponent<CylinderGrip>();
-            rightHandle = rightHandleTransform.GetComponent<CylinderGrip>();
+            m_leftHandle = m_leftHandleTransform.GetComponent<CylinderGrip>();
+            m_rightHandle = m_rightHandleTransform.GetComponent<CylinderGrip>();
 
-            cameraRigidbody = GetComponent<Rigidbody>();
+            m_rigidbody = GetComponent<Rigidbody>();
+
+            m_camera.backgroundColor = Color.black;
+            m_screenCamera.backgroundColor = Color.black;
+            m_camera.clearFlags = CameraClearFlags.SolidColor;
+            m_screenCamera.clearFlags = CameraClearFlags.SolidColor;
         }
 
         private void OnEnable()
         {
             OnCameraModeChanged(CameraMode.Handheld);
 
-            leftHandle.attachedUpdateDelegate += new System.Action<Hand>(LeftHandUpdate);
-            rightHandle.attachedUpdateDelegate += new System.Action<Hand>(RightHandUpdate);
-            leftHandle.detachedHandDelegate += new System.Action<Hand>(LeftHandDetached);
-            leftHandle.detachedHandDelegate += new System.Action<Hand>(RightHandDetached);
+            m_leftHandle.attachedUpdateDelegate += new System.Action<Hand>(LeftHandUpdate);
+            m_rightHandle.attachedUpdateDelegate += new System.Action<Hand>(RightHandUpdate);
+            m_leftHandle.detachedHandDelegate += new System.Action<Hand>(LeftHandDetached);
+            m_leftHandle.detachedHandDelegate += new System.Action<Hand>(RightHandDetached);
+
+            // m_lastCameraRotation = camera.transform.rotation;
         }
 
         private void OnDisable()
         {
             OnCameraModeChanged(CameraMode.Head);
 
-            leftHandle.attachedUpdateDelegate -= new System.Action<Hand>(LeftHandUpdate);
-            rightHandle.attachedUpdateDelegate -= new System.Action<Hand>(RightHandUpdate);
-            leftHandle.detachedHandDelegate -= new System.Action<Hand>(LeftHandDetached);
-            leftHandle.detachedHandDelegate -= new System.Action<Hand>(RightHandDetached);
+            m_leftHandle.attachedUpdateDelegate -= new System.Action<Hand>(LeftHandUpdate);
+            m_rightHandle.attachedUpdateDelegate -= new System.Action<Hand>(RightHandUpdate);
+            m_leftHandle.detachedHandDelegate -= new System.Action<Hand>(LeftHandDetached);
+            m_leftHandle.detachedHandDelegate -= new System.Action<Hand>(RightHandDetached);
+        }
+
+        private void Update()
+        {
+            m_camera.transform.localPosition = Vector3.Lerp(m_lastPosition, m_camera.transform.localPosition, 8f * Time.deltaTime);
+            m_screenCamera.transform.localPosition = Vector3.Lerp(m_lastPosition, m_camera.transform.localPosition, 8f * Time.deltaTime);
         }
 
         private void LateUpdate()
         {
-
+            m_lastPosition = m_camera.transform.localPosition;
         }
 
         private void OnCameraModeChanged(CameraMode mode)
         {
             if(mode == CameraMode.Handheld)
             {
-                displayScreen.active = true;
-                backViewfinderScreen.active = true;
-                frontViewfinderScreen.active = true;
+                m_displayScreen.active = true;
+                m_frontScreen.active = true;
 
                 // camera.targetTexture = displayTexture;
-                camera.gameObject.SetActive(true);
+                m_camera.gameObject.SetActive(true);
                 // CameraRigManager.Instance.FollowCamera.SetFollowTarget(sensorCamera.transform);
                 // CameraRigManager.Instance.CameraDisplay.FollowCamera.SetFollowTarget(sensorCamera.transform);
             }
             else
             {
-                displayScreen.active = false;
-                backViewfinderScreen.active = false;
-                frontViewfinderScreen.active = false;
+                m_displayScreen.active = false;
+                m_frontScreen.active = false;
 
-                camera.gameObject.SetActive(false);
+                m_camera.gameObject.SetActive(false);
 
                 // CameraRigManager.Instance.ClonedCamera.gameObject.SetActive(false);
                 // CameraRigManager.Instance.FollowCamera.SetDefaultTarget();
@@ -96,14 +107,14 @@ namespace NEP.MonoDirector.Cameras
 
         private void LeftHandUpdate(Hand hand)
         {
-            cameraRigidbody.isKinematic = false;
+            m_rigidbody.isKinematic = false;
 
             if (hand.GetIndexTriggerAxis() > 0.25f)
             {
                 float rate = 4f;
 
-                camera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f);
-                sensorCamera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f);
+                m_camera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f);
+                m_screenCamera.fieldOfView += -(hand.GetIndexTriggerAxis() * rate / 10f);
 
                 // CameraRigManager.Instance.CameraDisplay.FOVController.SetFOV(-(hand.GetIndexTriggerAxis() * rate / 10f));
                 // CameraRigManager.Instance.FOVController.SetFOV(-(hand.GetIndexTriggerAxis() * rate / 10f));
@@ -112,14 +123,14 @@ namespace NEP.MonoDirector.Cameras
          
         private void RightHandUpdate(Hand hand)
         {
-            cameraRigidbody.isKinematic = false;
+            m_rigidbody.isKinematic = false;
 
             if (hand.GetIndexTriggerAxis() > 0.25f)
             {
                 float rate = 4f;
 
-                camera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f);
-                sensorCamera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f);
+                m_camera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f);
+                m_screenCamera.fieldOfView += (hand.GetIndexTriggerAxis() * rate / 10f);
 
                 // CameraRigManager.Instance.CameraDisplay.FOVController.SetFOV(hand.GetIndexTriggerAxis() * rate / 10f);
                 // CameraRigManager.Instance.FOVController.SetFOV(hand.GetIndexTriggerAxis() * rate / 10f);
@@ -130,7 +141,7 @@ namespace NEP.MonoDirector.Cameras
         {
             if (Settings.Camera.handheldKinematicOnRelease)
             {
-                cameraRigidbody.isKinematic = true;
+                m_rigidbody.isKinematic = true;
             }
         }
 
@@ -138,7 +149,7 @@ namespace NEP.MonoDirector.Cameras
         {
             if (Settings.Camera.handheldKinematicOnRelease)
             {
-                cameraRigidbody.isKinematic = true;
+                m_rigidbody.isKinematic = true;
             }
         }
     }
