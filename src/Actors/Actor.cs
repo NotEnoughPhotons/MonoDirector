@@ -10,6 +10,7 @@ using MarrowSeat = Il2CppSLZ.Marrow.Seat;
 using Il2CppSLZ.Marrow.Interaction;
 using NEP.MonoDirector.Proxy;
 using Il2CppSLZ.Marrow.Warehouse;
+using NEP.MonoDirector.UI;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -284,6 +285,15 @@ namespace NEP.MonoDirector.Actors
         public override void Delete()
         {
             Events.OnActorUncasted?.Invoke(this);
+            
+            foreach (var ownedProp in m_ownedProps)
+            {
+                PropMarkerManager.RemoveMarkerFromProp(ownedProp);
+                Director.WorldProps.Remove(ownedProp);
+                ownedProp.DeleteAllFrames();
+            }
+
+            m_ownedProps.Clear();
             m_body.Delete();
             GameObject.Destroy(m_clonedAvatar.gameObject);
             GameObject.Destroy(m_microphone.gameObject);

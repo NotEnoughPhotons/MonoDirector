@@ -74,6 +74,12 @@ namespace NEP.MonoDirector.Actors
             return rigidbody.GetComponent<T>() != null;
         }
 
+        public void DeleteAllFrames()
+        {
+            m_propFrames.Clear();
+            m_actionFrames.Clear();
+        }
+
         public void SetRigidbody(Rigidbody rigidbody)
         {
             m_interactableRigidbody = rigidbody;
