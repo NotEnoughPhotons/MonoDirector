@@ -104,6 +104,8 @@ namespace NEP.MonoDirector.Tools
             m_intensityGizmo.Hide();
             m_dial.SetActive(false);
             m_rainbowStrip.SetActive(false);
+            m_leftAngleLine.gameObject.SetActive(false);
+            m_rightAngleLine.gameObject.SetActive(false);
         }
 
         protected override void Show()
@@ -116,6 +118,8 @@ namespace NEP.MonoDirector.Tools
             m_intensityGizmo.Show();
             m_dial.SetActive(true);
             m_rainbowStrip.SetActive(true);
+            m_leftAngleLine.gameObject.SetActive(true);
+            m_rightAngleLine.gameObject.SetActive(true);
         }
     }
 }

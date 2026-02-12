@@ -16,11 +16,14 @@ namespace NEP.MonoDirector.Tools
 
         private TextMeshPro m_volumeText;
 
+        private GameObject m_line;
+
         protected override void Awake()
         {
             base.Awake();
 
             m_volumeText = transform.Find("Text").GetComponent<TextMeshPro>();
+            m_line = transform.Find("Line").gameObject;
         }
 
         private void Update()
@@ -47,6 +50,7 @@ namespace NEP.MonoDirector.Tools
             base.Hide();
 
             m_volumeText.gameObject.SetActive(false);
+            m_line.SetActive(false);
         }
 
         public override void Show()
@@ -54,6 +58,7 @@ namespace NEP.MonoDirector.Tools
             base.Show();
 
             m_volumeText.gameObject.SetActive(true);
+            m_line.SetActive(true);
         }
     }
 }
