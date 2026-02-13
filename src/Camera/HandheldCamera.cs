@@ -15,6 +15,8 @@ namespace NEP.MonoDirector.Cameras
         private Transform m_leftHandleTransform;
         private Transform m_rightHandleTransform;
 
+        private Transform m_cameraPoint;
+
         private Camera m_camera;
         private Camera m_screenCamera;
 
@@ -23,7 +25,8 @@ namespace NEP.MonoDirector.Cameras
 
         private Rigidbody m_rigidbody;
 
-        private Vector3 m_lastPosition;
+        private Quaternion m_lastFrameRotation;
+        private Quaternion m_desiredRotation;
 
         private RenderTexture m_displayTexture  => m_screenCamera.targetTexture;
 
@@ -36,6 +39,7 @@ namespace NEP.MonoDirector.Cameras
             m_screenCamera = m_camera.transform.GetChild(0).GetComponent<Camera>();
             m_frontScreen = transform.Find("ExternalScreen").gameObject;
             m_displayScreen = transform.Find("Screen").gameObject;
+            m_cameraPoint = transform.Find("CamPoint");
 
             m_leftHandle = m_leftHandleTransform.GetComponent<CylinderGrip>();
             m_rightHandle = m_rightHandleTransform.GetComponent<CylinderGrip>();
@@ -57,6 +61,10 @@ namespace NEP.MonoDirector.Cameras
             m_leftHandle.detachedHandDelegate += new System.Action<Hand>(LeftHandDetached);
             m_leftHandle.detachedHandDelegate += new System.Action<Hand>(RightHandDetached);
 
+            // Hacky
+            // Lets us interpolate camera rotation properly
+            m_camera.transform.SetParent(null);
+
             // m_lastCameraRotation = camera.transform.rotation;
         }
 
@@ -68,17 +76,22 @@ namespace NEP.MonoDirector.Cameras
             m_rightHandle.attachedUpdateDelegate -= new System.Action<Hand>(RightHandUpdate);
             m_leftHandle.detachedHandDelegate -= new System.Action<Hand>(LeftHandDetached);
             m_leftHandle.detachedHandDelegate -= new System.Action<Hand>(RightHandDetached);
+
+            m_camera.transform.SetParent(transform);
+            m_camera.transform.localPosition = m_cameraPoint.localPosition;
+            m_camera.transform.localRotation = m_cameraPoint.localRotation;
         }
 
         private void Update()
         {
-            m_camera.transform.localPosition = Vector3.Lerp(m_lastPosition, m_camera.transform.localPosition, 8f * Time.deltaTime);
-            m_screenCamera.transform.localPosition = Vector3.Lerp(m_lastPosition, m_camera.transform.localPosition, 8f * Time.deltaTime);
+            m_desiredRotation = m_cameraPoint.rotation;
         }
 
         private void LateUpdate()
         {
-            m_lastPosition = m_camera.transform.localPosition;
+            m_camera.transform.position = Vector3.Lerp(m_camera.transform.position, m_cameraPoint.position, 16f * Time.deltaTime);
+            m_camera.transform.rotation = Quaternion.Slerp(m_lastFrameRotation, m_desiredRotation, 4f * Time.deltaTime);
+            m_lastFrameRotation = m_camera.transform.rotation;
         }
 
         private void OnCameraModeChanged(CameraMode mode)
