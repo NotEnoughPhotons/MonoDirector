@@ -16,6 +16,7 @@ namespace NEP.MonoDirector.Tools
         private SoundSourceTether m_tether;
         private SoundVolumeGizmo m_volumeGizmo;
         private LineRenderer m_lineRenderer;
+        private GameObject m_dial;
 
         protected override void Awake()
         {
@@ -30,6 +31,7 @@ namespace NEP.MonoDirector.Tools
             m_volumeGizmo = transform.Find("VolumeDial/Gizmo").GetComponent<SoundVolumeGizmo>();
 
             m_lineRenderer = transform.Find("Line").GetComponent<LineRenderer>();
+            m_dial = transform.Find("VolumeDial/Quad").gameObject;
         }
 
         protected override void OnEnable()
@@ -49,6 +51,8 @@ namespace NEP.MonoDirector.Tools
             m_nameText.gameObject.SetActive(true);
             m_lineRenderer.enabled = true;
             m_tether.Show();
+            m_volumeGizmo.Show();
+            m_dial.SetActive(true);
         }
 
         protected override void Hide()
@@ -57,6 +61,8 @@ namespace NEP.MonoDirector.Tools
             m_nameText.gameObject.SetActive(false);
             m_lineRenderer.enabled = false;
             m_tether.Hide();
+            m_volumeGizmo.Hide();
+            m_dial.SetActive(false);
         }
 
         private void Update()

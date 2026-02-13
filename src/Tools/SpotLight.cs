@@ -56,7 +56,7 @@ namespace NEP.MonoDirector.Tools
             m_radiusLineRenderer.SetPosition(1, m_radiusGizmo.transform.localPosition);
             m_light.range = m_radiusGizmo.Distance;
             m_light.spotAngle = m_angleGizmo.Angle;
-            m_light.innerSpotAngle = m_angleGizmo.Angle;
+            // m_light.innerSpotAngle = m_angleGizmo.Angle;
             m_light.intensity = m_intensityGizmo.Intensity;
             m_light.color = m_colorGizmo.Color;
             m_spriteRenderer.material.SetColor("_BaseColor", m_light.color);
