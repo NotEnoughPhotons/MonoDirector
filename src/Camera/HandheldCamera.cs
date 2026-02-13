@@ -89,7 +89,7 @@ namespace NEP.MonoDirector.Cameras
 
         private void LateUpdate()
         {
-            m_camera.transform.position = Vector3.Lerp(m_camera.transform.position, m_cameraPoint.position, 16f * Time.deltaTime);
+            m_camera.transform.position = m_cameraPoint.position;
             m_camera.transform.rotation = Quaternion.Slerp(m_lastFrameRotation, m_desiredRotation, 4f * Time.deltaTime);
             m_lastFrameRotation = m_camera.transform.rotation;
         }
