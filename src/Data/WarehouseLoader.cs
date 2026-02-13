@@ -104,7 +104,8 @@ namespace NEP.MonoDirector.Data
                     Pallet = spawnable.Pallet,
                     _packedAssets = spawnable.PackedAssets,
                     MainAsset = spawnable.MainAsset,
-                    MainGameObject = spawnable.MainGameObject
+                    MainGameObject = spawnable.MainGameObject,
+                    PreviewMesh = spawnable.PreviewMesh
                 };
 
                 copyCrate.name = copyCrate.Title;
