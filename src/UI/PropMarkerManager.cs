@@ -76,8 +76,7 @@ namespace NEP.MonoDirector.UI
                 return;
             }
 
-            Poolee marker = markers[prop].GetComponent<Poolee>();
-            marker.Despawn();
+            GameObject marker = markers[prop];
             marker.gameObject.SetActive(false);
             marker.transform.parent = null;
             markers.Remove(prop);
