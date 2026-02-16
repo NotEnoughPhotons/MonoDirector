@@ -208,6 +208,13 @@ namespace NEP.MonoDirector.UI
                 true,
                 value => Settings.World.temporalScaling = value
             );
+
+            category.CreateBool(
+                "Record Actors",
+                Color.white,
+                true,
+                value => Settings.World.recordActors = value
+            );
         }
 
         private static void BuildUIMenu(Page category)
