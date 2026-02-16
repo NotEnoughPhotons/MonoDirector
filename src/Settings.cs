@@ -23,6 +23,7 @@
             public static float fps = 60f;
             public static bool ignoreSlomo = false;
             public static bool temporalScaling = false;
+            public static bool recordActors = true;
         }
 
         public static class Debug

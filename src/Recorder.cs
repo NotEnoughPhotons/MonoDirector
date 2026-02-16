@@ -84,8 +84,11 @@ namespace NEP.MonoDirector.Core
 
         public void RecordActor()
         {
-            m_activeActor.RecordFrame();
-
+            if (Settings.World.recordActors)
+            {
+                m_activeActor.RecordFrame();
+            }
+            
             foreach (var prop in Director.RecordingProps)
             {
                 prop.Record(m_recordTick);
@@ -118,7 +121,10 @@ namespace NEP.MonoDirector.Core
 
             m_recordingTime = 0f;
 
-            SetActor(Constants.RigManager.avatar);
+            if (Settings.World.recordActors)
+            {
+                SetActor(Constants.RigManager.avatar);
+            }
 
             foreach (var castMember in Director.Cast)
             {
@@ -241,15 +247,19 @@ namespace NEP.MonoDirector.Core
             Main.Logger.Msg($"[STOPWATCH]: Actor::FromBinary() took {sw.ElapsedMilliseconds}...");
             */
 #endif
-            
-            m_activeActor.CloneAvatar();
-            
-            foreach (var recordedProp in Director.RecordingProps)
-            {
-                m_activeActor.OwnProp(recordedProp);
-            }
 
-            Director.Cast.Add(m_activeActor);
+            if (Settings.World.recordActors)
+            {
+                m_activeActor.CloneAvatar();
+                
+                foreach (var recordedProp in Director.RecordingProps)
+                {
+                    m_activeActor.OwnProp(recordedProp);
+                }
+
+                Director.Cast.Add(m_activeActor);
+            }
+            
             m_lastActor = m_activeActor;
 
             m_activeActor = null;
