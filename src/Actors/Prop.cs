@@ -115,6 +115,11 @@ namespace NEP.MonoDirector.Actors
             {
                 m_interactableRigidbody.isKinematic = true;
             }
+
+            foreach (var actionFrame in m_actionFrames)
+            {
+                actionFrame.Reset();
+            }
         }
 
         public virtual void Act()
