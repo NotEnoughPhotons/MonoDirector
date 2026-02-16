@@ -1,7 +1,9 @@
 ﻿using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Marrow.Pool;
 using MelonLoader;
+using NEP.MonoDirector.Actors;
 using NEP.MonoDirector.Audio;
+using NEP.MonoDirector.Core;
 using UnityEngine;
 
 namespace NEP.MonoDirector.Tools
@@ -13,6 +15,7 @@ namespace NEP.MonoDirector.Tools
         private VFXHolder m_holder;
         private List<ParticleSystem> m_particleSystems;
         private ParticleTriggerGizmo m_triggerGizmo;
+        private Prop m_prop;
 
         private VFXVolumeSizeGizmo m_radiusGizmo;
 
@@ -26,9 +29,16 @@ namespace NEP.MonoDirector.Tools
             m_triggerGizmo = transform.Find("ParticleTriggerGizmo").GetComponent<ParticleTriggerGizmo>();
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            BuildProp();
+        }
+
         protected override void OnDisable()
         {
             base.OnDisable();
+            DestroyProp();
             UnparentVFXHolder();
             m_holder.Despawn();
             m_holder = null;
@@ -39,9 +49,8 @@ namespace NEP.MonoDirector.Tools
             base.OnHandAttached(hand);
 
             m_triggerGizmo.Body.isKinematic = false;
-
-            m_radiusGizmo.Body.isKinematic = false;
         }
+        
         protected override void OnHandDetached(Hand hand)
         {
             if (GetAttachedHands() > 1)
@@ -52,8 +61,18 @@ namespace NEP.MonoDirector.Tools
             base.OnHandDetached(hand);
 
             m_triggerGizmo.Body.isKinematic = true;
+        }
 
-            m_radiusGizmo.Body.isKinematic = true;
+        protected override void Show()
+        {
+            base.Show();
+            m_triggerGizmo.Show();
+        }
+
+        protected override void Hide()
+        {
+            base.Hide();
+            m_triggerGizmo.Hide();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -95,6 +114,36 @@ namespace NEP.MonoDirector.Tools
             m_holder.Show();
             m_holder.transform.SetParent(null);
         }
+        
+        public void BuildProp()
+        {
+            if (m_prop == null)
+            {
+                m_prop = gameObject.AddComponent<Prop>();
+                Director.RecordingProps.Add(m_prop);
+            }
+        }
+
+        public void DestroyProp()
+        {
+            if (m_prop != null)
+            {
+                Director.RecordingProps.Remove(m_prop);
+
+                if (Director.WorldProps.Contains(m_prop))
+                {
+                    Director.WorldProps.Remove((m_prop));
+                }
+                
+                Destroy(m_prop);
+                m_prop = null;
+            }
+        }
+
+        public void RecordTrigger()
+        {
+            m_prop.RecordAction(() => TriggerVFX());
+        }
 
         public void SetParticles(List<ParticleSystem> particles)
         {
@@ -103,6 +152,7 @@ namespace NEP.MonoDirector.Tools
 
         public void TriggerVFX()
         {
+            Logging.Msg("TriggerVFX");
             foreach (var particleSystem in m_particleSystems)
             {
                 particleSystem.Play();
