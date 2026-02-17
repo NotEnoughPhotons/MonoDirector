@@ -66,7 +66,7 @@ namespace NEP.MonoDirector.Tools
             }
         }
 
-        protected override void OnSecondaryButtonPressed()
+        protected override void OnBButtonDown()
         {
             m_color = Color.white;
             m_meshRenderer.material.SetColor("_Emission", m_color);
