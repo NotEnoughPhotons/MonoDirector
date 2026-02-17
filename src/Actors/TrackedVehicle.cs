@@ -12,9 +12,46 @@ namespace NEP.MonoDirector.Actors
 
         protected Atv vehicle;
 
+        private Prop m_steeringWheelProp;
+        private Prop m_frontAxleProp;
+        private Prop m_backLeftWheelProp;
+        private Prop m_backRightWheelProp;
+        private Prop m_frontLeftWheelProp;
+        private Prop m_frontRightWheelProp;
+
         public void SetVehicle(Atv vehicle)
         {
             this.vehicle = vehicle;
+
+            m_steeringWheelProp = vehicle.steeringWheel.gameObject.AddComponent<Prop>();
+            m_frontAxleProp = vehicle.frontAxle.gameObject.AddComponent<Prop>();
+            m_backLeftWheelProp = vehicle._backLfRb.gameObject.AddComponent<Prop>();
+            m_backRightWheelProp = vehicle._backRtRb.gameObject.AddComponent<Prop>();
+            m_frontLeftWheelProp = vehicle._frontLfRb.gameObject.AddComponent<Prop>();
+            m_frontRightWheelProp = vehicle._frontRtRb.gameObject.AddComponent<Prop>();
+        }
+
+        public void RemoveVehicle()
+        {
+            vehicle = null;
+
+            InteractableRigidbody.isKinematic = false;
+            
+            m_steeringWheelProp.InteractableRigidbody.isKinematic = false;
+            m_frontAxleProp.InteractableRigidbody.isKinematic = false;
+            m_backLeftWheelProp.InteractableRigidbody.isKinematic = false;
+            m_backRightWheelProp.InteractableRigidbody.isKinematic = false;
+            m_frontLeftWheelProp.InteractableRigidbody.isKinematic = false;
+            m_frontRightWheelProp.InteractableRigidbody.isKinematic = false;
+            
+            Destroy(m_steeringWheelProp);
+            Destroy(m_frontAxleProp);
+            Destroy(m_backLeftWheelProp);
+            Destroy(m_backRightWheelProp);
+            Destroy(m_frontLeftWheelProp);
+            Destroy(m_frontRightWheelProp);
+            
+            
         }
 
         public override void OnSceneBegin()
@@ -29,13 +66,14 @@ namespace NEP.MonoDirector.Actors
                 return;
             }
 
-            vehicle.mainBody.isKinematic = true;
-            vehicle.steeringWheel.isKinematic = true;
-            vehicle.frontAxle.isKinematic = true;
-            vehicle._backLfRb.isKinematic = true;
-            vehicle._backRtRb.isKinematic = true;
-            vehicle._frontLfRb.isKinematic = true;
-            vehicle._frontRtRb.isKinematic = true;
+            InteractableRigidbody.isKinematic = true;
+            
+            m_steeringWheelProp.OnSceneBegin();
+            m_frontAxleProp.OnSceneBegin();
+            m_backLeftWheelProp.OnSceneBegin();
+            m_backRightWheelProp.OnSceneBegin();
+            m_frontLeftWheelProp.OnSceneBegin();
+            m_frontRightWheelProp.OnSceneBegin();
 
             InteractableRigidbody.position = PropFrames[0].position;
             InteractableRigidbody.rotation = PropFrames[0].rotation;
@@ -45,16 +83,17 @@ namespace NEP.MonoDirector.Actors
         {
             gameObject.SetActive(true);
 
-            vehicle.mainBody.isKinematic = false;
-            vehicle.steeringWheel.isKinematic = false;
-            vehicle.frontAxle.isKinematic = false;
-            vehicle._backLfRb.isKinematic = false;
-            vehicle._backRtRb.isKinematic = false;
-            vehicle._frontLfRb.isKinematic = false;
-            vehicle._frontRtRb.isKinematic = false;
+            InteractableRigidbody.isKinematic = true;
 
-            vehicle.mainBody.velocity = Interpolator.InterpolateVelocity(PropFrames);
+            vehicle.mainBody.position = Interpolator.InterpolatePosition(PropFrames);
             vehicle.mainBody.rotation = Interpolator.InterpolateRotation(PropFrames);
+            
+            m_steeringWheelProp.Act();
+            m_frontAxleProp.Act();
+            m_backLeftWheelProp.Act();
+            m_backRightWheelProp.Act();
+            m_frontLeftWheelProp.Act();
+            m_frontRightWheelProp.Act();
         }
 
         public override void Record(int frame)
@@ -69,6 +108,13 @@ namespace NEP.MonoDirector.Actors
             };
 
             m_propFrames.Add(objectFrame);
+            
+            m_steeringWheelProp.Record(frame);
+            m_frontAxleProp.Record(frame);
+            m_backLeftWheelProp.Record(frame);
+            m_backRightWheelProp.Record(frame);
+            m_frontLeftWheelProp.Record(frame);
+            m_frontRightWheelProp.Record(frame);
         }
     }
 }

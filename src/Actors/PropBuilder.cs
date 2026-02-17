@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Bonelab;
+using Il2CppSLZ.Marrow.Interaction;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -117,6 +118,13 @@ namespace NEP.MonoDirector.Actors
             Prop actorProp = gameObject.GetComponent<Prop>();
             bool isProp = actorProp != null;
 
+            TrackedVehicle vehicle = actorProp.TryCast<TrackedVehicle>();
+            
+            if (vehicle != null)
+            {
+                vehicle.RemoveVehicle();
+            }
+            
             if (isProp && Director.PlayState == State.PlayState.Stopped)
             {
                 MelonLoader.MelonLogger.Msg($"Removing component from {gameObject.name}");
