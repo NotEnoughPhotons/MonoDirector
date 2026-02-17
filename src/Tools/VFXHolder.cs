@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using MelonLoader;
 using Il2CppSLZ.Marrow.Pool;
+using Il2CppTMPro;
 
 namespace NEP.MonoDirector.Tools
 {
@@ -13,6 +14,7 @@ namespace NEP.MonoDirector.Tools
         private Poolee m_poolee;
         private List<ParticleSystem> m_particleSystems;
         private Collider m_collider;
+        private TextMeshPro m_displayText;
 
         private GameObject m_displayNameObject;
         private GameObject m_meshObject;
@@ -28,6 +30,7 @@ namespace NEP.MonoDirector.Tools
             m_displayNameObject = transform.Find("DisplayName").gameObject;
             m_meshObject = transform.Find("Mesh").gameObject;
             m_grip = transform.Find("Grip").gameObject;
+            m_displayText = m_displayNameObject.GetComponent<TextMeshPro>();
 
             m_particleSystems = new List<ParticleSystem>();
 
@@ -42,6 +45,8 @@ namespace NEP.MonoDirector.Tools
                     m_particleSystems.Add(particleSystem);
                 }
             }
+
+            m_displayText.text = gameObject.name;
         }
 
         public void Despawn()
