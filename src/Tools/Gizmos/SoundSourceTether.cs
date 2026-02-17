@@ -14,6 +14,7 @@ namespace NEP.MonoDirector.Tools
         private SoundSource m_source;
 
         private Rigidbody m_originalConnectedBody;
+        private Vector3 m_originalConnectedAnchor;
 
         private Actor m_hoveredActor;
         private Actor m_attachedActor;
@@ -27,22 +28,29 @@ namespace NEP.MonoDirector.Tools
             m_source = transform.parent.GetComponent<SoundSource>();
 
             m_originalConnectedBody = m_joint.connectedBody;
+            m_originalConnectedAnchor = m_joint.connectedAnchor;
 
             m_tetherInSound = transform.Find("TetherIn").GetComponent<AudioSource>();
             m_tetherOutSound = transform.Find("TetherOut").GetComponent<AudioSource>();
+
+            m_joint.autoConfigureConnectedAnchor = false;
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
             m_joint.connectedBody = m_originalConnectedBody;
+            m_joint.connectedAnchor = m_originalConnectedAnchor;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            m_attachedActor.Microphone.AssignSound(null);
+            if (m_attachedActor != null)
+            {
+                m_attachedActor.Microphone?.AssignSound(null);
+            }
 
             m_source.Unmute();
         }
@@ -126,8 +134,9 @@ namespace NEP.MonoDirector.Tools
             m_attachedActor = m_hoveredActor;
 
             m_joint.connectedBody = m_hoveredActor.ActorBody.Head.GetComponent<Rigidbody>();
+            m_joint.connectedAnchor = Vector3.zero;
 
-            FeedbackSFX.LinkAudio();
+            // FeedbackSFX.LinkAudio();
             m_hoveredActor = null;
 
             m_source.Mute();
@@ -138,8 +147,12 @@ namespace NEP.MonoDirector.Tools
         private void UnTether()
         {
             m_joint.connectedBody = m_originalConnectedBody;
+            m_joint.connectedAnchor = m_originalConnectedAnchor;
+            
             m_attachedActor.Microphone.AssignSound(null);
             m_attachedActor = null;
+
+            m_source.Unmute();
 
             m_tetherOutSound.Play();
         }
