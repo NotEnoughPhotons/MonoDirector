@@ -138,6 +138,7 @@ namespace NEP.MonoDirector.UI
             Transform head = BoneLib.Player.Head;
 
             transform.position = Vector3.Lerp(transform.position, head.position + head.forward, 16f * Time.deltaTime);
+            transform.localScale = new Vector3(-1f, 1f, 1f);
             transform.LookAt(head);
         }
 
