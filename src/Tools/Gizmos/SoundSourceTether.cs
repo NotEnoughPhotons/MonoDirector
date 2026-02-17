@@ -18,12 +18,18 @@ namespace NEP.MonoDirector.Tools
         private Actor m_hoveredActor;
         private Actor m_attachedActor;
 
+        private AudioSource m_tetherInSound;
+        private AudioSource m_tetherOutSound;
+        
         protected override void Awake()
         {
             base.Awake();
             m_source = transform.parent.GetComponent<SoundSource>();
 
             m_originalConnectedBody = m_joint.connectedBody;
+
+            m_tetherInSound = transform.Find("TetherIn").GetComponent<AudioSource>();
+            m_tetherOutSound = transform.Find("TetherOut").GetComponent<AudioSource>();
         }
 
         protected override void OnEnable()
@@ -125,6 +131,8 @@ namespace NEP.MonoDirector.Tools
             m_hoveredActor = null;
 
             m_source.Mute();
+
+            m_tetherInSound.Play();
         }
 
         private void UnTether()
@@ -132,6 +140,8 @@ namespace NEP.MonoDirector.Tools
             m_joint.connectedBody = m_originalConnectedBody;
             m_attachedActor.Microphone.AssignSound(null);
             m_attachedActor = null;
+
+            m_tetherOutSound.Play();
         }
     }
 }
