@@ -3,6 +3,7 @@ using Il2CppTMPro;
 using MelonLoader;
 using NEP.MonoDirector.State;
 using System;
+using Il2CppSLZ.Marrow.Interaction;
 using UnityEngine;
 
 namespace NEP.MonoDirector.Tools
@@ -11,6 +12,8 @@ namespace NEP.MonoDirector.Tools
     public class PointToolEntity(IntPtr ptr) : DirectedComponent(ptr)
     {
         protected Rigidbody m_rigidbody;
+        protected MarrowEntity m_entity;
+        protected MarrowBody m_rootBody;
         protected GameObject m_frame;
         protected Grip m_grip;
 
@@ -22,6 +25,8 @@ namespace NEP.MonoDirector.Tools
             m_rigidbody = GetComponent<Rigidbody>();
             m_frame = transform.Find("Frame").gameObject;
             m_grip = transform.Find("Grip").GetComponent<Grip>();
+            m_entity = GetComponent<MarrowEntity>();
+            m_rootBody = m_entity.Bodies[0];
 
             m_OnHandAttached = new Action<Hand>(OnHandAttached);
             m_OnHandDetached = new Action<Hand>(OnHandDetached);
@@ -85,12 +90,22 @@ namespace NEP.MonoDirector.Tools
         {
             m_frame.SetActive(true);
             m_grip.enabled = true;
+
+            foreach (Collider collider in m_rootBody.Colliders)
+            {
+                collider.enabled = true;
+            }
         }
 
         protected virtual void Hide()
         {
             m_frame.SetActive(false);
             m_grip.enabled = false;
+            
+            foreach (Collider collider in m_rootBody.Colliders)
+            {
+                collider.enabled = false;
+            }
         }
 
         protected int GetAttachedHands()

@@ -14,6 +14,8 @@ namespace NEP.MonoDirector.Tools
 
         protected Grip m_grip;
         protected Rigidbody m_body;
+        protected MarrowEntity m_entity;
+        protected MarrowBody m_rootBody;
         protected ConfigurableJoint m_joint;
         protected MeshRenderer m_tetherMesh;
         protected MarrowJoint m_marrowJoint;
@@ -33,6 +35,8 @@ namespace NEP.MonoDirector.Tools
             m_joint = GetComponent<ConfigurableJoint>();
             m_tetherMesh = GetComponentInChildren<MeshRenderer>();
             m_marrowJoint = GetComponent<MarrowJoint>();
+            m_entity = GetComponent<MarrowEntity>();
+            m_rootBody = m_entity.Bodies[0];
         }
 
         protected virtual void OnEnable()
@@ -106,12 +110,22 @@ namespace NEP.MonoDirector.Tools
         {
             m_tetherMesh.enabled = false;
             m_grip.enabled = false;
+
+            foreach (Collider collider in m_rootBody.Colliders)
+            {
+                collider.enabled = false;
+            }
         }
 
         public virtual void Show()
         {
             m_tetherMesh.enabled = true;
             m_grip.enabled = true;
+            
+            foreach (Collider collider in m_rootBody.Colliders)
+            {
+                collider.enabled = true;
+            }
         }
     }
 }
