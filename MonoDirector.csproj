@@ -178,9 +178,6 @@
 	  <Reference Include="MelonLoader">
 	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\MelonLoader.dll</HintPath>
 	  </Reference>
-	  <Reference Include="NEDebug">
-	    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\BONELAB\Mods\NEDebug.dll</HintPath>
-	  </Reference>
 	  <Reference Include="Newtonsoft.Json">
 	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\Newtonsoft.Json.dll</HintPath>
 	  </Reference>
