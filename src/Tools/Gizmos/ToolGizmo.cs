@@ -109,6 +109,11 @@ namespace NEP.MonoDirector.Tools
             m_mesh.enabled = false;
             m_grip.enabled = false;
 
+            if (m_marrowBody == null)
+            {
+                return;
+            }
+
             foreach (Collider collider in m_marrowBody.Colliders)
             {
                 collider.enabled = false;
@@ -119,7 +124,12 @@ namespace NEP.MonoDirector.Tools
         {
             m_mesh.enabled = true;
             m_grip.enabled = true;
-            
+
+            if (m_marrowBody == null)
+            {
+                return;
+            }
+
             foreach (Collider collider in m_marrowBody.Colliders)
             {
                 collider.enabled = true;
