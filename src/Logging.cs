@@ -8,7 +8,7 @@ namespace NEP.MonoDirector.Core
 
         internal static void Initialize()
         {
-            m_LoggerInstance = new MelonLogger.Instance("MonoDirector", System.Drawing.Color.Magenta);
+            m_LoggerInstance = new MelonLogger.Instance("MonoDirector", MelonLoader.Logging.ColorARGB.Magenta);
         }
 
         public static void Msg(string message)
