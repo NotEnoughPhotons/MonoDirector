@@ -63,11 +63,11 @@ namespace NEP.MonoDirector.Tools
             
             if (m_triggerMode == TriggerMode.NotRecording)
             {
-                m_tetherMesh.material.SetColor("_Emission", m_inactiveColor);
+                m_mesh.material.SetColor("_Emission", m_inactiveColor);
             }
             else
             {
-                m_tetherMesh.material.SetColor("_Emission", m_activeColor);
+                m_mesh.material.SetColor("_Emission", m_activeColor);
             }
         }
 

@@ -12,8 +12,7 @@ namespace NEP.MonoDirector.Tools
     public class PointToolEntity(IntPtr ptr) : DirectedComponent(ptr)
     {
         protected Rigidbody m_rigidbody;
-        protected MarrowEntity m_entity;
-        protected MarrowBody m_rootBody;
+        protected MarrowBody m_marrowBody;
         protected GameObject m_frame;
         protected Grip m_grip;
 
@@ -25,8 +24,7 @@ namespace NEP.MonoDirector.Tools
             m_rigidbody = GetComponent<Rigidbody>();
             m_frame = transform.Find("Frame").gameObject;
             m_grip = transform.Find("Grip").GetComponent<Grip>();
-            m_entity = GetComponent<MarrowEntity>();
-            m_rootBody = m_entity.Bodies[0];
+            m_marrowBody = GetComponent<MarrowBody>();
 
             m_OnHandAttached = new Action<Hand>(OnHandAttached);
             m_OnHandDetached = new Action<Hand>(OnHandDetached);
@@ -91,7 +89,7 @@ namespace NEP.MonoDirector.Tools
             m_frame.SetActive(true);
             m_grip.enabled = true;
 
-            foreach (Collider collider in m_rootBody.Colliders)
+            foreach (Collider collider in m_marrowBody.Colliders)
             {
                 collider.enabled = true;
             }
@@ -102,7 +100,7 @@ namespace NEP.MonoDirector.Tools
             m_frame.SetActive(false);
             m_grip.enabled = false;
             
-            foreach (Collider collider in m_rootBody.Colliders)
+            foreach (Collider collider in m_marrowBody.Colliders)
             {
                 collider.enabled = false;
             }
