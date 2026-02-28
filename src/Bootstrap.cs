@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Collections;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -7,6 +9,10 @@ using BoneLib;
 using NEP.MonoDirector.UI;
 using NEP.MonoDirector.Data;
 using NEP.MonoDirector.Audio;
+using NEP.MonoDirector.Downloading;
+using MelonLoader;
+using Il2CppSLZ.Marrow.Warehouse;
+using BoneLib.Notifications;
 
 namespace NEP.MonoDirector.Core
 {
@@ -43,17 +49,44 @@ namespace NEP.MonoDirector.Core
 
         internal static void OnWarehouseReady()
         {
-            AudioClip[] sounds = WarehouseLoader.GetSounds().ToArray();
-            WarehouseLoader.GenerateSpawnablesFromSounds(sounds);
+            AssetWarehouse.Instance.OnPalletAdded += new Action<Barcode>(OnPalletAdded);
+
+            if (AssetDownloader.CheckInstall())
+            {
+                WarehouseLoader.LoadSounds();
+                WarehouseLoader.GenerateSpawnablesFromSounds();
+            }
+        }
+
+        internal static void OnPalletAdded(Barcode barcode)
+        {
+            if (barcode.ID != "NEP.MonoDirector")
+            {
+                return;
+            }
+
+            WarehouseLoader.LoadSounds();
+            WarehouseLoader.GenerateSpawnablesFromSounds();
         }
 
         internal static void OnLevelLoaded()
         {
+            if (!AssetDownloader.CheckInstall())
+            {
+                Notification notification = new()
+                {
+                    Title = "Missing Content Pallet",
+                    Message = "You do not have the MonoDirector content pallet installed! Subscribe to it on mod.io, then install it in game!",
+                    Type = NotificationType.Warning,
+                    PopupLength = 5f
+                };
+
+                Notifier.Send(notification);
+            }
+
             MainContainerObject = new GameObject("[MonoDirector]");
 
             Events.FlushActions();
-            // PropMarkerManager.CleanUp();
-            // ActorFrameManager.CleanUp();
 
             FeedbackSFX.Initialize();
 

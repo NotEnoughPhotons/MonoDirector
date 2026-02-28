@@ -53,6 +53,10 @@
 		<Compile Include="src\Audio\SoundHolder.cs" />
 		<Compile Include="src\Bootstrap.cs" />
 		<Compile Include="src\Data\BundleLoader.cs" />
+		<Compile Include="src\Downloading\AssetDownloader.cs" />
+		<Compile Include="src\Downloading\PalletVersion.cs" />
+		<Compile Include="src\Downloading\PlatformObject.cs" />
+		<Compile Include="src\Downloading\ModObject.cs" />
 		<Compile Include="src\Logging.cs" />
 		<Compile Include="src\Tools\ActorPen.cs" />
 		<Compile Include="src\Tools\DirectedComponent.cs" />
@@ -174,6 +178,9 @@
 	  </Reference>
 	  <Reference Include="Il2CppSystem.Core">
 	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Il2CppSystem.Core.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Il2CppUniTask">
+	    <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Il2CppUniTask.dll</HintPath>
 	  </Reference>
 	  <Reference Include="MelonLoader">
 	    <HintPath>$(BONELAB_DIR)\MelonLoader\net6\MelonLoader.dll</HintPath>
