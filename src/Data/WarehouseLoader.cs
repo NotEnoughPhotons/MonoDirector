@@ -25,9 +25,9 @@ namespace NEP.MonoDirector.Data
         internal static readonly Barcode frameBarcode = CreateFullBarcode("Frame");
         internal static readonly Barcode actorPanelBarcode = CreateFullBarcode("ActorPanel");
 
-        internal static List<AudioClip> GetSounds()
+        internal static void LoadSounds()
         {
-            List<AudioClip> sounds = new List<AudioClip>();
+            sounds = new List<AudioClip>();
             soundTable = new Dictionary<string, AudioClip>();
             string path = Path.Combine(MelonEnvironment.UserDataDirectory, "Not Enough Photons/MonoDirector/SFX/Sounds");
 
@@ -44,18 +44,16 @@ namespace NEP.MonoDirector.Data
                 clip.hideFlags = HideFlags.DontUnloadUnusedAsset;
                 sounds.Add(clip);
             }
-
-            return sounds;
         }
 
-        internal static void GenerateSpawnablesFromSounds(AudioClip[] sounds)
+        internal static void GenerateSpawnablesFromSounds()
         {
             if (sounds == null)
             {
                 return;
             }
 
-            if (sounds.Length == 0)
+            if (sounds.Count == 0)
             {
                 return;
             }
@@ -80,7 +78,6 @@ namespace NEP.MonoDirector.Data
             SpawnableCrate spawnable = null;
             foreach (Crate crate in pallet.Crates)
             {
-                Logging.Msg(crate.Barcode.ID);
                 if (crate.Barcode == CreateFullBarcode("SoundHolder"))
                 {
                     spawnable = crate.Cast<SpawnableCrate>();
