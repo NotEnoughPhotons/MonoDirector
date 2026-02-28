@@ -17,7 +17,7 @@ namespace NEP.MonoDirector.Tools
         {
             base.Awake();
 
-            m_distanceText = transform.Find("RadiusText").GetComponent<TextMeshPro>();
+            m_distanceText = transform.Find("Text").GetComponent<TextMeshPro>();
         }
 
         protected override void OnHandAttached(Hand hand)

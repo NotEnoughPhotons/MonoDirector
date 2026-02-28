@@ -18,7 +18,7 @@ namespace NEP.MonoDirector.Tools
         {
             base.Awake();
 
-            m_angleText = transform.Find("AngleText").GetComponent<TextMeshPro>();
+            m_angleText = transform.Find("Text").GetComponent<TextMeshPro>();
         }
 
         protected override void OnHandAttached(Hand hand)
