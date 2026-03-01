@@ -5,6 +5,7 @@ using Il2CppSLZ.Marrow.Warehouse;
 using Il2CppSLZ.Marrow.Data;
 using Il2CppSLZ.Marrow.Combat;
 using Il2CppSLZ.Marrow.Pool;
+using UnityEngine;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -72,7 +73,13 @@ namespace NEP.MonoDirector.Actors
 
             AssetSpawner.Spawn(muzzleFlashSpawnable,
                 gun.firePointTransform.position,
-                gun.firePointTransform.rotation);
+                gun.firePointTransform.rotation,
+                new Il2CppSystem.Nullable<Vector3>(Vector3.one),
+                null,
+                false,
+                new Il2CppSystem.Nullable<int>(),
+                null,
+                null);
         }
 
         private void EjectCasing()
