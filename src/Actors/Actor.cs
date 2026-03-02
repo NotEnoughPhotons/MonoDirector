@@ -241,7 +241,8 @@ namespace NEP.MonoDirector.Actors
             m_body = new ActorBody(this, Constants.RigManager.physicsRig);
 
             // stops position overrides, if there are any
-            m_clonedAvatar.GetComponent<Animator>().enabled = false;
+            Animator animator = m_clonedAvatar.GetComponent<Animator>() ?? m_clonedAvatar.animator;
+            animator.enabled = false;
 
             m_clonedRigBones = GetAvatarBones(m_clonedAvatar);
 
