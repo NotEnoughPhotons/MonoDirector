@@ -152,7 +152,6 @@ namespace NEP.MonoDirector.Tools
 
         public void TriggerVFX()
         {
-            Logging.Msg("TriggerVFX");
             foreach (var particleSystem in m_particleSystems)
             {
                 particleSystem.Play();
