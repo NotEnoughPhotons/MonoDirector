@@ -57,6 +57,7 @@ When all is said and done, and you have all the actors in their right places, no
 - [wnp](https://github.com/wnp78) and [Someone Somewhere](https://github.com/someonesomewheredev) for helping with audio syncing
 - [Son of Forehead](https://github.com/SonOfForehead) for the clapperboard, green screens, and the prop lights
 - [CarrionAndOn](https://github.com/CarrionAndOn) for the addition of a handheld camera, and most of the feedback
+- Atlas96 for the visual effects (rain, snow, and explosions!)
 - **Rexmeck** for helping with grip event recording
 - **Stress Level Zero** for BONELAB and the Marrow SDK
 
