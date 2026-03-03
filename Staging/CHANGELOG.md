@@ -3,6 +3,12 @@ This is the changelog for MonoDirector! This changelog only features public rele
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [1.2.2] - 3/3/2026 (Hotfix)
+
+### Fixed
+- Fixed a backwards compatibility problem with the Quest version because of an incompatible console logger
+- Reverted back to using MelonLoader 0.7.0 for compatibility
+
 ## [1.2.1] - 3/3/2026
 
 ### Removed
