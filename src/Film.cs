@@ -13,7 +13,9 @@
         }
 
         public IReadOnlyList<Stage> Stages => m_stages.AsReadOnly();
+        public string Name => m_name;
 
         private List<Stage> m_stages;
+        private string m_name;
     }
 }
