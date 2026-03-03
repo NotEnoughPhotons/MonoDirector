@@ -1,0 +1,69 @@
+# Changelog
+This is the changelog for MonoDirector! This changelog only features public release versions.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
+
+## [1.2.0] - 3/3/2026
+
+### Added
+- Added spot lights
+- Added omni lights
+- Added sound source tethering to actors
+- Added light intensity, radius, angle, and color gizmos for light tools
+- Added a volume gizmo for sound sources
+- Added visual effect (VFX) charges and volumes, activated by a gizmo on the top
+- Added an "actor pen" tool that allows for easy actor management
+- Added a frame object around selected actors
+- Added back the prop icons
+- Added a feature to check to see if you have the MonoDirector content pallet installed, and notifies you if you don't have it
+
+### Updated
+- Sound sources, among other tools, have been given a makeover with new sprites and visuals
+- Updated the sprite for props
+- Brought MonoDirector to Patch 6
+- Vehicle functionality (vehicles are still kinematic, but most things are tracked now)
+
+### Fixed
+- Fixed a bug that, when firing a weapon, would freeze the actor, breaking the mod
+- Fixed an issue with the info interface being backwards
+- Fixed a problem with prop markers not showing up
+- Fixed an issue with removed actors not having their props cleaned up
+
+### Removed
+- Removed most camera options to make them better in the future
+
+## [1.1.1] - 4/26/2024
+
+### Added
+- Added back the working handheld camera
+- A lens to the handheld camera
+
+### Updated
+- Cleaned up the hierarchy of the handheld camera
+- VFX changes in BoneMenu now get reflected across both cameras
+- Kinematic on release for the handheld camera now triggers on both grips
+
+## [1.1.0] - 4/24/2024
+
+### Added
+- Added sound sources (2D and 3D)
+- Added sound holders and the ability to put music in **UserData/Not Enough Photons/MonoDirector/SFX/Sounds**
+- Added a "Caster Menu" for managing actors you recently created
+- Added the ability to recast an actor, or redo the take of an actor
+
+### Updated
+- Weapon tracking, including casing scale, slide animations, and more (Rexmeck)
+- Actor jaw movement
+
+### Fixed
+- Fixed an issue with horrible random crashes
+
+### Removed
+- Removed blinding effects that would play when actors got casted
+- Removed debug text that would sometimes appear in the console
+- Pausing was removed, as it currently does nothing
+
+
+## [1.0.0] - 4/10/2024
+
+Initial release!
