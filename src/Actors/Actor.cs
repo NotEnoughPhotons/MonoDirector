@@ -329,12 +329,12 @@ namespace NEP.MonoDirector.Actors
         {
             if(avatar == null)
             {
-                Logging.Error("ShowHairMeshes: Avatar doesn't exist!");
+                Logging.ErrorDebug("ShowHairMeshes: Avatar doesn't exist!");
             }
 
             if(avatar.hairMeshes.Count == 0 || avatar.hairMeshes == null)
             {
-                Logging.Warn("ShowHairMeshes: No hair meshes to clone.");
+                Logging.WarnDebug("ShowHairMeshes: No hair meshes to clone.");
             }
 
             foreach (var mesh in avatar.hairMeshes)
@@ -456,7 +456,7 @@ namespace NEP.MonoDirector.Actors
                 //avatarCrate = Encoding.UTF8.GetString(strBytes);
                 
 #if DEBUG
-                Logging.Msg($"[ACTOR]: Barcode: {avatarCrate}");
+                Logging.MsgDebug($"[ACTOR]: Barcode: {avatarCrate}");
 #endif
                 
                 // Then the take
@@ -478,7 +478,7 @@ namespace NEP.MonoDirector.Actors
                 int numFrames = BitConverter.ToInt32(frameNumBytes, 0);
 
 #if DEBUG
-                Logging.Msg($"[ACTOR]: NumFrames: {numFrames}");
+                Logging.MsgDebug($"[ACTOR]: NumFrames: {numFrames}");
 #endif
                 
                 FrameGroup[] frameGroups = new FrameGroup[numFrames];

@@ -25,5 +25,26 @@ namespace NEP.MonoDirector.Core
         {
             m_LoggerInstance.Error(message);
         }
+
+        public static void MsgDebug(string message)
+        {
+#if DEBUG
+            Msg(message);
+#endif
+        }
+
+        public static void WarnDebug(string message)
+        {
+#if DEBUG
+            Warn(message);
+#endif
+        }
+
+        public static void ErrorDebug(string message)
+        {
+#if DEBUG
+            Error(message);
+#endif
+        }
     }
 }
