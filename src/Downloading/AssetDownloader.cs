@@ -31,8 +31,6 @@ namespace NEP.MonoDirector.Downloading
             {
                 yield break;
             }
-
-            yield return DownloadRoutine();
         }
 
         public static bool NeedsNewVersion()
@@ -61,82 +59,6 @@ namespace NEP.MonoDirector.Downloading
             }
 
             return true;
-        }
-
-        private static IEnumerator DownloadRoutine()
-        {
-            var fetchTask = FetchModFileAsync();
-
-            while (!fetchTask.IsCompleted) yield return null;
-
-            var downloadTask = BeginDownloadAsync();
-
-            while (!downloadTask.IsCompleted) yield return null;
-
-            var warehouseTask = AssetWarehouse.Instance.LoadPalletsFromFolderAsync(m_modsPath).GetAwaiter();
-
-            while (!warehouseTask.IsCompleted) yield return null;
-
-            yield return null;
-        }
-
-        private static async Task FetchModFileAsync()
-        {
-            try
-            {
-                Uri uri = new Uri($"https://g-{GameID}.modapi.io/v1/games/{GameID}/mods/{ModID}?api_key={APIKey}");
-
-                var client = new HttpClient();
-                var request = new HttpRequestMessage(HttpMethod.Get, uri);
-
-                request.Headers.Add("Accept", "application/json");
-
-                var response = await client.SendAsync(request);
-
-                response.EnsureSuccessStatusCode();
-
-                string content = await response.Content.ReadAsStringAsync();
-
-                client = new HttpClient();
-
-                m_modFile = JsonConvert.DeserializeObject<ModObject>(content);
-            }
-            catch (System.Exception e)
-            {
-                Logging.Error($"Exception caught! {e.StackTrace} - {e.Message}");
-            }
-        }
-
-        private static async Task BeginDownloadAsync()
-        {
-            try
-            {
-                HttpClient client = new HttpClient();
-
-                PlatformObject windowsPlatform = m_modFile.Platforms[0];
-
-                Uri modUri = new Uri($"https://g-{GameID}.modapi.io/v1/games/{GameID}/mods/{ModID}/files/{windowsPlatform.FileID}/download");
-
-                using (var downloadStream = client.GetStreamAsync(modUri))
-                {
-                    using (var fileStream = new FileStream(Path.Combine(m_modsPath, "md-temp.zip"), FileMode.OpenOrCreate))
-                    {
-                        Logging.Msg("Downloading file...");
-                        await downloadStream.Result.CopyToAsync(fileStream);
-                        Logging.Msg("Unzipping file...");
-                        ZipArchive archive = new ZipArchive(fileStream);
-                        archive.ExtractToDirectory(m_modsPath, true);
-                        archive.Dispose();
-                        Logging.Msg("Done!");
-                    }
-
-                    File.Delete(Path.Combine(m_modsPath, "md-temp.zip"));
-                }
-            }
-            catch (Exception e)
-            {
-                Logging.Error($"Exception caught! {e.StackTrace} - {e.Message}");
-            }
         }
     }
 }

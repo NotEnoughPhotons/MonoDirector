@@ -38,6 +38,9 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+# Remove staging ZIP
+Staging/MonoDirector.zip
+
 # JetBrains IDE
 .idea/
 
