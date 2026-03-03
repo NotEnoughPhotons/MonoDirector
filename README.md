@@ -21,7 +21,7 @@ To install MonoDirector, ensure that you the above dependencies installed:
 3. Drag all contents of the folder into your game directory
 
 For installing the SDK mod:
-1. Subscribe to the [mod on mod.io]
+1. Subscribe to the [mod on mod.io](https://mod.io/g/bonelab/m/monodirector-assets)
 2. Go into Void G-114 (or the Mod Levels area in BONELAB Hub)
 3. Go to Mods, then Downloads
 4. Hit the "Download All" button
