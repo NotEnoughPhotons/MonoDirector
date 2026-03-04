@@ -27,6 +27,7 @@
 	  <None Remove="quest_build.bat" />
 	  <None Remove="README.md" />
 	  <None Remove="Resources\md_ui_pc.bundle" />
+	  <None Remove="Resources\md_ui_quest.bundle" />
 	  <None Remove="run_build.bat" />
 	  <None Remove="setup_build.py" />
 	</ItemGroup>
@@ -148,6 +149,7 @@
 
 	<ItemGroup>
 	  <EmbeddedResource Include="Resources\md_ui_pc.bundle" />
+	  <EmbeddedResource Include="Resources\md_ui_quest.bundle" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,6 +1,6 @@
 {
     "name": "MonoDirector",
-    "version_number": "1.2.2",
+    "version_number": "1.2.3",
     "website_url": "https://notenoughphotons.dev",
     "description": "A movie/photo making utility for BONELAB. Now for Patch 6!",
     "dependencies": ["LavaGang-MelonLoader-0.7.1", "bonelib-BoneLib-3.2.1", "TrevTV-AudioImportLib-1.3.0"]

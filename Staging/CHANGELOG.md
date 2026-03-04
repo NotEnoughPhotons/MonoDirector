@@ -3,6 +3,14 @@ This is the changelog for MonoDirector! This changelog only features public rele
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [1.2.3] - 3/3/2026 (Hotfix)
+
+### Added
+- Added back the Quest MonoDirector embedded bundle in the DLL
+
+### Fixed
+- Changed file compression algorithm to something other than LZMA4 because it couldn't be opened with anything
+
 ## [1.2.2] - 3/3/2026 (Hotfix)
 
 ### Fixed
