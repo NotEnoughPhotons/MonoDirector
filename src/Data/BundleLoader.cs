@@ -1,6 +1,7 @@
 ﻿using BoneLib;
 using UnityEngine;
 using System.Reflection;
+using MelonLoader;
 
 namespace NEP.MonoDirector.Data
 {
@@ -16,10 +17,25 @@ namespace NEP.MonoDirector.Data
 
         public static void Initialize()
         {
-            m_bundle = HelperMethods.LoadEmbeddedAssetBundle(Assembly.GetExecutingAssembly(), "NEP.MonoDirector.Resources.md_ui_pc.bundle");
-
+            LoadBundle();
             m_frameObject = m_bundle.LoadPersistentAsset<GameObject>("Frame");
             m_propMarkerObject = m_bundle.LoadPersistentAsset<GameObject>("PropMarker");
+        }
+
+        private static void LoadBundle()
+        {
+            string resourcePath = "NEP.MonoDirector.Resources";
+
+            if (!HelperMethods.IsAndroid())
+            {
+                resourcePath += ".md_ui_pc.bundle";
+            }
+            else
+            {
+                resourcePath += ".md_ui_quest.bundle";
+            }
+
+            m_bundle = HelperMethods.LoadEmbeddedAssetBundle(Assembly.GetExecutingAssembly(), resourcePath);
         }
     }
 }
