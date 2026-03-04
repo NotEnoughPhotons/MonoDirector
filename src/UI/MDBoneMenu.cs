@@ -59,15 +59,6 @@ namespace NEP.MonoDirector.UI
         private static void BuildActorMenu(Page category)
         {
             category.CreateFunction(
-                "Show Caster Menu", 
-                Color.white,
-                () => 
-                {
-                    MDMenu.Instance.gameObject.SetActive(true);
-                }
-            );
-            
-            category.CreateFunction(
                 "Remove All Actors", 
                 Color.red, 
                 () =>
