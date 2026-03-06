@@ -53,6 +53,7 @@
 		<Compile Include="src\Audio\PooledAudio.cs" />
 		<Compile Include="src\Audio\SoundHolder.cs" />
 		<Compile Include="src\Bootstrap.cs" />
+		<Compile Include="src\Caster.cs" />
 		<Compile Include="src\Data\BundleLoader.cs" />
 		<Compile Include="src\Downloading\AssetDownloader.cs" />
 		<Compile Include="src\Downloading\PalletVersion.cs" />
