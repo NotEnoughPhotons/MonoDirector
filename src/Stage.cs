@@ -26,6 +26,13 @@ namespace NEP.MonoDirector.Core
         private string m_name;
         private float m_duration;
 
+        public static void Swap(ref Stage left, ref Stage right)
+        {
+            Stage temp = left;
+            left = right;
+            right = temp;
+        }
+
         public void AddActor(Actor actor)
         {
             m_actors.Add(actor);
