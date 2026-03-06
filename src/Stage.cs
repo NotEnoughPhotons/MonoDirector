@@ -19,10 +19,12 @@ namespace NEP.MonoDirector.Core
         public IReadOnlyList<Actor> Actors => m_actors.AsReadOnly();
         public Barcode LevelBarcode => m_levelBarcode;
         public string Name => m_name;
+        public float Duration => m_duration;
 
         private List<Actor> m_actors;
         private Barcode m_levelBarcode;
         private string m_name;
+        private float m_duration;
 
         public void AddActor(Actor actor)
         {
