@@ -1,11 +1,13 @@
 ﻿using NEP.MonoDirector.Actors;
 using UnityEngine;
+using MelonLoader;
 
 using Il2CppSLZ.Marrow;
+using Il2CppTrees;
 
 namespace NEP.MonoDirector.Tools
 {
-    [MelonLoader.RegisterTypeInIl2Cpp]
+    [RegisterTypeInIl2Cpp]
     public class Propifier(IntPtr ptr) : MonoBehaviour(ptr)
     {
         public enum Mode
@@ -14,47 +16,62 @@ namespace NEP.MonoDirector.Tools
             Remove
         }
 
-        public Mode mode;
+        private Mode m_mode;
 
-        public TargetGrip triggerGrip;
-        public Transform firePoint;
-        public float maxRange;
-        public GameObject laserPointer;
-        public Rigidbody rigidbody;
+        private Grip m_grip;
+        private Transform m_firePoint;
+        private float m_range;
+        private GameObject m_laser;
+        private Rigidbody m_rigidbody;
 
-        public GameObject propModeIcon;
-        public GameObject removeModeIcon;
+        private GameObject m_propModeIcon;
+        private GameObject m_removeModeIcon;
 
-        public float fireForce = 5f;
+        private float m_fireForce = 5f;
 
-        private GunSFX gunSFX;
+        private GunSFX m_gunSFX;
+
+        private Action<Hand> m_OnHandAttached;
+        private Action<Hand> m_OnHandDetached;
+        private Action<Hand> m_OnTriggerGripUpdate;
 
         private void Awake()
         {
-            gunSFX = GetComponent<GunSFX>();
-            
-            triggerGrip = transform.Find("Grips/HandlePrimaryGrip").GetComponent<TargetGrip>();
-            firePoint = transform.Find("PointOfInterest/FirePoint");
-            laserPointer = transform.Find("Propifier Art/Laser").gameObject;
-            maxRange = 30;
+            m_rigidbody = GetComponent<Rigidbody>();
+            m_gunSFX = GetComponent<GunSFX>();
+            m_grip = transform.Find("Grips/HandlePrimaryGrip").GetComponent<Grip>();
+            m_firePoint = transform.Find("FirePoint");
+            m_laser = transform.Find("Laser Pointer").gameObject;
+            m_range = 30;
 
-            propModeIcon = transform.Find("Propifier Art/ScreenMode_Prop").gameObject;
-            removeModeIcon = transform.Find("Propifier Art/ScreenMode_Remove").gameObject;
+            m_propModeIcon = transform.Find("Art/ScreenMode_Prop").gameObject;
+            m_removeModeIcon = transform.Find("Art/ScreenMode_Remove").gameObject;
+
+            m_OnHandAttached = OnHandAttached;
+            m_OnHandDetached = OnHandDetached;
+            m_OnTriggerGripUpdate = OnTriggerGripUpdate;
         }
 
-        private void Start()
+        private void OnEnable()
         {
-            triggerGrip.attachedHandDelegate += new System.Action<Hand>((hand) => OnAttachHand());
-            triggerGrip.detachedHandDelegate += new System.Action<Hand>((hand) => OnDetachHand());
-            triggerGrip.attachedUpdateDelegate += new System.Action<Hand>((hand) => OnTriggerGripUpdate());
+            m_grip.attachedHandDelegate += m_OnHandAttached;
+            m_grip.detachedHandDelegate += m_OnHandDetached;
+            m_grip.attachedUpdateDelegate += m_OnTriggerGripUpdate;
+        }
+
+        private void OnDisable()
+        {
+            m_grip.attachedHandDelegate -= m_OnHandAttached;
+            m_grip.detachedHandDelegate -= m_OnHandDetached;
+            m_grip.attachedUpdateDelegate -= m_OnTriggerGripUpdate;
         }
 
         private void PrimaryButtonDown()
         {
-            gunSFX.GunShot();
-            rigidbody.AddForce(rigidbody.transform.up - firePoint.forward * fireForce, ForceMode.Impulse);
+            m_gunSFX.GunShot();
+            m_rigidbody.AddForce(m_rigidbody.transform.up - m_firePoint.forward * m_fireForce, ForceMode.Impulse);
 
-            if(Physics.Raycast(firePoint.position, firePoint.forward * maxRange, out RaycastHit hit))
+            if(Physics.Raycast(m_firePoint.position, m_firePoint.forward * m_range, out RaycastHit hit))
             {
                 if(hit.rigidbody == null)
                 {
@@ -68,7 +85,7 @@ namespace NEP.MonoDirector.Tools
                     return;
                 }
 
-                if(mode == Mode.Prop)
+                if(m_mode == Mode.Prop)
                 {
                     PropBuilder.BuildProp(entity);
                 }
@@ -79,26 +96,23 @@ namespace NEP.MonoDirector.Tools
             }
         }
 
-        public void OnAttachHand()
+        private void OnHandAttached(Hand hand)
         {
-            rigidbody = GetComponent<Rigidbody>();
-            laserPointer.SetActive(true);
+            m_laser.SetActive(true);
         }
 
-        public void OnDetachHand()
+        private void OnHandDetached(Hand hand)
         {
-            rigidbody = GetComponent<Rigidbody>();
-            laserPointer.SetActive(false);
+            m_laser.SetActive(false);
         }
 
-        public void OnTriggerGripUpdate()
+        private void OnTriggerGripUpdate(Hand hand)
         {
-            Hand hand = triggerGrip.GetHand();
             bool bTapped = hand.Controller.GetMenuTap();
 
             if (bTapped)
             {
-                if(mode == Mode.Prop)
+                if(m_mode == Mode.Prop)
                 {
                     SetMode(Mode.Remove);
                 }
@@ -114,20 +128,20 @@ namespace NEP.MonoDirector.Tools
             }
         }
 
-        public void SetMode(Mode mode)
+        private void SetMode(Mode mode)
         {
-            this.mode = mode;
-            gunSFX.DryFire();
+            this.m_mode = mode;
+            m_gunSFX.DryFire();
 
             if (mode == Mode.Prop)
             {
-                propModeIcon.SetActive(true);
-                removeModeIcon.SetActive(false);
+                m_propModeIcon.SetActive(true);
+                m_removeModeIcon.SetActive(false);
             }
             else if (mode == Mode.Remove)
             {
-                propModeIcon.SetActive(false);
-                removeModeIcon.SetActive(true);
+                m_propModeIcon.SetActive(false);
+                m_removeModeIcon.SetActive(true);
             }
         }
     }
