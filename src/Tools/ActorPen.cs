@@ -12,6 +12,7 @@ namespace NEP.MonoDirector.Tools
     public class ActorPen(IntPtr ptr) : ToolEntity(ptr)
     {
         private Transform m_rayPoint;
+        private GameObject m_laserPointer;
         private ActorProxy m_selectedProxy;
 
         protected override void Awake()
@@ -19,6 +20,17 @@ namespace NEP.MonoDirector.Tools
             base.Awake();
 
             m_rayPoint = transform.Find("RayPoint");
+            m_laserPointer = m_rayPoint.GetChild(0).gameObject;
+        }
+
+        protected override void OnHandAttached(Hand hand)
+        {
+            m_laserPointer.SetActive(true);
+        }
+
+        protected override void OnHandDetached(Hand hand)
+        {
+            m_laserPointer.SetActive(false);
         }
 
         protected override void OnPrimaryButtonDown()
