@@ -71,12 +71,15 @@ namespace NEP.MonoDirector.Tools
                 Poolee obj = task.GetResult();
                 MarrowEntity reelEntity = obj.GetComponent<MarrowEntity>();
 
+                reelEntity.gameObject.SetActive(false);
                 m_sockets[i].SetReel(reelEntity.GetComponent<StageReel>());
             }
 
             for (int i = 0; i < Director.ActiveFilm.Stages.Count; i++)
             {
-
+                m_sockets[i].Reel.SetStage(Director.ActiveFilm.Stages[i]);
+                m_sockets[i].Reel.gameObject.SetActive(true);
+                m_sockets[i].Reel.AttachToSocket(m_sockets[i]);
             }
         }
     }

@@ -9,9 +9,12 @@ namespace NEP.MonoDirector.Tools
     public class StageShelfSocket(IntPtr ptr) : MonoBehaviour(ptr)
     {
         public StageReel Reel { get => m_reel; }
+        public bool Empty { get => m_empty; }
 
         private StageReel m_reel;
+        private StageReel m_hoveredReel;
         private Image m_image;
+        private bool m_empty;
 
         private Color m_regularColor;
         private Color m_hoverColor;
@@ -22,6 +25,8 @@ namespace NEP.MonoDirector.Tools
 
             m_regularColor = Color.white;
             m_hoverColor = Color.blue;
+
+            m_empty = true;
         }
 
         private void OnEnable()
@@ -31,7 +36,15 @@ namespace NEP.MonoDirector.Tools
 
         public void SetReel(StageReel reel)
         {
+            if (reel == null)
+            {
+                m_reel = null;
+                m_empty = true;
+                return;
+            }
+
             m_reel = reel;
+            m_empty = false;
         }
 
         public void OnHoverOver()
@@ -42,26 +55,6 @@ namespace NEP.MonoDirector.Tools
         public void OnHoverAway()
         {
             m_image.color = m_regularColor;
-        }
-
-        private void OnTriggerEnter(Collider collider)
-        {
-            if (!collider.GetComponent<StageReel>())
-            {
-                return;
-            }
-
-            OnHoverOver();
-        }
-
-        private void OnTriggerExit(Collider collider)
-        {
-            if (!collider.GetComponent<StageReel>())
-            {
-                return;
-            }
-
-            OnHoverAway();
         }
     }
 }

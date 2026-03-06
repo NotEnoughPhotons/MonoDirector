@@ -13,6 +13,7 @@ namespace NEP.MonoDirector.Tools
         private TextMeshPro m_title;
         private ConfigurableJoint m_joint;
         private StageShelfSocket m_socket;
+        private StageShelfSocket m_hoveredSocket;
         private Grip m_grip;
 
         private Action<Hand> m_onHandAttached;
@@ -22,7 +23,7 @@ namespace NEP.MonoDirector.Tools
         {
             m_title = transform.Find("Text").GetComponent<TextMeshPro>();
             m_joint = GetComponent<ConfigurableJoint>();
-            m_grip = transform.Find("Grip/Box").GetComponent<Grip>();
+            m_grip = transform.Find("Grip").GetComponent<Grip>();
 
             m_onHandAttached = OnHandAttached;
             m_onHandReleased = OnHandReleased;
@@ -38,6 +39,40 @@ namespace NEP.MonoDirector.Tools
         {
             m_grip.attachedHandDelegate -= m_onHandAttached;
             m_grip.detachedHandDelegate -= m_onHandReleased;
+        }
+
+        private void OnTriggerEnter(Collider collider)
+        {
+            StageShelfSocket socket = collider.GetComponent<StageShelfSocket>();
+
+            if (socket == null)
+            {
+                return;
+            }
+
+            m_hoveredSocket = socket;
+
+            if (socket.Empty)
+            {
+                socket.OnHoverOver();
+            }
+        }
+
+        private void OnTriggerExit(Collider collider)
+        {
+            StageShelfSocket socket = collider.GetComponent<StageShelfSocket>();
+
+            if (socket == null)
+            {
+                return;
+            }
+
+            m_hoveredSocket = socket;
+
+            if (socket.Empty)
+            {
+                socket.OnHoverAway();
+            }
         }
 
         public void SetStage(Stage stage)
@@ -90,7 +125,15 @@ namespace NEP.MonoDirector.Tools
                 return;
             }
 
-            AttachToSocket(m_socket);
+            if (m_hoveredSocket == null)
+            {
+                AttachToSocket(m_socket);
+            }
+            else
+            {
+                m_socket.SetReel(null);
+                AttachToSocket(m_hoveredSocket);
+            }
         }
     }
 }
