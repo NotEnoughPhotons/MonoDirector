@@ -124,6 +124,9 @@
 		<Compile Include="src\Tools\Propifier.cs" />
 		<Compile Include="src\Tools\Gizmos\SoundSourceTether.cs" />
 		<Compile Include="src\Tools\SpotLight.cs" />
+		<Compile Include="src\Tools\StageReel.cs" />
+		<Compile Include="src\Tools\StageShelf.cs" />
+		<Compile Include="src\Tools\StageShelfSocket.cs" />
 		<Compile Include="src\Tools\StudioLight.cs" />
 		<Compile Include="src\Tools\ToolEntity.cs" />
 		<Compile Include="src\Tools\VFXCharge.cs" />

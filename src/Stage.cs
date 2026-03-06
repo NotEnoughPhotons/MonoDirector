@@ -10,6 +10,12 @@ namespace NEP.MonoDirector.Core
             m_actors = new List<Actor>();
         }
 
+        public Stage(string name)
+        {
+            m_actors = new List<Actor>();
+            m_name = name;
+        }
+
         public IReadOnlyList<Actor> Actors => m_actors.AsReadOnly();
         public Barcode LevelBarcode => m_levelBarcode;
         public string Name => m_name;

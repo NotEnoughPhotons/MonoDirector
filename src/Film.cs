@@ -17,5 +17,15 @@
 
         private List<Stage> m_stages;
         private string m_name;
+
+        public void AddStage(Stage stage)
+        {
+            m_stages.Add(stage);
+        }
+
+        public void RemoveStage(Stage stage)
+        {
+            m_stages.Remove(stage);
+        }
     }
 }
