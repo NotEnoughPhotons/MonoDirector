@@ -200,6 +200,8 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnStopRecording()
         {
+            Director.ActiveStage.SetDuration(m_recordingTime);
+
             m_activeActor?.Microphone?.StopRecording();
 
             foreach (Trackable castMember in Director.Cast)
@@ -265,11 +267,13 @@ namespace NEP.MonoDirector.Core
             m_activeActor = null;
 
             Director.Cast.AddRange(ActiveActors);
+            Director.ActiveStage.AddActors(ActiveActors);
             ActiveActors.Clear();
-
+            
             Director.WorldProps.AddRange(Director.RecordingProps);
             Director.LastRecordedProps = Director.RecordingProps;
             Director.RecordingProps.Clear();
+
 
             if (m_recordRoute != null)
             {

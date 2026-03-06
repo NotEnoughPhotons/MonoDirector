@@ -15,6 +15,7 @@ namespace NEP.MonoDirector.Core
         public static Recorder Recorder { get => m_recorder; }
 
         public static Film ActiveFilm { get => m_activeFilm; }
+        public static Stage ActiveStage { get => m_activeStage; }
 
         public static Actor SelectedActor { get => m_selectedActor; }
 
@@ -43,6 +44,7 @@ namespace NEP.MonoDirector.Core
         private static Recorder m_recorder;
 
         private static Film m_activeFilm;
+        private static Stage m_activeStage;
 
         private static PlayState m_playState = PlayState.Stopped;
         private static PlayState m_lastPlayState;
@@ -68,7 +70,10 @@ namespace NEP.MonoDirector.Core
             Events.OnPlay += () => SetPlayState(PlayState.Playing);
             Events.OnStartRecording += () => SetPlayState(PlayState.Recording);
 
+            m_activeStage = new Stage("Stage 00");
+
             m_activeFilm = new Film();
+            m_activeFilm.AddStage(m_activeStage);
             m_activeFilm.AddStage(new Stage("Stage 01"));
             m_activeFilm.AddStage(new Stage("Stage 02"));
             m_activeFilm.AddStage(new Stage("Stage 03"));

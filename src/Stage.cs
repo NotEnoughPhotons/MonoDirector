@@ -52,5 +52,10 @@ namespace NEP.MonoDirector.Core
         {
             m_actors.RemoveRange(0, m_actors.Count);
         }
+
+        public void SetDuration(float duration)
+        {
+            m_duration = duration;
+        }
     }
 }
