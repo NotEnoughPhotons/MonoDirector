@@ -26,6 +26,7 @@
 	  <None Remove="NOTICE.txt" />
 	  <None Remove="quest_build.bat" />
 	  <None Remove="README.md" />
+	  <None Remove="Resources\md_sounds.bundle" />
 	  <None Remove="Resources\md_ui_pc.bundle" />
 	  <None Remove="Resources\md_ui_quest.bundle" />
 	  <None Remove="run_build.bat" />
@@ -83,7 +84,6 @@
 		<Compile Include="src\Camera\InputController.cs" />
 		<Compile Include="src\Constants.cs" />
 		<Compile Include="src\Data\ActionFrame.cs" />
-		<Compile Include="src\Data\AvatarPhotoBuilder.cs" />
 		<Compile Include="src\Data\BodyPartData.cs" />
 		<Compile Include="src\Data\CompressedQuaternion.cs" />
 		<Compile Include="src\Data\CompressedVector3.cs" />
@@ -146,6 +146,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="Resources\md_sounds.bundle" />
 	  <EmbeddedResource Include="Resources\md_ui_pc.bundle" />
 	  <EmbeddedResource Include="Resources\md_ui_quest.bundle" />
 	</ItemGroup>
