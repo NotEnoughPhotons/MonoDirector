@@ -117,7 +117,7 @@ namespace NEP.MonoDirector.Core
                 Notification notification = new()
                 {
                     Title = "Missing AudioImportLib",
-                    Message = "You do not have AudioImportLib installed! Download it from Thunderstore and install it!",
+                    Message = "You do not have AudioImportLib installed! Custom sounds will not work.",
                     Type = NotificationType.Warning,
                     PopupLength = 5f
                 };
