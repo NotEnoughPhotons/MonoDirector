@@ -29,6 +29,8 @@ namespace NEP.MonoDirector.Data
         public static void Initialize()
         {
             LoadUIBundle();
+            LoadSoundBundle();
+
             m_frameObject = m_uiBundle.LoadPersistentAsset<GameObject>("Frame");
             m_propMarkerObject = m_uiBundle.LoadPersistentAsset<GameObject>("PropMarker");
 

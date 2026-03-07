@@ -28,6 +28,7 @@ namespace NEP.MonoDirector.Core
         internal static void Initialize()
         {
             Logging.Initialize();
+            BundleLoader.Initialize();
 
             Directory.CreateDirectory(Constants.dirBase);
             Directory.CreateDirectory(Constants.dirMod);
@@ -41,12 +42,8 @@ namespace NEP.MonoDirector.Core
 
             CheckAudioImport();
 
-            if (m_audioImportInstalled)
-            {
-                FeedbackSFX.Initialize();
-            }
 
-            BundleLoader.Initialize();
+            FeedbackSFX.Initialize();
 #if DEBUG
             TestDebugSerialize();
 #endif
@@ -132,10 +129,7 @@ namespace NEP.MonoDirector.Core
 
             Events.FlushActions();
 
-            if (m_audioImportInstalled)
-            {
-                FeedbackSFX.Initialize();
-            }
+            FeedbackSFX.Initialize();
 
             Director.Shutdown();
             Director.Initialize();
@@ -154,7 +148,7 @@ namespace NEP.MonoDirector.Core
 
         private static void CheckAudioImport()
         {
-            if (MelonBase.FindMelon("AudioImportLib", "trev") != null)
+            if (MelonBase.FindMelon("AudioImportLib", "trev & zCubed") != null)
             {
                 m_audioImportInstalled = true;
             }
