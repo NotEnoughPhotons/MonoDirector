@@ -13,12 +13,17 @@ using NEP.MonoDirector.Downloading;
 using MelonLoader;
 using Il2CppSLZ.Marrow.Warehouse;
 using BoneLib.Notifications;
+using System.Linq.Expressions;
 
 namespace NEP.MonoDirector.Core
 {
     public static class Bootstrap
     {
         internal static GameObject MainContainerObject { get; private set; }
+
+        internal static bool AudioImportInstalled { get => m_audioImportInstalled; }
+
+        private static bool m_audioImportInstalled = false;
 
         internal static void Initialize()
         {
@@ -34,7 +39,12 @@ namespace NEP.MonoDirector.Core
 
             MDBoneMenu.Initialize();
 
-            FeedbackSFX.Initialize();
+            CheckAudioImport();
+
+            if (m_audioImportInstalled)
+            {
+                FeedbackSFX.Initialize();
+            }
 
             BundleLoader.Initialize();
 #if DEBUG
@@ -51,6 +61,12 @@ namespace NEP.MonoDirector.Core
         {
             AssetWarehouse.Instance.OnPalletAdded += new Action<Barcode>(OnPalletAdded);
 
+            if (!m_audioImportInstalled)
+            {
+                Logging.Warn("AudioImportLib is not installed!");
+                return;
+            }
+
             if (AssetDownloader.CheckInstall())
             {
                 WarehouseLoader.LoadSounds();
@@ -62,6 +78,21 @@ namespace NEP.MonoDirector.Core
         {
             if (barcode.ID != "NEP.MonoDirector")
             {
+                return;
+            }
+
+            if (!m_audioImportInstalled)
+            {
+                Notification notification = new()
+                {
+                    Title = "Missing AudioImportLib",
+                    Message = "You do not have AudioImportLib installed! Download it from Thunderstore and install it!",
+                    Type = NotificationType.Warning,
+                    PopupLength = 5f
+                };
+
+                Notifier.Send(notification);
+
                 return;
             }
 
@@ -84,11 +115,27 @@ namespace NEP.MonoDirector.Core
                 Notifier.Send(notification);
             }
 
+            if (!m_audioImportInstalled)
+            {
+                Notification notification = new()
+                {
+                    Title = "Missing AudioImportLib",
+                    Message = "You do not have AudioImportLib installed! Download it from Thunderstore and install it!",
+                    Type = NotificationType.Warning,
+                    PopupLength = 5f
+                };
+
+                Notifier.Send(notification);
+            }
+
             MainContainerObject = new GameObject("[MonoDirector]");
 
             Events.FlushActions();
 
-            FeedbackSFX.Initialize();
+            if (m_audioImportInstalled)
+            {
+                FeedbackSFX.Initialize();
+            }
 
             Director.Shutdown();
             Director.Initialize();
@@ -103,6 +150,14 @@ namespace NEP.MonoDirector.Core
             ActorFrameManager.Initialize();
             WarehouseLoader.SpawnFromBarcode(WarehouseLoader.actorPanelBarcode);
             WarehouseLoader.SpawnFromBarcode(WarehouseLoader.mainMenuBarcode);
+        }
+
+        private static void CheckAudioImport()
+        {
+            if (MelonBase.FindMelon("AudioImportLib", "trev") != null)
+            {
+                m_audioImportInstalled = true;
+            }
         }
 
         internal static void TestDebugSerialize()

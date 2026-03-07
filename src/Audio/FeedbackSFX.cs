@@ -1,8 +1,8 @@
 ﻿using AudioImportLib;
 using UnityEngine;
 
-using BoneLib;
 using UnityEngine.Audio;
+using NEP.MonoDirector.Core;
 
 namespace NEP.MonoDirector.Audio
 {
@@ -40,6 +40,11 @@ namespace NEP.MonoDirector.Audio
 
         public static void Play(AudioClip clip, float pitch = 1.0f)
         {
+            if (clip == null)
+            {
+                return;
+            }
+
             AudioMixerGroup mixer = BoneLib.Audio.UI;
             BoneLib.Audio.Play2DOneShot(clip, mixer, 1f, pitch);
         }
