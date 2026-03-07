@@ -55,7 +55,9 @@ namespace NEP.MonoDirector.UI
 
         private void Update()
         {
+            Vector3 rotation = Quaternion.LookRotation(Constants.RigManager.physicsRig.m_head.position - transform.position).eulerAngles;
             transform.position = Vector3.Lerp(transform.position, m_targetPosition, 8f * Time.deltaTime);
+            transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
         }
 
         private void OnActorSelected(Actor actor)
