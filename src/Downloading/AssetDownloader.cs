@@ -1,4 +1,5 @@
-﻿using Il2CppSLZ.Marrow.Forklift;
+﻿using BoneLib;
+using Il2CppSLZ.Marrow.Forklift;
 using Il2CppSLZ.Marrow.Forklift.Model;
 using Il2CppSLZ.Marrow.Warehouse;
 using MelonLoader;
@@ -71,7 +72,26 @@ namespace NEP.MonoDirector.Downloading
             {
                 Uri uri = new Uri($"https://g-{GameID}.modapi.io/v1/games/{GameID}/mods/{ModID}/files/?api_key={APIKey}");
 
-                var client = new HttpClient();
+                HttpClient client = null;
+                
+                // B.S. way to get around SSL validation not working on Quest.
+                // This might be a security issue.
+                if (HelperMethods.IsAndroid())
+                {
+                    // It is absolutely not recommended to use this code.
+                    // Bypassing SSL certificates and validation altogether is a massive security breach waiting to happen.
+                    // BUT...
+                    // The request URI will never change, and it is only done here once, and exists only for the Quest platform.
+                    HttpClientHandler handler = new HttpClientHandler();
+                    handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+                    client = new HttpClient(handler);
+                }
+                else
+                {
+                    client = new HttpClient();
+                }
+
                 var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
                 request.Headers.Add("Accept", "application/json");
