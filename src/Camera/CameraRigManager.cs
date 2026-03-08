@@ -37,13 +37,13 @@ namespace NEP.MonoDirector.Cameras
 
         public CameraMode CameraMode
         {
-            get => cameraMode;
+            get => m_cameraMode;
             set
             {
-                cameraMode = value;
+                m_cameraMode = value;
 
                 // Default spectator camera mode
-                if (cameraMode == CameraMode.None)
+                if (m_cameraMode == CameraMode.None)
                 {
                     // Disable any effects that we have on the camera
                     FreeCamera.enabled = false;
@@ -55,7 +55,7 @@ namespace NEP.MonoDirector.Cameras
                 }
 
                 // Free camera mode using WASD and the mouse
-                if (cameraMode == CameraMode.Free)
+                if (m_cameraMode == CameraMode.Free)
                 {
                     SmoothFollower.enabled = false;
 
@@ -66,7 +66,7 @@ namespace NEP.MonoDirector.Cameras
                 }
 
                 // Modified spectator camera with smooth rotations and custom targets
-                if (cameraMode == CameraMode.Head)
+                if (m_cameraMode == CameraMode.Head)
                 {
                     SmoothFollower.enabled = false;
 
@@ -76,7 +76,7 @@ namespace NEP.MonoDirector.Cameras
                     FreeCamera.enabled = false;
                 }
 
-                Events.OnCameraModeSet?.Invoke(cameraMode);
+                Events.OnCameraModeSet?.Invoke(m_cameraMode);
             }
         }
 
@@ -122,11 +122,8 @@ namespace NEP.MonoDirector.Cameras
             set => FreeCamera.CameraSettings.friction = value;
         }
 
-        private GameObject cameraObject;
-        private CameraMode cameraMode = CameraMode.None;
-
-        private GameObject cameraModel;
-        private MeshRenderer cameraRenderer;
+        private GameObject m_cameraObject;
+        private CameraMode m_cameraMode = CameraMode.None;
 
         private void Start()
         {
@@ -137,24 +134,24 @@ namespace NEP.MonoDirector.Cameras
         private void InitializeCamera(RigScreenOptions screenOptions)
         {
             Camera = screenOptions.cam;
-            cameraObject = Camera.gameObject;
+            m_cameraObject = Camera.gameObject;
 
-            ClonedCamera = GameObject.Instantiate(cameraObject).GetComponent<Camera>();
+            ClonedCamera = GameObject.Instantiate(m_cameraObject).GetComponent<Camera>();
             ClonedCamera.gameObject.SetActive(false);
 
-            cameraObject.transform.parent = null;
+            m_cameraObject.transform.parent = null;
 
-            SmoothFollower = cameraObject.GetComponent<SmoothFollower>();
-            InputController = cameraObject.AddComponent<InputController>();
+            SmoothFollower = m_cameraObject.GetComponent<SmoothFollower>();
+            InputController = m_cameraObject.AddComponent<InputController>();
 
-            FreeCamera = cameraObject.AddComponent<FreeCamera>();
-            FOVController = cameraObject.AddComponent<FOVController>();
-            FollowCamera = cameraObject.AddComponent<FollowCamera>();
-            CameraDamp = cameraObject.AddComponent<CameraDamp>();
+            FreeCamera = m_cameraObject.AddComponent<FreeCamera>();
+            FOVController = m_cameraObject.AddComponent<FOVController>();
+            FollowCamera = m_cameraObject.AddComponent<FollowCamera>();
+            CameraDamp = m_cameraObject.AddComponent<CameraDamp>();
 
             CameraVolumes = new CameraVolume[2]
             {
-                cameraObject.AddComponent<CameraVolume>(),
+                m_cameraObject.AddComponent<CameraVolume>(),
                 ClonedCamera.gameObject.AddComponent<CameraVolume>(),
             };
 

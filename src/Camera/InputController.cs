@@ -8,27 +8,27 @@ namespace NEP.MonoDirector.Cameras
         public float mouseSensitivity = 1f;
         public float mouseSmoothness = 4f;
 
-        private Vector3 keyboardInput;
-        private Vector3 mouseInput;
+        private Vector3 m_keyInput;
+        private Vector3 m_mouseInput;
 
-        private float xMouseMove = 0f;
-        private float yMouseMove = 0f;
+        private float m_xMouseMove = 0f;
+        private float m_yMouseMove = 0f;
 
-        private bool enableKeyboard = true;
-        private bool enableMouse = true;
+        private bool m_enableKeyboard = true;
+        private bool m_enableMouse = true;
 
-        private bool lockCursor = false;
+        private bool m_lockCursor = false;
 
         private void Update()
         {
-            lockCursor = Input.GetMouseButton(1);
-            Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !lockCursor;
+            m_lockCursor = Input.GetMouseButton(1);
+            Cursor.lockState = m_lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !m_lockCursor;
         }
 
         public Vector3 KeyboardMove()
         {
-            if (!enableKeyboard)
+            if (!m_enableKeyboard)
             {
                 return Vector3.zero;
             }
@@ -38,65 +38,65 @@ namespace NEP.MonoDirector.Cameras
 
             if (Input.GetKey(KeyCode.A))
             {
-                keyboardInput.x = -1f;
+                m_keyInput.x = -1f;
             }
             else if (Input.GetKeyUp(KeyCode.A))
             {
-                keyboardInput.x = 0f;
+                m_keyInput.x = 0f;
             }
 
             if (Input.GetKey(KeyCode.D))
             {
-                keyboardInput.x = 1f;
+                m_keyInput.x = 1f;
             }
             else if (Input.GetKeyUp(KeyCode.D))
             {
-                keyboardInput.x = 0f;
+                m_keyInput.x = 0f;
             }
 
             if (Input.GetKey(KeyCode.W))
             {
-                keyboardInput.z = 1f;
+                m_keyInput.z = 1f;
             }
             else if (Input.GetKeyUp(KeyCode.W))
             {
-                keyboardInput.z = 0f;
+                m_keyInput.z = 0f;
             }
 
             if (Input.GetKey(KeyCode.S))
             {
-                keyboardInput.z = -1f;
+                m_keyInput.z = -1f;
             }
             else if (Input.GetKeyUp(KeyCode.S))
             {
-                keyboardInput.z = 0f;
+                m_keyInput.z = 0f;
             }
 
-            keyboardInput.y = yNeg + yPos;
+            m_keyInput.y = yNeg + yPos;
 
-            return keyboardInput;
+            return m_keyInput;
         }
 
         public Vector3 MouseMove()
         {
-            if (!enableMouse)
+            if (!m_enableMouse)
             {
                 return Vector3.zero;
             }
 
-            if (xMouseMove > 0f || xMouseMove < 0f)
+            if (m_xMouseMove > 0f || m_xMouseMove < 0f)
             {
-                xMouseMove = Mathf.Lerp(xMouseMove, 0f, mouseSmoothness * Time.deltaTime);
+                m_xMouseMove = Mathf.Lerp(m_xMouseMove, 0f, mouseSmoothness * Time.deltaTime);
             }
 
-            if (yMouseMove > 0f || yMouseMove < 0f)
+            if (m_yMouseMove > 0f || m_yMouseMove < 0f)
             {
-                yMouseMove = Mathf.Lerp(yMouseMove, 0f, mouseSmoothness * Time.deltaTime);
+                m_yMouseMove = Mathf.Lerp(m_yMouseMove, 0f, mouseSmoothness * Time.deltaTime);
             }
 
-            if (!lockCursor)
+            if (!m_lockCursor)
             {
-                return mouseInput;
+                return m_mouseInput;
             }
 
             float x = Input.GetAxisRaw("Mouse X");
@@ -106,16 +106,16 @@ namespace NEP.MonoDirector.Cameras
 
             if (rollCam)
             {
-                mouseInput.z -= x;
+                m_mouseInput.z -= x;
             }
 
-            xMouseMove += x * Time.deltaTime;
-            yMouseMove += y * Time.deltaTime;
+            m_xMouseMove += x * Time.deltaTime;
+            m_yMouseMove += y * Time.deltaTime;
 
-            mouseInput.x += xMouseMove * mouseSensitivity;
-            mouseInput.y -= yMouseMove * mouseSensitivity;
+            m_mouseInput.x += m_xMouseMove * mouseSensitivity;
+            m_mouseInput.y -= m_yMouseMove * mouseSensitivity;
 
-            return mouseInput;
+            return m_mouseInput;
         }
     }
 }
