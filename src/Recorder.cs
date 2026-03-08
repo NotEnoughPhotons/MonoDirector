@@ -279,6 +279,8 @@ namespace NEP.MonoDirector.Core
 
             ActiveActors.Clear();
 
+            Director.ActiveStage.SetDuration(m_recordingTime);
+
             if (m_recordRoute != null)
             {
                 MelonCoroutines.Stop(m_recordRoute);

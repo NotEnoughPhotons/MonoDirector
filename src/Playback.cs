@@ -159,8 +159,8 @@ namespace NEP.MonoDirector.Core
             if (m_playbackTime <= 0f)
                 m_playbackTime = 0f;
 
-            if (m_playbackTime >= Recorder.Instance.TakeTime)
-                m_playbackTime = Recorder.Instance.TakeTime;
+            if (m_playbackTime >= Director.ActiveStage.Duration)
+                m_playbackTime = Director.ActiveStage.Duration;
 
             AnimateAll();
 
@@ -226,7 +226,7 @@ namespace NEP.MonoDirector.Core
                 while (Director.PlayState == PlayState.Paused)
                     yield return null;
 
-                if (PlaybackTime >= Recorder.Instance.TakeTime)
+                if (PlaybackTime >= Director.ActiveStage.Duration)
                     break;
 
                 Tick();
