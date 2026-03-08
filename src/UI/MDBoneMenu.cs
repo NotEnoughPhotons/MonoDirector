@@ -7,6 +7,7 @@ using UnityEngine;
 using BoneLib.BoneMenu;
 using Il2CppSLZ.Marrow;
 using Il2CppSystem;
+using BoneLib;
 
 namespace NEP.MonoDirector.UI
 {
@@ -103,14 +104,17 @@ namespace NEP.MonoDirector.UI
         private static void BuildSettingsMenu(Page category)
         {
             Page audioCategory = category.CreatePage("Audio", Color.white);
-            Page cameraCategory = category.CreatePage("Camera", Color.white);
+
+            // Camera settings on Quest wouldn't make much sense.
+            if (!HelperMethods.IsAndroid())
+            {
+                Page cameraCategory = category.CreatePage("Camera", Color.white);
+                BuildCameraCategory(cameraCategory);
+            }
+
             Page toolCategory = category.CreatePage("Tools", Color.white);
             Page uiCategory = category.CreatePage("UI", Color.white);
 
-            Page headModeCategory = cameraCategory.CreatePage("Head Mode Settings", Color.white);
-            Page freeCamCategory = cameraCategory.CreatePage("Free Camera Settings", Color.white);
-            Page vfxCategory = cameraCategory.CreatePage("VFX", Color.white);
-            
             #if DEBUG
             Page debugCategory = category.CreatePage("DEBUG", Color.red);
             BuildDebugCategory(debugCategory);
@@ -130,28 +134,34 @@ namespace NEP.MonoDirector.UI
                 value => Settings.World.micPlayback = value
             );
 
-            cameraCategory.CreateEnum(
-                "Camera Mode", 
-                Color.white, 
-                CameraMode.None,
-                (mode) => CameraRigManager.Instance.CameraMode = (CameraMode)mode
-            );
+            BuildToolCategory(toolCategory);
 
-            cameraCategory.CreateBool(
-                "Kinematic On Release", 
-                Color.white, 
-                false,
-                (value) => Settings.Camera.handheldKinematicOnRelease = value
-            );
+            BuildUIMenu(uiCategory);
+        }
+
+        private static void BuildCameraCategory(Page category)
+        {
+            Page camModeCategory = category.CreatePage("Camera Modes", Color.white);
+            Page headModeCategory = category.CreatePage("Head Mode Settings", Color.white);
+            Page freeCamCategory = category.CreatePage("Free Camera Settings", Color.white);
+
+            camModeCategory.CreateFunction("Mode: None", Color.white, () => CameraRigManager.Instance.CameraMode = CameraMode.None);
+            camModeCategory.CreateFunction("Mode: Handheld", Color.white, () => CameraRigManager.Instance.CameraMode = CameraMode.Handheld);
+            camModeCategory.CreateFunction("Mode: Free", Color.white, () => CameraRigManager.Instance.CameraMode = CameraMode.Free);
+            camModeCategory.CreateFunction("Mode: Head", Color.white, () => CameraRigManager.Instance.CameraMode = CameraMode.Head);
 
             BuildHeadModeCategory(headModeCategory);
             BuildFreeModeCategory(freeCamCategory);
 
+            Page vfxCategory = category.CreatePage("VFX", Color.white);
             BuildVFXCategory(vfxCategory);
 
-            BuildToolCategory(toolCategory);
-
-            BuildUIMenu(uiCategory);
+            category.CreateBool(
+                "Kinematic On Release",
+                Color.white,
+                false,
+                (value) => Settings.Camera.handheldKinematicOnRelease = value
+            );
         }
 
         private static void BuildToolCategory(Page category)

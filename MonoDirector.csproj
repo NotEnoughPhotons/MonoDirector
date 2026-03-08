@@ -26,6 +26,7 @@
 	  <None Remove="NOTICE.txt" />
 	  <None Remove="quest_build.bat" />
 	  <None Remove="README.md" />
+	  <None Remove="Resources\md_sounds_quest.bundle" />
 	  <None Remove="Resources\md_ui_pc.bundle" />
 	  <None Remove="Resources\md_ui_quest.bundle" />
 	  <None Remove="run_build.bat" />
@@ -53,15 +54,14 @@
 		<Compile Include="src\Audio\PooledAudio.cs" />
 		<Compile Include="src\Audio\SoundHolder.cs" />
 		<Compile Include="src\Bootstrap.cs" />
-		<Compile Include="src\Caster.cs" />
 		<Compile Include="src\Data\BundleLoader.cs" />
 		<Compile Include="src\Downloading\AssetDownloader.cs" />
+		<Compile Include="src\Downloading\DataResult.cs" />
 		<Compile Include="src\Downloading\PalletVersion.cs" />
 		<Compile Include="src\Downloading\PlatformObject.cs" />
 		<Compile Include="src\Downloading\ModObject.cs" />
-		<Compile Include="src\Film.cs" />
 		<Compile Include="src\Logging.cs" />
-		<Compile Include="src\Stage.cs" />
+		<Compile Include="src\Patches\Rig\RigScreenOptions.cs" />
 		<Compile Include="src\Tools\ActorPen.cs" />
 		<Compile Include="src\Tools\DirectedComponent.cs" />
 		<Compile Include="src\Tools\Gizmos\LightAngleGizmo.cs" />
@@ -86,7 +86,6 @@
 		<Compile Include="src\Camera\InputController.cs" />
 		<Compile Include="src\Constants.cs" />
 		<Compile Include="src\Data\ActionFrame.cs" />
-		<Compile Include="src\Data\AvatarPhotoBuilder.cs" />
 		<Compile Include="src\Data\BodyPartData.cs" />
 		<Compile Include="src\Data\CompressedQuaternion.cs" />
 		<Compile Include="src\Data\CompressedVector3.cs" />
@@ -125,9 +124,6 @@
 		<Compile Include="src\Tools\Propifier.cs" />
 		<Compile Include="src\Tools\Gizmos\SoundSourceTether.cs" />
 		<Compile Include="src\Tools\SpotLight.cs" />
-		<Compile Include="src\Tools\StageReel.cs" />
-		<Compile Include="src\Tools\StageShelf.cs" />
-		<Compile Include="src\Tools\StageShelfSocket.cs" />
 		<Compile Include="src\Tools\StudioLight.cs" />
 		<Compile Include="src\Tools\ToolEntity.cs" />
 		<Compile Include="src\Tools\VFXCharge.cs" />
@@ -152,6 +148,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="Resources\md_sounds_pc.bundle" />
+	  <EmbeddedResource Include="Resources\md_sounds_quest.bundle" />
 	  <EmbeddedResource Include="Resources\md_ui_pc.bundle" />
 	  <EmbeddedResource Include="Resources\md_ui_quest.bundle" />
 	</ItemGroup>

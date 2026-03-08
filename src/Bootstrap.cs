@@ -13,6 +13,7 @@ using NEP.MonoDirector.Downloading;
 using MelonLoader;
 using Il2CppSLZ.Marrow.Warehouse;
 using BoneLib.Notifications;
+using System.Linq.Expressions;
 
 namespace NEP.MonoDirector.Core
 {
@@ -20,9 +21,16 @@ namespace NEP.MonoDirector.Core
     {
         internal static GameObject MainContainerObject { get; private set; }
 
+        internal static bool AudioImportInstalled { get => m_audioImportInstalled; }
+
+        private static bool m_audioImportInstalled = false;
+
         internal static void Initialize()
         {
             Logging.Initialize();
+            BundleLoader.Initialize();
+
+            MelonCoroutines.Start(AssetDownloader.Start());
 
             Directory.CreateDirectory(Constants.dirBase);
             Directory.CreateDirectory(Constants.dirMod);
@@ -34,9 +42,9 @@ namespace NEP.MonoDirector.Core
 
             MDBoneMenu.Initialize();
 
-            FeedbackSFX.Initialize();
+            CheckAudioImport();
 
-            BundleLoader.Initialize();
+            FeedbackSFX.Initialize();
 #if DEBUG
             TestDebugSerialize();
 #endif
@@ -50,6 +58,12 @@ namespace NEP.MonoDirector.Core
         internal static void OnWarehouseReady()
         {
             AssetWarehouse.Instance.OnPalletAdded += new Action<Barcode>(OnPalletAdded);
+
+            if (!m_audioImportInstalled)
+            {
+                Logging.Warn("AudioImportLib is not installed!");
+                return;
+            }
 
             if (AssetDownloader.CheckInstall())
             {
@@ -65,18 +79,58 @@ namespace NEP.MonoDirector.Core
                 return;
             }
 
+            if (!m_audioImportInstalled)
+            {
+                Notification notification = new()
+                {
+                    Title = "Missing AudioImportLib",
+                    Message = "You do not have AudioImportLib installed! Custom sounds will not work.",
+                    Type = NotificationType.Warning,
+                    PopupLength = 5f
+                };
+
+                Notifier.Send(notification);
+
+                return;
+            }
+
             WarehouseLoader.LoadSounds();
             WarehouseLoader.GenerateSpawnablesFromSounds();
         }
 
         internal static void OnLevelLoaded()
         {
+            if (!m_audioImportInstalled)
+            {
+                Notification notification = new()
+                {
+                    Title = "Missing AudioImportLib",
+                    Message = "You do not have AudioImportLib installed! Custom sounds will not work.",
+                    Type = NotificationType.Warning,
+                    PopupLength = 5f
+                };
+
+                Notifier.Send(notification);
+            }
+
             if (!AssetDownloader.CheckInstall())
             {
                 Notification notification = new()
                 {
                     Title = "Missing Content Pallet",
                     Message = "You do not have the MonoDirector content pallet installed! Subscribe to it on mod.io, then install it in game!",
+                    Type = NotificationType.Warning,
+                    PopupLength = 5f
+                };
+
+                Notifier.Send(notification);
+            }
+            else if(AssetDownloader.NeedsNewVersion())
+            {
+                Notification notification = new()
+                {
+                    Title = "Content Update Available",
+                    Message = "A new update for the MonoDirector pallet is available! Download it from Void G114!",
                     Type = NotificationType.Warning,
                     PopupLength = 5f
                 };
@@ -103,6 +157,14 @@ namespace NEP.MonoDirector.Core
             ActorFrameManager.Initialize();
             WarehouseLoader.SpawnFromBarcode(WarehouseLoader.actorPanelBarcode);
             WarehouseLoader.SpawnFromBarcode(WarehouseLoader.mainMenuBarcode);
+        }
+
+        private static void CheckAudioImport()
+        {
+            if (MelonBase.FindMelon("AudioImportLib", "trev & zCubed") != null)
+            {
+                m_audioImportInstalled = true;
+            }
         }
 
         internal static void TestDebugSerialize()

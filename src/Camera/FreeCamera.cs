@@ -28,22 +28,22 @@ namespace NEP.MonoDirector.Cameras
 
         public Settings CameraSettings;
 
-        private Vector3 shakeVector;
+        private Vector3 m_shakeVector;
 
-        private Vector3 wishDir = Vector3.zero;
+        private Vector3 m_wishDir = Vector3.zero;
 
-        private bool fastCamera => Input.GetKey(KeyCode.LeftShift);
+        private bool m_fastCamera => Input.GetKey(KeyCode.LeftShift);
 
-        private float currentSpeed = 0f;
+        private float m_currentSpeed = 0f;
 
-        private Rigidbody rigidbody;
+        private Rigidbody m_rigidbody;
 
-        private InputController inputController = CameraRigManager.Instance.InputController;
+        private InputController m_inputControl = CameraRigManager.Instance.InputController;
 
         protected void Awake()
         {
-            rigidbody = gameObject.AddComponent<Rigidbody>();
-            rigidbody.useGravity = false;
+            m_rigidbody = gameObject.AddComponent<Rigidbody>();
+            m_rigidbody.useGravity = false;
 
             CameraSettings = new Settings()
             {
@@ -66,11 +66,11 @@ namespace NEP.MonoDirector.Cameras
 
         private void MouseUpdate()
         {
-            Vector3 mouseVector = inputController.MouseMove();
+            Vector3 mouseVector = m_inputControl.MouseMove();
 
-            float shakeX = Mathf.Sin(Time.time) + Mathf.PerlinNoise(CameraSettings.xShake * Time.time, CameraSettings.yShake) * shakeVector.x;
-            float shakeY = Mathf.Sin(Time.time) + Mathf.PerlinNoise(CameraSettings.xShake, 1f - CameraSettings.yShake * Time.time) * shakeVector.y;
-            float shakeZ = shakeY * shakeVector.z;
+            float shakeX = Mathf.Sin(Time.time) + Mathf.PerlinNoise(CameraSettings.xShake * Time.time, CameraSettings.yShake) * m_shakeVector.x;
+            float shakeY = Mathf.Sin(Time.time) + Mathf.PerlinNoise(CameraSettings.xShake, 1f - CameraSettings.yShake * Time.time) * m_shakeVector.y;
+            float shakeZ = shakeY * m_shakeVector.z;
 
             Vector3 rightVector = (Vector3.right * (mouseVector.y + (shakeX * CameraSettings.shakeMultiplier)));
             Vector3 upVector = (Vector3.up * (mouseVector.x + (shakeY * CameraSettings.shakeMultiplier)));
@@ -81,20 +81,20 @@ namespace NEP.MonoDirector.Cameras
 
         private void MoveUpdate()
         {
-            Vector3 inputVector = inputController.KeyboardMove();
+            Vector3 inputVector = m_inputControl.KeyboardMove();
 
-            Vector3.ClampMagnitude(wishDir, CameraSettings.maxSpeed);
+            Vector3.ClampMagnitude(m_wishDir, CameraSettings.maxSpeed);
 
             Transform t = CameraRigManager.Instance.Camera.transform;
 
-            currentSpeed = fastCamera ? CameraSettings.fastSpeed : CameraSettings.slowSpeed;
+            m_currentSpeed = m_fastCamera ? CameraSettings.fastSpeed : CameraSettings.slowSpeed;
 
             inputVector = Vector3.ClampMagnitude(inputVector, CameraSettings.maxSpeed);
 
-            wishDir = ((t.right * inputVector.x) + (t.up * inputVector.y) + (t.forward * inputVector.z));
-            rigidbody.AddForce(wishDir * currentSpeed);
+            m_wishDir = ((t.right * inputVector.x) + (t.up * inputVector.y) + (t.forward * inputVector.z));
+            m_rigidbody.AddForce(m_wishDir * m_currentSpeed);
 
-            rigidbody.drag = CameraSettings.friction;
+            m_rigidbody.drag = CameraSettings.friction;
         }
     }
 }

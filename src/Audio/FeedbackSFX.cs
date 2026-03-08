@@ -1,8 +1,9 @@
 ﻿using AudioImportLib;
 using UnityEngine;
 
-using BoneLib;
 using UnityEngine.Audio;
+using NEP.MonoDirector.Core;
+using NEP.MonoDirector.Data;
 
 namespace NEP.MonoDirector.Audio
 {
@@ -19,10 +20,10 @@ namespace NEP.MonoDirector.Audio
         {
             if (!m_init)
             {
-                m_sfxPreroll = API.LoadAudioClip(Constants.dirSFX + "preroll.wav");
-                m_sfxPostroll = API.LoadAudioClip(Constants.dirSFX + "postroll.wav");
-                m_sfxBeep = API.LoadAudioClip(Constants.dirSFX + "beep.wav");
-                m_sfxLinkedAudio = API.LoadAudioClip(Constants.dirSFX + "linkaudio.wav");
+                m_sfxPreroll = BundleLoader.PreRollClip;
+                m_sfxPostroll = BundleLoader.PostRollClip;
+                m_sfxBeep = BundleLoader.BeepClip;
+                m_sfxLinkedAudio = BundleLoader.LinkAudioClip;
                 m_init = true;
             }
 
@@ -40,6 +41,11 @@ namespace NEP.MonoDirector.Audio
 
         public static void Play(AudioClip clip, float pitch = 1.0f)
         {
+            if (clip == null)
+            {
+                return;
+            }
+
             AudioMixerGroup mixer = BoneLib.Audio.UI;
             BoneLib.Audio.Play2DOneShot(clip, mixer, 1f, pitch);
         }

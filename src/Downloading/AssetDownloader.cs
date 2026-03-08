@@ -1,15 +1,11 @@
-﻿using Il2CppSLZ.Marrow.Forklift;
-using Il2CppSLZ.Marrow.Forklift.Model;
+﻿using BoneLib;
 using Il2CppSLZ.Marrow.Warehouse;
-using MelonLoader;
 using NEP.MonoDirector.Core;
 
 using Newtonsoft.Json;
 using System.Collections;
-using System.IO.Compression;
 
 using UnityEngine;
-using UnityEngine.Playables;
 
 namespace NEP.MonoDirector.Downloading
 {
@@ -27,10 +23,14 @@ namespace NEP.MonoDirector.Downloading
 
         public static IEnumerator Start()
         {
-            if (CheckInstall())
-            {
-                yield break;
-            }
+            // if (CheckInstall())
+            // {
+            //     yield break;
+            // }
+
+            var task = FetchModFileAsync();
+
+            while (!task.IsCompleted) yield return null;
         }
 
         public static bool NeedsNewVersion()
@@ -59,6 +59,53 @@ namespace NEP.MonoDirector.Downloading
             }
 
             return true;
+        }
+
+        private static async Task FetchModFileAsync()
+        {
+            try
+            {
+                Uri uri = new Uri($"https://g-{GameID}.modapi.io/v1/games/{GameID}/mods/{ModID}/files/?api_key={APIKey}");
+
+                HttpClient client = null;
+                
+                // B.S. way to get around SSL validation not working on Quest.
+                // This might be a security issue.
+                if (HelperMethods.IsAndroid())
+                {
+                    // It is absolutely not recommended to use this code.
+                    // Bypassing SSL certificates and validation altogether is a massive security breach waiting to happen.
+                    // BUT...
+                    // The request URI will never change, and it is only done here once, and exists only for the Quest platform.
+                    HttpClientHandler handler = new HttpClientHandler();
+                    handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+                    client = new HttpClient(handler);
+                }
+                else
+                {
+                    client = new HttpClient();
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+                request.Headers.Add("Accept", "application/json");
+
+                var response = await client.SendAsync(request);
+
+                response.EnsureSuccessStatusCode();
+
+                string content = await response.Content.ReadAsStringAsync();
+
+                client = new HttpClient();
+
+                DataResult result = JsonConvert.DeserializeObject<DataResult>(content);
+                m_modFile = result.Data[result.Data.Length - 1];
+            }
+            catch (System.Exception e)
+            {
+                Logging.Error($"Exception caught! {e.StackTrace} - {e.Message}");
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace NEP.MonoDirector
         public const string Description = "A movie/photo making utility for BONELAB!";
         public const string Author = "Not Enough Photons";
         public const string Company = "Not Enough Photons";
-        public const string Version = "1.3.0";
+        public const string Version = "1.2.7";
         public const string DownloadLink = "https://bonelab.thunderstore.io/c/bonelab/p/NotEnoughPhotons/MonoDirector";
     }
 

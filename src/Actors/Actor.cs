@@ -125,6 +125,8 @@ namespace NEP.MonoDirector.Actors
         {
             base.OnSceneBegin();
 
+            m_body.AllowCollisions(true);
+
             for (int i = 0; i < 55; i++)
             {
                 var bone = m_clonedRigBones[i];
@@ -239,6 +241,7 @@ namespace NEP.MonoDirector.Actors
             m_clonedAvatar.gameObject.SetActive(true);
 
             m_body = new ActorBody(this, Constants.RigManager.physicsRig);
+            m_body.AllowCollisions(false);
 
             // stops position overrides, if there are any
             Animator animator = m_clonedAvatar.GetComponent<Animator>() ?? m_clonedAvatar.animator;
@@ -263,6 +266,20 @@ namespace NEP.MonoDirector.Actors
 
             m_marrowEntity = clonedAvatarObject.AddComponent<MarrowEntity>();
             m_marrowEntity.Validate();
+
+            // TODO: Refactor this whole... thing.
+            for (int i = 0; i < 55; i++)
+            {
+                var bone = m_clonedRigBones[i];
+
+                if (bone == null)
+                {
+                    continue;
+                }
+
+                bone.position = m_avatarFrames[m_avatarFrames.Count - 1].TransformFrames[i].position;
+                bone.rotation = m_avatarFrames[m_avatarFrames.Count - 1].TransformFrames[i].rotation;
+            }
 
             Events.OnActorCasted?.Invoke(this);
         }

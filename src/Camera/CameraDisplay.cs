@@ -10,12 +10,12 @@ namespace NEP.MonoDirector.Cameras
         public FollowCamera FollowCamera { get; private set; }
         public CameraVolume CameraVolume { get; private set; }
 
-        private SmoothFollower smoothFollower;
+        private SmoothFollower m_smoothFollower;
 
         private void Awake()
         {
-            smoothFollower = GetComponent<SmoothFollower>();
-            smoothFollower.enabled = false;
+            m_smoothFollower = GetComponent<SmoothFollower>();
+            m_smoothFollower.enabled = false;
 
             FOVController = gameObject.AddComponent<FOVController>();
             FollowCamera = gameObject.AddComponent<FollowCamera>();
@@ -26,7 +26,7 @@ namespace NEP.MonoDirector.Cameras
 
         private void Start()
         {
-            FollowCamera.SetFollowTarget(smoothFollower.targetTransform);
+            FollowCamera.SetFollowTarget(m_smoothFollower.targetTransform);
         }
     }
 }

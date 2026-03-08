@@ -8,7 +8,7 @@ namespace NEP.MonoDirector.Cameras
     {
         public float delta = 4f;
 
-        private Quaternion lastRotation;
+        private Quaternion m_lastRotation;
 
         private void LateUpdate()
         {
