@@ -10,11 +10,9 @@ namespace NEP.MonoDirector.Cameras
 {
     public class CameraRigManager
     {
-        public CameraRigManager()
+        public CameraRigManager(RigScreenOptions options)
         {
-            RigManager rigManager = Constants.RigManager;
-            RigScreenOptions screenOptions = rigManager.GetComponent<RigScreenOptions>();
-            RigScreenOptions = screenOptions;
+            RigScreenOptions = options;
             Start();
         }
 

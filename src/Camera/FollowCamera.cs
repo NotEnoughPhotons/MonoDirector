@@ -9,12 +9,7 @@ namespace NEP.MonoDirector.Cameras
     [MelonLoader.RegisterTypeInIl2Cpp]
     public class FollowCamera(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public readonly Dictionary<BodyPart, BodyPartData> FollowPoints = new Dictionary<BodyPart, BodyPartData>()
-        {
-            { BodyPart.Head, new BodyPartData(CameraRigManager.Instance.RigScreenOptions.TargetTransform) },
-            { BodyPart.Chest, new BodyPartData(Constants.RigManager.physicsRig.m_chest) },
-            { BodyPart.Pelvis, new BodyPartData(Constants.RigManager.physicsRig.m_pelvis) }
-        };
+        public readonly Dictionary<BodyPart, BodyPartData> FollowPoints = new Dictionary<BodyPart, BodyPartData>();
 
         public Transform FollowTarget { get => followTarget; }
 
