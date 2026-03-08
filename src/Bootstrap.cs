@@ -125,8 +125,7 @@ namespace NEP.MonoDirector.Core
 
                 Notifier.Send(notification);
             }
-
-            if (AssetDownloader.NeedsNewVersion())
+            else if(AssetDownloader.NeedsNewVersion())
             {
                 Notification notification = new()
                 {
