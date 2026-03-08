@@ -3,6 +3,21 @@ This is the changelog for MonoDirector! This changelog only features public rele
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [1.2.7] - 3/7/2026
+
+### Added
+- Re-added other cameras (including the freecam)!
+
+### Updated
+- Camera settings will only appear on PCVR, not Quest
+- Camera mode selection is done through one page instead of an enum element
+- Actors will automatically have their collision disabled outside of playback, then re-enabled during playback
+- Default camera mode is "None" instead of "Head"
+
+### Fixed
+- Fixed an issue with not being able to retrieve the camera holder object
+- Fixed an issue with Actors not being accurate to where the player last was after recording finished
+
 ## [1.2.6] - 3/7/2026
 
 ### Fixed
