@@ -107,6 +107,7 @@ namespace NEP.MonoDirector.UI
             Page toolCategory = category.CreatePage("Tools", Color.white);
             Page uiCategory = category.CreatePage("UI", Color.white);
 
+            Page camModeCategory = cameraCategory.CreatePage("Camera Modes", Color.white);
             Page headModeCategory = cameraCategory.CreatePage("Head Mode Settings", Color.white);
             Page freeCamCategory = cameraCategory.CreatePage("Free Camera Settings", Color.white);
             Page vfxCategory = cameraCategory.CreatePage("VFX", Color.white);
@@ -130,19 +131,17 @@ namespace NEP.MonoDirector.UI
                 value => Settings.World.micPlayback = value
             );
 
-            cameraCategory.CreateEnum(
-                "Camera Mode", 
-                Color.white, 
-                CameraMode.None,
-                (mode) => CameraRigManager.Instance.CameraMode = (CameraMode)mode
-            );
-
             cameraCategory.CreateBool(
                 "Kinematic On Release", 
                 Color.white, 
                 false,
                 (value) => Settings.Camera.handheldKinematicOnRelease = value
             );
+
+            camModeCategory.CreateFunction("Mode: None", Color.white, () => CameraRigManager.Instance.CameraMode = CameraMode.None);
+            camModeCategory.CreateFunction("Mode: Handheld", Color.white, () => CameraRigManager.Instance.CameraMode = CameraMode.Handheld);
+            camModeCategory.CreateFunction("Mode: Free", Color.white, () => CameraRigManager.Instance.CameraMode = CameraMode.Free);
+            camModeCategory.CreateFunction("Mode: Head", Color.white, () => CameraRigManager.Instance.CameraMode = CameraMode.Head);
 
             BuildHeadModeCategory(headModeCategory);
             BuildFreeModeCategory(freeCamCategory);
