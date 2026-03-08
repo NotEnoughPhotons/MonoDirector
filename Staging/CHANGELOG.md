@@ -3,6 +3,11 @@ This is the changelog for MonoDirector! This changelog only features public rele
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [1.2.6] - 3/7/2026
+
+### Fixed
+- Fixed a problem with the mod incorrectly reporting a pallet needed updating even though the most recent version was installed
+
 ## [1.2.5] - 3/7/2026
 
 ### Added
