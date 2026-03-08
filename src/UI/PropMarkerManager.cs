@@ -33,16 +33,16 @@ namespace NEP.MonoDirector.UI
                 loadedMarkerObjects.Add(obj);
             }
 
-            Events.OnPropCreated += AddMarkerToProp;
-            Events.OnPropRemoved += RemoveMarkerFromProp;
+            Caster.OnPropAdded += AddMarkerToProp;
+            Caster.OnPropRemoved += RemoveMarkerFromProp;
 
             Events.OnPlayStateSet += ShowMarkers;
         }
 
         public static void CleanUp()
         {
-            Events.OnPropCreated -= AddMarkerToProp;
-            Events.OnPropRemoved -= RemoveMarkerFromProp;
+            Caster.OnPropAdded -= AddMarkerToProp;
+            Caster.OnPropRemoved -= RemoveMarkerFromProp;
 
             Events.OnPlayStateSet -= ShowMarkers;
 
