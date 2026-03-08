@@ -259,7 +259,9 @@ namespace NEP.MonoDirector.Core
                     m_activeActor.OwnProp(recordedProp);
                 }
 
+                // NOTE: Perhaps add the active actor to the list?
                 Caster.CastActor(m_activeActor);
+                Director.ActiveStage.AddActor(m_activeActor);
             }
             
             m_lastActor = m_activeActor;
