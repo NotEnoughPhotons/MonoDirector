@@ -3,6 +3,21 @@ This is the changelog for MonoDirector! This changelog only features public rele
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [1.2.5] - 3/7/2026
+
+### Added
+- Added laser pointers to both the Actor Pen and Propifier
+- Added new notifications that will tell you if you don't have dependencies installed
+- Added a notification to let you know when there are new pallet updates
+
+### Updated
+- Moved UI sounds into their own bundles so that it doesn't break the mod if someone didn't have AudioImportLib installed
+- Actor management panel now faces the player
+- Custom SFX is now loaded from **"MonoDirector/SFX"** instead of **"MonoDirector/SFX/Sounds"** for simplicity
+
+### Fixed
+- Fixed issues with the mod coming to a screeching halt if AudioImportLib wasn't installed
+
 ## [1.2.4] - 3/4/2026
 
 ### Removed
