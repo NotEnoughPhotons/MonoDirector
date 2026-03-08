@@ -100,7 +100,7 @@ namespace NEP.MonoDirector.Downloading
                 client = new HttpClient();
 
                 DataResult result = JsonConvert.DeserializeObject<DataResult>(content);
-                m_modFile = result.Data[0];
+                m_modFile = result.Data[result.Data.Length - 1];
             }
             catch (System.Exception e)
             {
