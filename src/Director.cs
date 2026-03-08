@@ -142,6 +142,42 @@ namespace NEP.MonoDirector.Core
             m_camera = camera;
         }
 
+        public static void SetStage(Stage stage)
+        {
+            foreach (var actor in Caster.Cast)
+            {
+                actor.ActorBody.AllowCollisions(false);
+                actor.ClonedAvatar.gameObject.SetActive(false);
+            }
+
+            foreach (var prop in Caster.Props)
+            {
+                prop.gameObject.SetActive(false);
+            }
+
+            Caster.ClearCast();
+            Caster.ClearProps();
+            Caster.ClearRecordProps();
+
+            m_activeStage = stage;
+
+            Caster.CastActors(stage.Actors.ToList());
+            Caster.AddProps(stage.Props.ToList());
+
+            foreach (var actor in Caster.Cast)
+            {
+                actor.ActorBody.AllowCollisions(true);
+                actor.ClonedAvatar.gameObject.SetActive(true);
+                actor.Act();
+            }
+
+            foreach (var prop in Caster.Props)
+            {
+                prop.gameObject.SetActive(true);
+                prop.Act();
+            }
+        }
+
         public static void SelectActor(Actor actor) => Caster.SelectActor(actor);
 
         public static void DeselectActor(Actor actor) => Caster.DeselectActor(actor);
