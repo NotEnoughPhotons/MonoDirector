@@ -54,14 +54,17 @@
 		<Compile Include="src\Audio\PooledAudio.cs" />
 		<Compile Include="src\Audio\SoundHolder.cs" />
 		<Compile Include="src\Bootstrap.cs" />
+		<Compile Include="src\Caster.cs" />
 		<Compile Include="src\Data\BundleLoader.cs" />
 		<Compile Include="src\Downloading\AssetDownloader.cs" />
 		<Compile Include="src\Downloading\DataResult.cs" />
 		<Compile Include="src\Downloading\PalletVersion.cs" />
 		<Compile Include="src\Downloading\PlatformObject.cs" />
 		<Compile Include="src\Downloading\ModObject.cs" />
+		<Compile Include="src\Film.cs" />
 		<Compile Include="src\Logging.cs" />
 		<Compile Include="src\Patches\Rig\RigScreenOptions.cs" />
+		<Compile Include="src\Stage.cs" />
 		<Compile Include="src\Tools\ActorPen.cs" />
 		<Compile Include="src\Tools\DirectedComponent.cs" />
 		<Compile Include="src\Tools\Gizmos\LightAngleGizmo.cs" />
@@ -124,6 +127,9 @@
 		<Compile Include="src\Tools\Propifier.cs" />
 		<Compile Include="src\Tools\Gizmos\SoundSourceTether.cs" />
 		<Compile Include="src\Tools\SpotLight.cs" />
+		<Compile Include="src\Tools\StageReel.cs" />
+		<Compile Include="src\Tools\StageShelf.cs" />
+		<Compile Include="src\Tools\StageShelfSocket.cs" />
 		<Compile Include="src\Tools\StudioLight.cs" />
 		<Compile Include="src\Tools\ToolEntity.cs" />
 		<Compile Include="src\Tools\VFXCharge.cs" />
