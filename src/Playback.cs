@@ -39,6 +39,9 @@ namespace NEP.MonoDirector.Core
         private float m_playbackTime;
         private Coroutine m_playRoutine;
 
+        private Film m_film;
+        private Stage m_stage;
+
         //
         // Playback modification methods
         //
@@ -72,6 +75,9 @@ namespace NEP.MonoDirector.Core
                 Director.SetPlayState(PlayState.Playing);
                 return;
             }
+
+            m_film = Director.ActiveFilm;
+            m_stage = m_film.Stages[0];
 
             if (m_playRoutine == null)
                 m_playRoutine = MelonCoroutines.Start(PlayRoutine()) as Coroutine;
@@ -159,8 +165,8 @@ namespace NEP.MonoDirector.Core
             if (m_playbackTime <= 0f)
                 m_playbackTime = 0f;
 
-            if (m_playbackTime >= Director.ActiveStage.Duration)
-                m_playbackTime = Director.ActiveStage.Duration;
+            if (m_playbackTime >= m_stage.Duration)
+                m_playbackTime = m_stage.Duration;
 
             AnimateAll();
 
@@ -208,34 +214,41 @@ namespace NEP.MonoDirector.Core
         /// <returns></returns>
         public IEnumerator PlayRoutine()
         {
-            Events.OnPrePlayback?.Invoke();
-
-           for (Countdown = 0; Countdown < Settings.World.delay; Countdown++)
+            for (int i = 0; i < m_film.Stages.Count; i++)
             {
-                Events.OnTimerCountdown?.Invoke();
-                yield return new WaitForSeconds(1);
-            }
+                m_stage = m_film.Stages[i];
+                Director.SetStage(m_stage);
 
-            FeedbackSFX.BeepHigh();
+                Events.OnPrePlayback?.Invoke();
 
-            Events.OnPlay?.Invoke();
+                for (Countdown = 0; Countdown < Settings.World.delay; Countdown++)
+                {
+                    Events.OnTimerCountdown?.Invoke();
+                    yield return new WaitForSeconds(1);
+                }
 
-            while (Director.PlayState == PlayState.Playing || Director.PlayState == PlayState.Paused)
-            {
-                // TODO: Replace this with WaitUntil to prevent Coroutine garbage?
-                while (Director.PlayState == PlayState.Paused)
+                FeedbackSFX.BeepHigh();
+
+                Events.OnPlay?.Invoke();
+
+                while (Director.PlayState == PlayState.Playing || Director.PlayState == PlayState.Paused)
+                {
+                    // TODO: Replace this with WaitUntil to prevent Coroutine garbage?
+                    while (Director.PlayState == PlayState.Paused)
+                        yield return null;
+
+                    if (PlaybackTime >= m_stage.Duration)
+                        break;
+
+                    Tick();
+
                     yield return null;
+                }
 
-                if (PlaybackTime >= Director.ActiveStage.Duration)
-                    break;
-
-                Tick();
-                
                 yield return null;
             }
-
+            
             Events.OnStopPlayback?.Invoke();
-            yield return null;
         }
     }
 }
