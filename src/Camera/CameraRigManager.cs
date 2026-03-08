@@ -123,7 +123,7 @@ namespace NEP.MonoDirector.Cameras
         }
 
         private GameObject cameraObject;
-        private CameraMode cameraMode;
+        private CameraMode cameraMode = CameraMode.None;
 
         private GameObject cameraModel;
         private MeshRenderer cameraRenderer;
