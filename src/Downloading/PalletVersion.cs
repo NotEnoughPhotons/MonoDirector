@@ -16,7 +16,7 @@
 
         public static bool operator != (PalletVersion lhs, PalletVersion rhs)
         {
-            return (lhs.Major != rhs.Major) && (lhs.Minor != rhs.Minor) && (lhs.Patch != rhs.Patch);
+            return (lhs.Major != rhs.Major) || (lhs.Minor != rhs.Minor) || (lhs.Patch != rhs.Patch);
         }
 
         public int Major;

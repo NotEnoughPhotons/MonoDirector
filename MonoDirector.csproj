@@ -56,6 +56,7 @@
 		<Compile Include="src\Bootstrap.cs" />
 		<Compile Include="src\Data\BundleLoader.cs" />
 		<Compile Include="src\Downloading\AssetDownloader.cs" />
+		<Compile Include="src\Downloading\DataResult.cs" />
 		<Compile Include="src\Downloading\PalletVersion.cs" />
 		<Compile Include="src\Downloading\PlatformObject.cs" />
 		<Compile Include="src\Downloading\ModObject.cs" />

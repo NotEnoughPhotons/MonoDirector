@@ -27,10 +27,14 @@ namespace NEP.MonoDirector.Downloading
 
         public static IEnumerator Start()
         {
-            if (CheckInstall())
-            {
-                yield break;
-            }
+            // if (CheckInstall())
+            // {
+            //     yield break;
+            // }
+
+            var task = FetchModFileAsync();
+
+            while (!task.IsCompleted) yield return null;
         }
 
         public static bool NeedsNewVersion()
@@ -59,6 +63,34 @@ namespace NEP.MonoDirector.Downloading
             }
 
             return true;
+        }
+
+        private static async Task FetchModFileAsync()
+        {
+            try
+            {
+                Uri uri = new Uri($"https://g-{GameID}.modapi.io/v1/games/{GameID}/mods/{ModID}/files/?api_key={APIKey}");
+
+                var client = new HttpClient();
+                var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+                request.Headers.Add("Accept", "application/json");
+
+                var response = await client.SendAsync(request);
+
+                response.EnsureSuccessStatusCode();
+
+                string content = await response.Content.ReadAsStringAsync();
+
+                client = new HttpClient();
+
+                DataResult result = JsonConvert.DeserializeObject<DataResult>(content);
+                m_modFile = result.Data[0];
+            }
+            catch (System.Exception e)
+            {
+                Logging.Error($"Exception caught! {e.StackTrace} - {e.Message}");
+            }
         }
     }
 }

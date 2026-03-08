@@ -30,6 +30,8 @@ namespace NEP.MonoDirector.Core
             Logging.Initialize();
             BundleLoader.Initialize();
 
+            MelonCoroutines.Start(AssetDownloader.Start());
+
             Directory.CreateDirectory(Constants.dirBase);
             Directory.CreateDirectory(Constants.dirMod);
             Directory.CreateDirectory(Constants.dirSFX);
@@ -41,7 +43,6 @@ namespace NEP.MonoDirector.Core
             MDBoneMenu.Initialize();
 
             CheckAudioImport();
-
 
             FeedbackSFX.Initialize();
 #if DEBUG
@@ -83,7 +84,7 @@ namespace NEP.MonoDirector.Core
                 Notification notification = new()
                 {
                     Title = "Missing AudioImportLib",
-                    Message = "You do not have AudioImportLib installed! Download it from Thunderstore and install it!",
+                    Message = "You do not have AudioImportLib installed! Custom sounds will not work.",
                     Type = NotificationType.Warning,
                     PopupLength = 5f
                 };
@@ -99,6 +100,19 @@ namespace NEP.MonoDirector.Core
 
         internal static void OnLevelLoaded()
         {
+            if (!m_audioImportInstalled)
+            {
+                Notification notification = new()
+                {
+                    Title = "Missing AudioImportLib",
+                    Message = "You do not have AudioImportLib installed! Custom sounds will not work.",
+                    Type = NotificationType.Warning,
+                    PopupLength = 5f
+                };
+
+                Notifier.Send(notification);
+            }
+
             if (!AssetDownloader.CheckInstall())
             {
                 Notification notification = new()
@@ -112,12 +126,12 @@ namespace NEP.MonoDirector.Core
                 Notifier.Send(notification);
             }
 
-            if (!m_audioImportInstalled)
+            if (AssetDownloader.NeedsNewVersion())
             {
                 Notification notification = new()
                 {
-                    Title = "Missing AudioImportLib",
-                    Message = "You do not have AudioImportLib installed! Custom sounds will not work.",
+                    Title = "Content Update Available",
+                    Message = "A new update for the MonoDirector pallet is available! Download it from Void G114!",
                     Type = NotificationType.Warning,
                     PopupLength = 5f
                 };
