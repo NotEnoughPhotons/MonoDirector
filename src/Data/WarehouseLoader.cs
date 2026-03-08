@@ -29,7 +29,7 @@ namespace NEP.MonoDirector.Data
         {
             sounds = new List<AudioClip>();
             soundTable = new Dictionary<string, AudioClip>();
-            string path = Path.Combine(MelonEnvironment.UserDataDirectory, "Not Enough Photons/MonoDirector/SFX/Sounds");
+            string path = Path.Combine(MelonEnvironment.UserDataDirectory, "Not Enough Photons/MonoDirector/SFX");
 
             if (!Directory.Exists(path))
             {
