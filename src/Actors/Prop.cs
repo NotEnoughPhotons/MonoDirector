@@ -179,7 +179,7 @@ namespace NEP.MonoDirector.Actors
         {
             if (Director.PlayState == State.PlayState.Recording)
             {
-                if (!Director.RecordingProps.Contains(this))
+                if (!Caster.RecordProps.Contains(this))
                 {
                     return;
                 }

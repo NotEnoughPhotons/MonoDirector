@@ -93,7 +93,6 @@ namespace NEP.MonoDirector.Core
         public static void AddProp(Prop prop)
         {
             m_props.Add(prop);
-            m_recordProps.Add(prop);
             OnPropAdded?.Invoke(prop);
         }
 
@@ -111,6 +110,24 @@ namespace NEP.MonoDirector.Core
             m_props.Remove(prop);
             m_recordProps.Remove(prop);
             OnPropRemoved?.Invoke(prop);
+        }
+
+        public static void AddRecordProp(Prop prop)
+        {
+            m_recordProps.Add(prop);
+            OnPropAdded?.Invoke(prop);
+        }
+
+        public static void RemoveRecordProp(Prop prop)
+        {
+            m_recordProps.Remove(prop);
+            OnPropRemoved?.Invoke(prop);
+        }
+
+        public static void TransferRecordedProps()
+        {
+            m_props.AddRange(m_recordProps);
+            ClearRecordProps();
         }
 
         public static void ClearCast()

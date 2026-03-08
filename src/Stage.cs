@@ -8,20 +8,24 @@ namespace NEP.MonoDirector.Core
         public Stage()
         {
             m_actors = new List<Actor>();
+            m_props = new List<Prop>();
         }
 
         public Stage(string name)
         {
             m_actors = new List<Actor>();
+            m_props = new List<Prop>();
             m_name = name;
         }
 
         public IReadOnlyList<Actor> Actors => m_actors.AsReadOnly();
+        public IReadOnlyList<Prop> Props => m_props.AsReadOnly();
         public Barcode LevelBarcode => m_levelBarcode;
         public string Name => m_name;
         public float Duration => m_duration;
 
         private List<Actor> m_actors;
+        private List<Prop> m_props;
         private Barcode m_levelBarcode;
         private string m_name;
         private float m_duration;
@@ -50,7 +54,27 @@ namespace NEP.MonoDirector.Core
 
         public void RemoveActors(List<Actor> actors)
         {
-            m_actors.RemoveRange(0, m_actors.Count);
+
+        }
+
+        public void AddProp(Prop prop)
+        {
+            m_props.Add(prop);
+        }
+
+        public void AddProps(List<Prop> props)
+        {
+            m_props.AddRange(props);
+        }
+
+        public void RemoveProp(Prop prop)
+        {
+            m_props.Remove(prop);
+        }
+
+        public void RemoveProps(List<Prop> props)
+        {
+
         }
 
         public void SetDuration(float duration)

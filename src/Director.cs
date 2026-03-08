@@ -25,13 +25,6 @@ namespace NEP.MonoDirector.Core
         public static PlayState LastPlayState { get => m_lastPlayState; }
         public static CaptureState CaptureState { get => m_captureState; }
 
-        public static List<Actor> Cast;
-        public static List<ActorNPC> NPCCast;
-
-        public static List<Prop> WorldProps;
-        public static List<Prop> RecordingProps;
-        public static List<Prop> LastRecordedProps;
-
         public static int WorldTick { get => m_worldTick; }
 
         public static event Action<Actor> OnActorSelected;
@@ -58,11 +51,6 @@ namespace NEP.MonoDirector.Core
             m_playback = new Playback();
             m_recorder = new Recorder();
             Caster.Initialize();
-
-            Cast = new List<Actor>();
-            NPCCast = new List<ActorNPC>();
-            WorldProps = new List<Prop>();
-            RecordingProps = new List<Prop>();
 
             Events.OnPrePlayback += () => SetPlayState(PlayState.Preplaying);
             Events.OnPreRecord += () => SetPlayState(PlayState.Prerecording);

@@ -58,7 +58,7 @@ namespace NEP.MonoDirector.Actors
 
                 vfxBlip?.CallSpawnEffect();
 
-                Caster.AddProp(destructableProp);
+                Caster.AddRecordProp(destructableProp);
                 return;
             }
 
@@ -71,7 +71,7 @@ namespace NEP.MonoDirector.Actors
 
                 vfxBlip?.CallSpawnEffect();
 
-                Caster.AddProp(magazineProp);
+                Caster.AddRecordProp(magazineProp);
                 return;
             }
 
@@ -85,7 +85,7 @@ namespace NEP.MonoDirector.Actors
 
                 vfxBlip?.CallSpawnEffect();
 
-                Caster.AddProp(vehicle);
+                Caster.AddRecordProp(vehicle);
                 return;
             }
 
@@ -98,7 +98,7 @@ namespace NEP.MonoDirector.Actors
 
                 vfxBlip?.CallSpawnEffect();
 
-                Caster.AddProp(actorProp);
+                Caster.AddRecordProp(actorProp);
             }
         }
 

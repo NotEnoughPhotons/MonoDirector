@@ -76,7 +76,7 @@ namespace NEP.MonoDirector.Core
 
         public void RecordCamera()
         {
-            foreach (var castMember in Director.Cast)
+            foreach (var castMember in Caster.Cast)
             {
                 castMember?.Act();
             }
@@ -99,7 +99,7 @@ namespace NEP.MonoDirector.Core
                 Playback.Instance.AnimateActor(castMember);
             }
 
-            foreach(var prop in Director.WorldProps)
+            foreach(var prop in Caster.Props)
             {
                 Playback.Instance.AnimateProp(prop);
             }
@@ -268,11 +268,14 @@ namespace NEP.MonoDirector.Core
 
             Caster.CastActors(ActiveActors);
             Director.ActiveStage.AddActors(ActiveActors);
-            ActiveActors.Clear();
+            Director.ActiveStage.AddProps(Caster.RecordProps.ToList());
             
-            Caster.AddProps(Director.RecordingProps);
+            // Caster.AddProps(Director.RecordingProps);
             // Director.LastRecordedProps = Director.RecordingProps;
-            Caster.ClearRecordProps();
+
+            Caster.TransferRecordedProps();
+
+            ActiveActors.Clear();
 
             if (m_recordRoute != null)
             {

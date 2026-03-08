@@ -120,7 +120,7 @@ namespace NEP.MonoDirector.Tools
             if (m_prop == null)
             {
                 m_prop = gameObject.AddComponent<Prop>();
-                Director.RecordingProps.Add(m_prop);
+                Caster.AddProp(m_prop);
             }
         }
 
@@ -128,11 +128,11 @@ namespace NEP.MonoDirector.Tools
         {
             if (m_prop != null)
             {
-                Director.RecordingProps.Remove(m_prop);
+                Caster.RemoveProp(m_prop);
 
-                if (Director.WorldProps.Contains(m_prop))
+                if (Caster.Props.Contains(m_prop))
                 {
-                    Director.WorldProps.Remove((m_prop));
+                    Caster.RemoveProp(m_prop);
                 }
                 
                 Destroy(m_prop);
