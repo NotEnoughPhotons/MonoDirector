@@ -1,11 +1,10 @@
-﻿using UnityEngine;
-
+﻿using BoneLib;
+using NEP.MonoDirector.Actors;
 using NEP.MonoDirector.Cameras;
 using NEP.MonoDirector.State;
-
 using System.Collections.Generic;
-using NEP.MonoDirector.Actors;
-using BoneLib;
+using UnityEngine;
+using static Il2CppSLZ.Marrow.PuppetMasta.Muscle;
 
 namespace NEP.MonoDirector.Core
 {
@@ -58,6 +57,7 @@ namespace NEP.MonoDirector.Core
         {
             m_playback = new Playback();
             m_recorder = new Recorder();
+            Caster.Initialize();
 
             Cast = new List<Actor>();
             NPCCast = new List<ActorNPC>();
@@ -140,28 +140,7 @@ namespace NEP.MonoDirector.Core
 
         public static void Recast(Actor actor)
         {
-            Vector3 actorPosition = actor.Frames[0].TransformFrames[0].position;
-            Constants.RigManager.Teleport(actorPosition, true);
-            Constants.RigManager.SwapAvatar(actor.ClonedAvatar);
-
-            // Any props recorded by this actor must be removed if we're recasting
-            // If we don't, the props will still play, but they will be floating in the air aimlessly.
-            // Spooky!
-
-            if (WorldProps.Count != 0)
-            {
-                foreach (var prop in WorldProps)
-                {
-                    if (prop.Actor == actor)
-                    {
-                        GameObject.Destroy(prop);
-                    }
-                }
-            }
-
-            Cast.Remove(actor);
-            actor.Delete();
-
+            Caster.RecastActor(actor);
             Record();
         }
 
@@ -175,71 +154,35 @@ namespace NEP.MonoDirector.Core
             m_camera = camera;
         }
 
-        public static void SelectActor(Actor actor)
-        {
-            m_selectedActor = actor;
-            OnActorSelected?.Invoke(actor);
-        }
+        public static void SelectActor(Actor actor) => Caster.SelectActor(actor);
 
-        public static void DeselectActor(Actor actor)
-        {
-            m_selectedActor = null;
-            OnActorDeselected?.Invoke(actor);
-        }
+        public static void DeselectActor(Actor actor) => Caster.DeselectActor(actor);
 
-        public static void RemoveActor(Actor actor)
-        {
-            Cast.Remove(actor);
-            actor.Delete();
-        }
-
-        public static void RemoveLastActor()
-        {
-            RemoveActor(Recorder.Instance.LastActor);
-
-            foreach(var prop in LastRecordedProps)
-            {
-                WorldProps.Remove(prop);
-                prop.InteractableRigidbody.isKinematic = false;
-                GameObject.Destroy(prop);
-            }
-        }
+        public static void RemoveActor(Actor actor) => Caster.UncastActor(actor);
 
         public static void RemoveAllActors()
         {
             m_playState = PlayState.Stopped;
 
-            for (int i = 0; i < Cast.Count; i++)
+            for (int i = Caster.Cast.Count; i > 0; i--)
             {
-                Cast[i].Delete();
+                Caster.UncastActor(Caster.Cast[i]);
             }
 
-            Cast.Clear();
-        }
-        
-        public static void ClearLastProps()
-        {
-            foreach(var prop in LastRecordedProps)
-            {
-                prop.InteractableRigidbody.isKinematic = false;
-                WorldProps.Remove(prop);
-                GameObject.Destroy(prop);
-            }
-
-            LastRecordedProps.Clear();
+            Caster.ClearCast();
         }
 
         public static void ClearScene()
         {
             RemoveAllActors();
             
-            foreach(var prop in WorldProps)
+            for (int i = Caster.Props.Count - 1; i > 0; i--)
             {
-                prop.InteractableRigidbody.isKinematic = false;
-                GameObject.Destroy(prop);
+                Caster.RemoveProp(Caster.Props[i]);
+                GameObject.Destroy(Caster.Props[i]);
             }
 
-            WorldProps.Clear();
+            Caster.ClearProps();
         }
 
         public static void SetPlayState(PlayState state)

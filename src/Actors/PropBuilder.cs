@@ -1,10 +1,9 @@
-﻿using NEP.MonoDirector.Core;
-
-using UnityEngine;
-
+﻿using Il2CppSLZ.Bonelab;
 using Il2CppSLZ.Marrow;
-using Il2CppSLZ.Bonelab;
 using Il2CppSLZ.Marrow.Interaction;
+using NEP.MonoDirector.Core;
+using NEP.MonoDirector.Proxy;
+using UnityEngine;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -42,11 +41,10 @@ namespace NEP.MonoDirector.Actors
                 var actorProp = gameObject.AddComponent<GunProp>();
                 actorProp.SetRigidbody(rigidbody);
                 actorProp.SetGun(gameObject.GetComponent<Gun>());
-                Director.RecordingProps.Add(actorProp);
 
                 vfxBlip?.CallSpawnEffect();
 
-                Events.OnPropCreated?.Invoke(actorProp);
+                Caster.AddProp(actorProp);
                 return;
             }
 
@@ -58,11 +56,9 @@ namespace NEP.MonoDirector.Actors
                 destructableProp.SetRigidbody(rigidbody);
                 destructableProp.SetBreakableObject(gameObject.GetComponent<ObjectDestructible>());
 
-                Director.RecordingProps.Add(destructableProp);
-
                 vfxBlip?.CallSpawnEffect();
 
-                Events.OnPropCreated?.Invoke(destructableProp);
+                Caster.AddProp(destructableProp);
                 return;
             }
 
@@ -73,11 +69,9 @@ namespace NEP.MonoDirector.Actors
                 var magazineProp = gameObject.AddComponent<Prop>();
                 magazineProp.SetRigidbody(rigidbody);
 
-                Director.RecordingProps.Add(magazineProp);
-
                 vfxBlip?.CallSpawnEffect();
 
-                Events.OnPropCreated?.Invoke(magazineProp);
+                Caster.AddProp(magazineProp);
                 return;
             }
 
@@ -89,10 +83,9 @@ namespace NEP.MonoDirector.Actors
                 vehicle.SetRigidbody(rigidbody);
                 vehicle.SetVehicle(rigidbody.GetComponent<Atv>());
 
-                Director.RecordingProps.Add(vehicle);
                 vfxBlip?.CallSpawnEffect();
 
-                Events.OnPropCreated?.Invoke(vehicle);
+                Caster.AddProp(vehicle);
                 return;
             }
 
@@ -102,11 +95,10 @@ namespace NEP.MonoDirector.Actors
 
                 var actorProp = gameObject.AddComponent<Prop>();
                 actorProp.SetRigidbody(rigidbody);
-                Director.RecordingProps.Add(actorProp);
 
                 vfxBlip?.CallSpawnEffect();
 
-                Events.OnPropCreated?.Invoke(actorProp);
+                Caster.AddProp(actorProp);
             }
         }
 
@@ -130,12 +122,9 @@ namespace NEP.MonoDirector.Actors
                 MelonLoader.MelonLogger.Msg($"Removing component from {gameObject.name}");
 
                 var prop = actorProp;
-                prop.InteractableRigidbody.isKinematic = false;
-                Director.RecordingProps.Remove(prop);
-                GameObject.Destroy(prop);
                 vfxBlip?.CallDespawnEffect();
-
-                Events.OnPropRemoved?.Invoke(prop);
+                Caster.RemoveProp(prop);
+                GameObject.Destroy(prop);
             }
         }
     }

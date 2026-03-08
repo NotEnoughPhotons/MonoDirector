@@ -302,12 +302,10 @@ namespace NEP.MonoDirector.Actors
 
         public override void Delete()
         {
-            Events.OnActorUncasted?.Invoke(this);
-            
             foreach (var ownedProp in m_ownedProps)
             {
                 PropMarkerManager.RemoveMarkerFromProp(ownedProp);
-                Director.WorldProps.Remove(ownedProp);
+                Caster.RemoveProp(ownedProp);
                 ownedProp.DeleteAllFrames();
             }
 

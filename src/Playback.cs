@@ -85,12 +85,12 @@ namespace NEP.MonoDirector.Core
         {
             ResetPlayhead();
 
-            foreach (var castMember in Director.Cast)
+            foreach (var castMember in Caster.Cast)
             {
                 castMember.OnSceneBegin();
             }
 
-            foreach (var prop in Director.WorldProps)
+            foreach (var prop in Caster.Props)
             {
                 prop.OnSceneBegin();
                 prop.gameObject.SetActive(true);
@@ -102,7 +102,7 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnPlay()
         {
-            foreach(var actor in Director.Cast)
+            foreach(var actor in Caster.Cast)
             {
                 if(actor is Actor actorPlayer)
                 {
@@ -131,7 +131,7 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnStopPlayback()
         {
-            foreach (Trackable castMember in Director.Cast)
+            foreach (Trackable castMember in Caster.Cast)
             {
                 if (castMember != null && castMember is Actor actorPlayer)
                 {
@@ -173,10 +173,10 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void AnimateAll()
         {
-            foreach (var castMember in Director.Cast)
+            foreach (var castMember in Caster.Cast)
                 AnimateActor(castMember);
 
-            foreach (var prop in Director.WorldProps)
+            foreach (var prop in Caster.Props)
                 AnimateProp(prop);
         }
         

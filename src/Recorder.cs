@@ -89,12 +89,12 @@ namespace NEP.MonoDirector.Core
                 m_activeActor.RecordFrame();
             }
             
-            foreach (var prop in Director.RecordingProps)
+            foreach (var prop in Caster.RecordProps)
             {
                 prop.Record(m_recordTick);
             }
 
-            foreach (var castMember in Director.Cast)
+            foreach (var castMember in Caster.Cast)
             {
                 Playback.Instance.AnimateActor(castMember);
             }
@@ -126,12 +126,12 @@ namespace NEP.MonoDirector.Core
                 SetActor(Constants.RigManager.avatar);
             }
 
-            foreach (var castMember in Director.Cast)
+            foreach (var castMember in Caster.Cast)
             {
                 castMember.OnSceneBegin();
             }
 
-            foreach(var prop in Director.WorldProps)
+            foreach(var prop in Caster.Props)
             {
                 prop.OnSceneBegin();
                 prop.gameObject.SetActive(true);
@@ -146,7 +146,7 @@ namespace NEP.MonoDirector.Core
             m_activeActor?.Microphone?.SetCorrectionMode(Audio.ActorSpeech.AudioCorrectionMode.Corrected);
             m_activeActor?.Microphone?.RecordMicrophone();
 
-            foreach (Trackable castMember in Director.Cast)
+            foreach (Trackable castMember in Caster.Cast)
             {
                 if (castMember != null && castMember is Actor actorPlayer)
                 {
@@ -186,7 +186,7 @@ namespace NEP.MonoDirector.Core
                 RecordActor();
             }
 
-            foreach (var castMember in Director.Cast)
+            foreach (var castMember in Caster.Cast)
             {
                 if (castMember != null)
                 {
@@ -204,7 +204,7 @@ namespace NEP.MonoDirector.Core
 
             m_activeActor?.Microphone?.StopRecording();
 
-            foreach (Trackable castMember in Director.Cast)
+            foreach (Trackable castMember in Caster.Cast)
             {
                 if (castMember != null && castMember is Actor actorPlayer)
                 {
@@ -254,26 +254,25 @@ namespace NEP.MonoDirector.Core
             {
                 m_activeActor.CloneAvatar();
                 
-                foreach (var recordedProp in Director.RecordingProps)
+                foreach (var recordedProp in Caster.RecordProps)
                 {
                     m_activeActor.OwnProp(recordedProp);
                 }
 
-                Director.Cast.Add(m_activeActor);
+                Caster.CastActor(m_activeActor);
             }
             
             m_lastActor = m_activeActor;
 
             m_activeActor = null;
 
-            Director.Cast.AddRange(ActiveActors);
+            Caster.CastActors(ActiveActors);
             Director.ActiveStage.AddActors(ActiveActors);
             ActiveActors.Clear();
             
-            Director.WorldProps.AddRange(Director.RecordingProps);
-            Director.LastRecordedProps = Director.RecordingProps;
-            Director.RecordingProps.Clear();
-
+            Caster.AddProps(Director.RecordingProps);
+            // Director.LastRecordedProps = Director.RecordingProps;
+            Caster.ClearRecordProps();
 
             if (m_recordRoute != null)
             {

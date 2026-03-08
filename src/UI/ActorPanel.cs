@@ -37,8 +37,8 @@ namespace NEP.MonoDirector.UI
 
         private void OnEnable()
         {
-            Director.OnActorSelected += OnActorSelected;
-            Director.OnActorDeselected += OnActorDeselected;
+            Caster.OnActorSelected += OnActorSelected;
+            Caster.OnActorDeselected += OnActorDeselected;
 
             m_recastButton.onClick.AddListener(m_onRecastClicked);
             m_deleteButton.onClick.AddListener(m_onDeleteClicked);
@@ -46,8 +46,8 @@ namespace NEP.MonoDirector.UI
 
         private void OnDisable()
         {
-            Director.OnActorSelected -= OnActorSelected;
-            Director.OnActorDeselected -= OnActorDeselected;
+            Caster.OnActorSelected -= OnActorSelected;
+            Caster.OnActorDeselected -= OnActorDeselected;
 
             m_recastButton.onClick.RemoveListener(m_onRecastClicked);
             m_deleteButton.onClick.RemoveListener(m_onDeleteClicked);
@@ -76,13 +76,13 @@ namespace NEP.MonoDirector.UI
 
         private void OnRecastClicked()
         {
-            Director.Recast(Director.SelectedActor);
+            Caster.RecastActor(Caster.SelectedActor);
             m_root.gameObject.SetActive(false);
         }
 
         private void OnDeleteClicked()
         {
-            Director.RemoveActor(Director.SelectedActor);
+            Caster.UncastActor(Caster.SelectedActor);
             m_root.gameObject.SetActive(false);
         }
     }

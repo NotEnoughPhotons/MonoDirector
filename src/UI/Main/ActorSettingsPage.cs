@@ -64,7 +64,7 @@ namespace NEP.MonoDirector.UI
 
         public void OnDeletePropsButtonClicked()
         {
-            Director.ClearLastProps();
+            // Director.ClearLastProps();
         }
 
         public void OnRecastButtonClicked()
