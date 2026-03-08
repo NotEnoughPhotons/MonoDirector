@@ -26,7 +26,7 @@
 	  <None Remove="NOTICE.txt" />
 	  <None Remove="quest_build.bat" />
 	  <None Remove="README.md" />
-	  <None Remove="Resources\md_sounds.bundle" />
+	  <None Remove="Resources\md_sounds_quest.bundle" />
 	  <None Remove="Resources\md_ui_pc.bundle" />
 	  <None Remove="Resources\md_ui_quest.bundle" />
 	  <None Remove="run_build.bat" />
@@ -147,7 +147,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Resources\md_sounds.bundle" />
+	  <EmbeddedResource Include="Resources\md_sounds_pc.bundle" />
+	  <EmbeddedResource Include="Resources\md_sounds_quest.bundle" />
 	  <EmbeddedResource Include="Resources\md_ui_pc.bundle" />
 	  <EmbeddedResource Include="Resources\md_ui_quest.bundle" />
 	</ItemGroup>

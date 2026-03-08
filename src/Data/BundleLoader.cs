@@ -28,8 +28,8 @@ namespace NEP.MonoDirector.Data
 
         public static void Initialize()
         {
-            LoadUIBundle();
-            LoadSoundBundle();
+            m_uiBundle = LoadBundle("ui");
+            m_soundBundle = LoadBundle("sounds");
 
             m_frameObject = m_uiBundle.LoadPersistentAsset<GameObject>("Frame");
             m_propMarkerObject = m_uiBundle.LoadPersistentAsset<GameObject>("PropMarker");
@@ -40,28 +40,20 @@ namespace NEP.MonoDirector.Data
             m_linkAudioClip = m_soundBundle.LoadPersistentAsset<AudioClip>("linkaudio");
         }
 
-        private static void LoadUIBundle()
+        private static AssetBundle LoadBundle(string name)
         {
             string resourcePath = "NEP.MonoDirector.Resources";
 
             if (!HelperMethods.IsAndroid())
             {
-                resourcePath += ".md_ui_pc.bundle";
+                resourcePath += $".md_{name}_pc.bundle";
             }
             else
             {
-                resourcePath += ".md_ui_quest.bundle";
+                resourcePath += $".md_{name}_quest.bundle";
             }
 
-            m_uiBundle = HelperMethods.LoadEmbeddedAssetBundle(Assembly.GetExecutingAssembly(), resourcePath);
-        }
-
-        private static void LoadSoundBundle()
-        {
-            string resourcePath = "NEP.MonoDirector.Resources";
-            resourcePath += ".md_sounds.bundle";
-
-            m_soundBundle = HelperMethods.LoadEmbeddedAssetBundle(Assembly.GetExecutingAssembly(), resourcePath);
+            return HelperMethods.LoadEmbeddedAssetBundle(Assembly.GetExecutingAssembly(), resourcePath);
         }
     }
 }
