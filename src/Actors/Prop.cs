@@ -124,8 +124,6 @@ namespace NEP.MonoDirector.Actors
 
         public virtual void Act()
         {
-            gameObject.SetActive(true);
-
             if(m_interactableRigidbody == null)
             {
                 m_interactableRigidbody = GetComponent<Rigidbody>();
@@ -177,6 +175,11 @@ namespace NEP.MonoDirector.Actors
 
         public virtual void RecordAction(Action action)
         {
+            RecordAction(action, Recorder.Instance.RecordingTime);
+        }
+
+        public virtual void RecordAction(Action action, float time = 0f)
+        {
             if (Director.PlayState == State.PlayState.Recording)
             {
                 if (!Director.RecordingProps.Contains(this))
@@ -184,7 +187,7 @@ namespace NEP.MonoDirector.Actors
                     return;
                 }
 
-                m_actionFrames.Add(new ActionFrame(action, Recorder.Instance.RecordingTime));
+                m_actionFrames.Add(new ActionFrame(action, time));
             }
         }
 
