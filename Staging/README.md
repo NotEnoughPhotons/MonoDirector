@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="https://github.com/Not-Enough-Photons/MonoDirector/blob/main/img/logo.png?raw=true" alt="MagPerception" width = 800px>
+<img src="https://github.com/Not-Enough-Photons/MonoDirector/blob/main/img/logo.png?raw=true" alt="MonoDirector" width = 800px>
 </img>
 </p>
 
