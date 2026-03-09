@@ -60,7 +60,11 @@ namespace NEP.MonoDirector.UI
 
             GameObject asset = loadedMarkerObjects.FirstOrDefault((marker) => !activeMarkers.Contains(marker));
 
-            asset.gameObject.SetActive(true);
+            // HACK: Don't show prop markers during recording, if the prop was added during recording!
+            if (Director.PlayState != PlayState.Recording)
+            {
+                asset.gameObject.SetActive(true);
+            }
 
             asset.transform.SetParent(prop.transform);
             asset.transform.localPosition = new Vector3(0f, 0.5f, 0f);
