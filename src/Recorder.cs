@@ -134,7 +134,6 @@ namespace NEP.MonoDirector.Core
             foreach(var prop in Director.WorldProps)
             {
                 prop.OnSceneBegin();
-                prop.gameObject.SetActive(true);
             }
         }
 
