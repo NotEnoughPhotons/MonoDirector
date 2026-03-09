@@ -3,6 +3,12 @@ This is the changelog for MonoDirector! This changelog only features public rele
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [1.2.8] - 3/9/2026
+
+### Fixed
+- Fixed magazines floating around during playback
+- Fixed prop markers showing up during recordings if props were added
+
 ## [1.2.7] - 3/7/2026
 
 ### Added
