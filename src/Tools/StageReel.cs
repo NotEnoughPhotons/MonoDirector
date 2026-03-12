@@ -3,6 +3,7 @@ using MelonLoader;
 using NEP.MonoDirector.Core;
 using Il2CppTMPro;
 using Il2CppSLZ.Marrow;
+using Il2CppSLZ.Marrow.Pool;
 
 namespace NEP.MonoDirector.Tools
 {
@@ -10,35 +11,51 @@ namespace NEP.MonoDirector.Tools
     public class StageReel(IntPtr ptr) : MonoBehaviour(ptr)
     {
         private Stage m_stage;
+        private Rigidbody m_rigidbody;
         private TextMeshPro m_title;
-        private ConfigurableJoint m_joint;
-        private StageShelfSocket m_socket;
+        private StageShelfSocket m_attachedSocket;
+        private StageShelfSocket m_lastConnectedSocket;
         private StageShelfSocket m_hoveredSocket;
         private Grip m_grip;
+        private Poolee m_poolee;
 
         private Action<Hand> m_onHandAttached;
         private Action<Hand> m_onHandReleased;
 
+        private bool m_hackDespawnFlag;
+
         private void Awake()
         {
             m_title = transform.Find("Text").GetComponent<TextMeshPro>();
-            m_joint = GetComponent<ConfigurableJoint>();
             m_grip = transform.Find("Grip").GetComponent<Grip>();
+            m_poolee = GetComponent<Poolee>();
+            m_rigidbody = GetComponent<Rigidbody>();
 
             m_onHandAttached = OnHandAttached;
             m_onHandReleased = OnHandReleased;
+
+            m_rigidbody.isKinematic = true;
         }
 
-        protected virtual void OnEnable()
+        protected void OnEnable()
         {
             m_grip.attachedHandDelegate += m_onHandAttached;
             m_grip.detachedHandDelegate += m_onHandReleased;
         }
 
-        protected virtual void OnDisable()
+        protected void OnDisable()
         {
             m_grip.attachedHandDelegate -= m_onHandAttached;
             m_grip.detachedHandDelegate -= m_onHandReleased;
+        }
+
+        private void Update()
+        {
+            if (m_hackDespawnFlag)
+            {
+                m_poolee.Despawn();
+                m_hackDespawnFlag = false;
+            }
         }
 
         private void OnTriggerEnter(Collider collider)
@@ -52,9 +69,9 @@ namespace NEP.MonoDirector.Tools
 
             m_hoveredSocket = socket;
 
-            if (socket.Empty)
+            if (m_hoveredSocket.Empty)
             {
-                socket.OnHoverOver();
+                m_hoveredSocket.HoverOver();
             }
         }
 
@@ -67,12 +84,21 @@ namespace NEP.MonoDirector.Tools
                 return;
             }
 
-            m_hoveredSocket = socket;
-
-            if (socket.Empty)
+            if (m_hoveredSocket)
             {
-                socket.OnHoverAway();
+                m_hoveredSocket.HoverAway();
+                m_hoveredSocket = null;
             }
+        }
+
+        private void Despawn()
+        {
+            // Directly despawning a poolee while in your hands triggers a stack overflow.
+            // This is because Poolee.Despawn invokes Grip.detachedHandDelegate.
+            // Anyone who calls Poolee.Despawn inside of code that Grip.detachedHandDelegate is subscribed to, will trigger a stack overflow.
+            // To get around this, we'll just set a flag to true and check it in the Update loop for despawning.
+            // I really wish I didn't have to do this.
+            m_hackDespawnFlag = true;
         }
 
         public void SetStage(Stage stage)
@@ -83,29 +109,29 @@ namespace NEP.MonoDirector.Tools
 
         public void AttachToSocket(StageShelfSocket socket)
         {
-            m_socket = socket;
-
-            m_joint.connectedBody = m_socket.GetComponent<Rigidbody>();
-            m_joint.xMotion = ConfigurableJointMotion.Locked;
-            m_joint.yMotion = ConfigurableJointMotion.Locked;
-            m_joint.zMotion = ConfigurableJointMotion.Locked;
-            m_joint.angularXMotion = ConfigurableJointMotion.Locked;
-            m_joint.angularYMotion = ConfigurableJointMotion.Locked;
-            m_joint.angularZMotion = ConfigurableJointMotion.Locked;
-            m_joint.autoConfigureConnectedAnchor = false;
-            m_joint.connectedAnchor = Vector3.zero;
-            transform.localPosition = Vector3.zero;
-            transform.rotation = Quaternion.identity;
+            m_attachedSocket = socket;
+            m_lastConnectedSocket = m_attachedSocket;
+            m_attachedSocket.Connect();
+            m_rigidbody.isKinematic = true;
+            transform.position = m_attachedSocket.transform.position;
+            transform.rotation = m_attachedSocket.transform.rotation;
         }
 
         public void DetachFromSocket()
         {
-            m_joint.xMotion = ConfigurableJointMotion.Free;
-            m_joint.yMotion = ConfigurableJointMotion.Free;
-            m_joint.zMotion = ConfigurableJointMotion.Free;
-            m_joint.angularXMotion = ConfigurableJointMotion.Free;
-            m_joint.angularYMotion = ConfigurableJointMotion.Free;
-            m_joint.angularZMotion = ConfigurableJointMotion.Free;
+            if (!m_attachedSocket)
+            {
+                return;
+            }
+
+            if (m_attachedSocket.IsDisconnected)
+            {
+                return;
+            }
+
+            m_attachedSocket.Disconnect();
+            m_attachedSocket = null;
+            m_rigidbody.isKinematic = false;
         }
 
         private void OnHandAttached(Hand hand)
@@ -125,14 +151,29 @@ namespace NEP.MonoDirector.Tools
                 return;
             }
 
-            if (m_hoveredSocket == null)
+            // Already hovering over a socket?
+            if (m_hoveredSocket)
             {
-                AttachToSocket(m_socket);
-            }
-            else
-            {
-                m_socket.SetReel(null);
+                // If there's no stage already, make one.
+                if (m_stage == null)
+                {
+                    m_stage = new Stage("Stage");
+                    SetStage(m_stage);
+                    Director.SetStage(m_stage);
+                    Director.ActiveFilm.AddStage(m_stage);
+                }
+
                 AttachToSocket(m_hoveredSocket);
+            }
+            // If we let go of the reel, it should go back to the previously connected socket.
+            else if (m_lastConnectedSocket)
+            {
+                if (m_stage == null)
+                {
+                    Despawn();
+                }
+
+                AttachToSocket(m_lastConnectedSocket);
             }
         }
     }

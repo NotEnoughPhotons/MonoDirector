@@ -19,6 +19,10 @@ namespace NEP.MonoDirector.Tools
     {
         private Film m_film;
         private StageShelfSocket[] m_sockets;
+        private StageShelfSocket m_newStageSocket;
+
+        private Spawnable m_reelSpawnable;
+        private Coroutine m_reelSpawnRoutine;
 
         private void Awake()
         {
@@ -32,6 +36,8 @@ namespace NEP.MonoDirector.Tools
                 m_sockets[i] = child.GetComponent<StageShelfSocket>();
             }
 
+            m_newStageSocket = transform.Find("Canvas/NewStage").GetComponent<StageShelfSocket>();
+
             MelonCoroutines.Start(SpawnReels());
         }
 
@@ -39,6 +45,40 @@ namespace NEP.MonoDirector.Tools
         {
             m_film = Director.ActiveFilm;
             transform.position = Vector3.up;
+
+            m_newStageSocket.OnDisconnected += OnNewStage;
+        }
+
+        private void OnDisable()
+        {
+            m_newStageSocket.OnDisconnected -= OnNewStage;
+        }
+
+        private void OnNewStage()
+        {
+            MelonCoroutines.Start(SpawnNewReel());
+        }
+
+        private IEnumerator SpawnNewReel()
+        {
+            var spawnTask = AssetSpawner.SpawnAsync(
+                    m_reelSpawnable,
+                    Vector3.zero,
+                    Quaternion.identity,
+                    new Il2CppSystem.Nullable<Vector3>(Vector3.one),
+                    null,
+                    false,
+                    new Il2CppSystem.Nullable<int>(0)).GetAwaiter();
+
+            while (!spawnTask.IsCompleted) yield return null;
+
+            Poolee newReelObj = spawnTask.GetResult();
+            MarrowEntity newReelEntity = newReelObj.GetComponent<MarrowEntity>();
+            StageReel reel = newReelEntity.GetComponent<StageReel>();
+            reel.AttachToSocket(m_newStageSocket);
+            m_newStageSocket.SetReel(reel);
+
+            yield return null;
         }
 
         private IEnumerator SpawnReels()
@@ -48,17 +88,17 @@ namespace NEP.MonoDirector.Tools
                 Barcode = new Barcode("NEP.MonoDirector.Spawnable.StageReel")
             };
 
-            Spawnable spawnable = new Spawnable()
+            m_reelSpawnable = new Spawnable()
             {
                 crateRef = crateRef
             };
 
-            AssetSpawner.Register(spawnable);
+            AssetSpawner.Register(m_reelSpawnable);
 
             for (int i = 0; i < m_sockets.Length; i++)
             { 
                 var task = AssetSpawner.SpawnAsync(
-                    spawnable,
+                    m_reelSpawnable,
                     Vector3.zero,
                     Quaternion.identity,
                     new Il2CppSystem.Nullable<Vector3>(Vector3.one),
@@ -81,6 +121,23 @@ namespace NEP.MonoDirector.Tools
                 m_sockets[i].Reel.gameObject.SetActive(true);
                 m_sockets[i].Reel.AttachToSocket(m_sockets[i]);
             }
+
+            var spawnTask = AssetSpawner.SpawnAsync(
+                    m_reelSpawnable,
+                    Vector3.zero,
+                    Quaternion.identity,
+                    new Il2CppSystem.Nullable<Vector3>(Vector3.one),
+                    null,
+                    false,
+                    new Il2CppSystem.Nullable<int>(0)).GetAwaiter();
+
+            while (!spawnTask.IsCompleted) yield return null;
+
+            Poolee newReelObj = spawnTask.GetResult();
+            MarrowEntity newReelEntity = newReelObj.GetComponent<MarrowEntity>();
+            StageReel reel = newReelEntity.GetComponent<StageReel>();
+            reel.AttachToSocket(m_newStageSocket);
+            m_newStageSocket.SetReel(reel);
         }
     }
 }
