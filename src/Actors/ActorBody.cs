@@ -158,14 +158,12 @@ namespace NEP.MonoDirector.Actors
             leftHand.transform.rotation = Quaternion.identity;
             rightHand.transform.rotation = Quaternion.identity;
 
-            // ImpactPropertiesManager vfxManager = physicsRig.GetComponent<ImpactPropertiesManager>();
-            // 
-            // headVFX.surfaceData = vfxManager.surfaceData;
-            // chestVFX.surfaceData = vfxManager.surfaceData;
-            // spineVFX.surfaceData = vfxManager.surfaceData;
-            // hipVFX.surfaceData = vfxManager.surfaceData;
-            // leftHandVFX.surfaceData = vfxManager.surfaceData;
-            // rightHandVFX.surfaceData = vfxManager.surfaceData;
+            headVFX.surfaceData = actor.ClonedAvatar.surfaceData;
+            chestVFX.surfaceData = actor.ClonedAvatar.surfaceData;
+            spineVFX.surfaceData = actor.ClonedAvatar.surfaceData;
+            hipVFX.surfaceData = actor.ClonedAvatar.surfaceData;
+            leftHandVFX.surfaceData = actor.ClonedAvatar.surfaceData;
+            rightHandVFX.surfaceData = actor.ClonedAvatar.surfaceData;
         }
 
         private void SetupAudio()
