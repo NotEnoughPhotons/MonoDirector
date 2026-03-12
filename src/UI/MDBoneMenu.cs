@@ -13,6 +13,8 @@ namespace NEP.MonoDirector.UI
 {
     internal static class MDBoneMenu
     {
+        public static Page MonoDirectorPage => mdCategory;
+
         internal static Page rootCategory;
 
         internal static Page mdCategory;

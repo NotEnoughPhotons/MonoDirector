@@ -8,6 +8,7 @@ namespace NEP.MonoDirector.Data
     {
         public static GameObject FrameObject { get => m_frameObject; }
         public static GameObject PropMarkerObject { get => m_propMarkerObject; }
+        public static GameObject MenuButtonObject { get => m_menuButtonObject; }
 
         public static AudioClip BeepClip { get => m_beepClip; }
         public static AudioClip PreRollClip { get => m_preRollClip; }
@@ -19,6 +20,7 @@ namespace NEP.MonoDirector.Data
 
         private static GameObject m_frameObject;
         private static GameObject m_propMarkerObject;
+        private static GameObject m_menuButtonObject;
 
         private static AudioClip m_beepClip;
         private static AudioClip m_preRollClip;
@@ -32,6 +34,7 @@ namespace NEP.MonoDirector.Data
 
             m_frameObject = m_uiBundle.LoadPersistentAsset<GameObject>("Frame");
             m_propMarkerObject = m_uiBundle.LoadPersistentAsset<GameObject>("PropMarker");
+            m_menuButtonObject = m_uiBundle.LoadPersistentAsset<GameObject>("MonoDirectorButton");
 
             m_beepClip = m_soundBundle.LoadPersistentAsset<AudioClip>("beep");
             m_preRollClip = m_soundBundle.LoadPersistentAsset<AudioClip>("preroll");

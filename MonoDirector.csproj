@@ -64,6 +64,7 @@
 		<Compile Include="src\Film.cs" />
 		<Compile Include="src\Logging.cs" />
 		<Compile Include="src\Patches\Rig\RigScreenOptions.cs" />
+		<Compile Include="src\Patches\Rig\UIRig.cs" />
 		<Compile Include="src\Stage.cs" />
 		<Compile Include="src\Tools\ActorPen.cs" />
 		<Compile Include="src\Tools\DirectedComponent.cs" />
@@ -150,6 +151,7 @@
 		<Compile Include="src\UI\Main\PlayheadPage.cs" />
 		<Compile Include="src\UI\Main\SettingsPage.cs" />
 		<Compile Include="src\UI\MDBoneMenu.cs" />
+		<Compile Include="src\UI\MenuBootstrap.cs" />
 		<Compile Include="src\UI\PropMarkerManager.cs" />
 	</ItemGroup>
 
