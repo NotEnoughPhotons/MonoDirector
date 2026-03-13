@@ -58,13 +58,9 @@ namespace NEP.MonoDirector.Core
             Events.OnPlay += () => SetPlayState(PlayState.Playing);
             Events.OnStartRecording += () => SetPlayState(PlayState.Recording);
 
-            m_activeStage = new Stage("Stage 00");
-
             m_activeFilm = new Film();
+            m_activeStage = new Stage("Stage 0");
             m_activeFilm.AddStage(m_activeStage);
-            m_activeFilm.AddStage(new Stage("Stage 01"));
-            m_activeFilm.AddStage(new Stage("Stage 02"));
-            m_activeFilm.AddStage(new Stage("Stage 03"));
         }
 
         internal static void Shutdown()

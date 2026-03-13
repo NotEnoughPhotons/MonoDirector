@@ -213,17 +213,29 @@ namespace NEP.MonoDirector.Core
         /// <returns></returns>
         public IEnumerator PlayRoutine()
         {
+            bool begun = false;
+
             for (int i = 0; i < m_film.Stages.Count; i++)
             {
+                Events.OnPrePlayback?.Invoke();
+
+                if (Director.PlayState == PlayState.Stopped)
+                {
+                    break;
+                }
+
                 m_stage = m_film.Stages[i];
                 Director.SetStage(m_stage);
 
-                Events.OnPrePlayback?.Invoke();
-
-                for (Countdown = 0; Countdown < Settings.World.delay; Countdown++)
+                if (!begun)
                 {
-                    Events.OnTimerCountdown?.Invoke();
-                    yield return new WaitForSeconds(1);
+                    for (Countdown = 0; Countdown < Settings.World.delay; Countdown++)
+                    {
+                        Events.OnTimerCountdown?.Invoke();
+                        yield return new WaitForSeconds(1);
+                    }
+
+                    begun = true;
                 }
 
                 FeedbackSFX.BeepHigh();
