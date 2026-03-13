@@ -4,12 +4,15 @@ using NEP.MonoDirector.Core;
 using Il2CppTMPro;
 using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Marrow.Pool;
+using Il2CppJetBrains.Annotations;
 
 namespace NEP.MonoDirector.Tools
 {
     [RegisterTypeInIl2Cpp]
     public class StageReel(IntPtr ptr) : MonoBehaviour(ptr)
     {
+        public Stage Stage => m_stage;
+
         private Stage m_stage;
         private Rigidbody m_rigidbody;
         private TextMeshPro m_title;
@@ -18,6 +21,11 @@ namespace NEP.MonoDirector.Tools
         private StageShelfSocket m_hoveredSocket;
         private Grip m_grip;
         private Poolee m_poolee;
+
+        private AudioSource m_connect1;
+        private AudioSource m_connect2;
+        private AudioSource m_disconnect1;
+        private AudioSource m_disconnect2;
 
         private Action<Hand> m_onHandAttached;
         private Action<Hand> m_onHandReleased;
@@ -30,6 +38,11 @@ namespace NEP.MonoDirector.Tools
             m_grip = transform.Find("Grip").GetComponent<Grip>();
             m_poolee = GetComponent<Poolee>();
             m_rigidbody = GetComponent<Rigidbody>();
+
+            m_connect1 = transform.Find("SFX/Connect 1").GetComponent<AudioSource>();
+            m_connect2 = transform.Find("SFX/Connect 2").GetComponent<AudioSource>();
+            m_disconnect1 = transform.Find("SFX/Disconnect 1").GetComponent<AudioSource>();
+            m_disconnect2 = transform.Find("SFX/Disconnect 2").GetComponent<AudioSource>();
 
             m_onHandAttached = OnHandAttached;
             m_onHandReleased = OnHandReleased;
@@ -91,7 +104,7 @@ namespace NEP.MonoDirector.Tools
             }
         }
 
-        private void Despawn()
+        public void Despawn()
         {
             // Directly despawning a poolee while in your hands triggers a stack overflow.
             // This is because Poolee.Despawn invokes Grip.detachedHandDelegate.
@@ -104,17 +117,29 @@ namespace NEP.MonoDirector.Tools
         public void SetStage(Stage stage)
         {
             m_stage = stage;
-            m_title.text = m_stage.Name;
+
+            if (m_stage == null)
+            {
+                m_title.text = "None";
+            }
+            else
+            {
+                m_title.text = m_stage.Name;
+            }
         }
 
         public void AttachToSocket(StageShelfSocket socket)
         {
             m_attachedSocket = socket;
             m_lastConnectedSocket = m_attachedSocket;
+            m_attachedSocket.SetReel(this);
             m_attachedSocket.Connect();
             m_rigidbody.isKinematic = true;
             transform.position = m_attachedSocket.transform.position;
             transform.rotation = m_attachedSocket.transform.rotation;
+
+            m_connect1.Play();
+            m_connect2.Play();
         }
 
         public void DetachFromSocket()
@@ -129,9 +154,13 @@ namespace NEP.MonoDirector.Tools
                 return;
             }
 
+            m_attachedSocket.SetReel(null);
             m_attachedSocket.Disconnect();
             m_attachedSocket = null;
             m_rigidbody.isKinematic = false;
+
+            m_disconnect1.Play();
+            m_disconnect2.Play();
         }
 
         private void OnHandAttached(Hand hand)
