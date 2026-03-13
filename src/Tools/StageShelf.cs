@@ -20,6 +20,7 @@ namespace NEP.MonoDirector.Tools
         private Film m_film;
         private StageShelfSocket[] m_sockets;
         private StageShelfSocket m_newStageSocket;
+        private StageShelfSocket m_deleteStageSocket;
 
         private Spawnable m_reelSpawnable;
         private Coroutine m_reelSpawnRoutine;
@@ -37,6 +38,7 @@ namespace NEP.MonoDirector.Tools
             }
 
             m_newStageSocket = transform.Find("Canvas/NewStage").GetComponent<StageShelfSocket>();
+            m_deleteStageSocket = transform.Find("Canvas/Trash").GetComponent<StageShelfSocket>();
 
             MelonCoroutines.Start(SpawnReels());
         }
@@ -47,16 +49,34 @@ namespace NEP.MonoDirector.Tools
             transform.position = Vector3.up;
 
             m_newStageSocket.OnDisconnected += OnNewStage;
+            m_deleteStageSocket.OnConnected += OnDeleteStage;
         }
 
         private void OnDisable()
         {
             m_newStageSocket.OnDisconnected -= OnNewStage;
+            m_deleteStageSocket.OnConnected -= OnDeleteStage;
         }
 
         private void OnNewStage()
         {
             MelonCoroutines.Start(SpawnNewReel());
+        }
+
+        private void OnDeleteStage()
+        {
+            if (m_deleteStageSocket.Reel.Stage == null)
+            {
+                m_deleteStageSocket.Reel.DetachFromSocket();
+                m_deleteStageSocket.Reel.Despawn();
+                return;
+            }
+
+            Director.ActiveFilm.RemoveStage(m_deleteStageSocket.Reel.Stage);
+            Director.SetStage(Director.ActiveFilm.Stages[Director.ActiveFilm.Stages.Count - 1]);
+            m_deleteStageSocket.Reel.Despawn();
+            m_deleteStageSocket.Reel.SetStage(null);
+            m_deleteStageSocket.Reel.AttachToSocket(m_newStageSocket);
         }
 
         private IEnumerator SpawnNewReel()
