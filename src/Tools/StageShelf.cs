@@ -62,6 +62,7 @@ namespace NEP.MonoDirector.Tools
 
             m_newStageSocket.OnDisconnected += OnNewReel;
             m_deleteStageSocket.OnConnected += OnDeleteReel;
+            m_activeStageSocket.OnConnected += OnActiveReelSet;
 
             UpdateSockets();
         }
@@ -76,6 +77,7 @@ namespace NEP.MonoDirector.Tools
 
             m_newStageSocket.OnDisconnected -= OnNewReel;
             m_deleteStageSocket.OnConnected -= OnDeleteReel;
+            m_activeStageSocket.OnConnected -= OnActiveReelSet;
         }
 
         private void OnReelConnected(StageReel reel)
@@ -121,6 +123,16 @@ namespace NEP.MonoDirector.Tools
             UpdateSockets();
 
             m_deleteSfx.Play();
+        }
+
+        private void OnActiveReelSet(StageReel reel)
+        {
+            if (reel == null)
+            {
+                return;
+            }
+
+            Director.SetStage(reel.Stage);
         }
 
         private IEnumerator SpawnNewReel()
