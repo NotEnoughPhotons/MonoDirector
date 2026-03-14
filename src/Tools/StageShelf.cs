@@ -51,7 +51,7 @@ namespace NEP.MonoDirector.Tools
         private void OnEnable()
         {
             m_film = Director.ActiveFilm;
-            transform.position = Vector3.up;
+            transform.position += Vector3.up * 0.8f;
 
             foreach (var socket in m_sockets)
             {
@@ -114,8 +114,28 @@ namespace NEP.MonoDirector.Tools
                 return;
             }
 
-            Director.ActiveFilm.RemoveStage(m_deleteStageSocket.Reel.Stage);
-            Director.SetStage(Director.ActiveFilm.Stages[Director.ActiveFilm.Stages.Count - 1]);
+            int index = Director.ActiveFilm.Stages.Count - 1;
+
+            if (index <= 0)
+            {
+                index = 0;
+            }
+
+            Stage previousStage = null;
+
+            if (Director.ActiveFilm.Stages.Count == 0)
+            {
+                previousStage = new Stage();
+                Director.SetStage(previousStage);
+            }
+            else
+            {
+                previousStage = Director.ActiveFilm.Stages[index];
+                Director.ActiveFilm.RemoveStage(m_deleteStageSocket.Reel.Stage);
+            }
+            
+            Director.SetStage(previousStage);
+
             m_deleteStageSocket.Reel.Despawn();
             m_deleteStageSocket.Reel.SetStage(null);
             m_deleteStageSocket.Reel.AttachToSocket(m_newStageSocket);
