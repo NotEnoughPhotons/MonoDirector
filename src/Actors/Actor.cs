@@ -19,27 +19,27 @@ namespace NEP.MonoDirector.Actors
         public Actor() : base()
         {
 #if DEBUG
-            m_previousFrameDebugger = new Transform[55];
-            m_nextFrameDebugger = new Transform[55];
-
-            GameObject baseCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-            baseCube.GetComponent<BoxCollider>().enabled = false;
-            baseCube.transform.localScale = Vector3.one * 0.03F;
-
-            MeshRenderer renderer = baseCube.GetComponent<MeshRenderer>();
-            // renderer.material = new Material(Shader.Find(Jevil.Const.UrpLitName));
-
-            GameObject empty = new GameObject("MONODIRECTOR DEBUG VIZ");
-            baseCube.transform.parent = empty.transform;
-            
-            for (int i = 0; i < 55; i++)
-            {
-                m_previousFrameDebugger[i] = GameObject.Instantiate(empty).transform;
-                m_nextFrameDebugger[i] = GameObject.Instantiate(empty).transform;
-            }
-
-            GameObject.Destroy(baseCube);
+            //m_previousFrameDebugger = new Transform[55];
+            //m_nextFrameDebugger = new Transform[55];
+            //
+            //GameObject baseCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //
+            //baseCube.GetComponent<BoxCollider>().enabled = false;
+            //baseCube.transform.localScale = Vector3.one * 0.03F;
+            //
+            //MeshRenderer renderer = baseCube.GetComponent<MeshRenderer>();
+            //// renderer.material = new Material(Shader.Find(Jevil.Const.UrpLitName));
+            //
+            //GameObject empty = new GameObject("MONODIRECTOR DEBUG VIZ");
+            //baseCube.transform.parent = empty.transform;
+            //
+            //for (int i = 0; i < 55; i++)
+            //{
+            //    m_previousFrameDebugger[i] = GameObject.Instantiate(empty).transform;
+            //    m_nextFrameDebugger[i] = GameObject.Instantiate(empty).transform;
+            //}
+            //
+            //GameObject.Destroy(baseCube);
 #endif
         }
         
@@ -195,11 +195,11 @@ namespace NEP.MonoDirector.Actors
                 bone.position = Vector3.Lerp(previousPosition, nextPosition, delta);
                 bone.rotation = Quaternion.Slerp(previousRotation, nextRotation, delta);
 #if DEBUG
-                m_previousFrameDebugger[i].position = previousPosition;
-                m_previousFrameDebugger[i].rotation = previousRotation;
-                
-                m_nextFrameDebugger[i].position = nextPosition;
-                m_nextFrameDebugger[i].rotation = nextRotation;
+                //m_previousFrameDebugger[i].position = previousPosition;
+                //m_previousFrameDebugger[i].rotation = previousRotation;
+                //
+                //m_nextFrameDebugger[i].position = nextPosition;
+                //m_nextFrameDebugger[i].rotation = nextRotation;
 #endif
             }
             
