@@ -12,12 +12,13 @@ namespace NEP.MonoDirector.Tools
     {
         public Rigidbody Body { get => m_body; }
         public StageReel Reel { get => m_reel; }
+        public int Index => transform.GetSiblingIndex();
         public bool Empty { get => m_empty; }
         public bool IsSpawner { get => m_isSpawner; }
         public bool IsDisconnected { get => m_isDisconnected; }
 
-        public event Action OnConnected;
-        public event Action OnDisconnected;
+        public event Action<StageReel> OnConnected;
+        public event Action<StageReel> OnDisconnected;
 
         private StageReel m_reel;
         private StageReel m_hoveredReel;
@@ -89,13 +90,15 @@ namespace NEP.MonoDirector.Tools
         public void Connect()
         {
             m_isDisconnected = false;
-            OnConnected?.Invoke();
+
+            OnConnected?.Invoke(m_reel);
         }
 
         public void Disconnect()
         {
             m_isDisconnected = true;
-            OnDisconnected?.Invoke();
+
+            OnDisconnected?.Invoke(m_reel);
         }
     }
 }

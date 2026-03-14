@@ -21,9 +21,12 @@ namespace NEP.MonoDirector.Tools
         private StageShelfSocket[] m_sockets;
         private StageShelfSocket m_newStageSocket;
         private StageShelfSocket m_deleteStageSocket;
+        private StageShelfSocket m_activeStageSocket;
 
         private Spawnable m_reelSpawnable;
         private Coroutine m_reelSpawnRoutine;
+
+        private AudioSource m_deleteSfx;
 
         private void Awake()
         {
@@ -39,6 +42,8 @@ namespace NEP.MonoDirector.Tools
 
             m_newStageSocket = transform.Find("Canvas/NewStage").GetComponent<StageShelfSocket>();
             m_deleteStageSocket = transform.Find("Canvas/Trash").GetComponent<StageShelfSocket>();
+            m_activeStageSocket = transform.Find("Canvas/ActiveStage").GetComponent<StageShelfSocket>();
+            m_deleteSfx = transform.Find("Canvas/Trash/DeleteSFX").GetComponent<AudioSource>();
 
             MelonCoroutines.Start(SpawnReels());
         }
@@ -48,22 +53,57 @@ namespace NEP.MonoDirector.Tools
             m_film = Director.ActiveFilm;
             transform.position = Vector3.up;
 
-            m_newStageSocket.OnDisconnected += OnNewStage;
-            m_deleteStageSocket.OnConnected += OnDeleteStage;
+            foreach (var socket in m_sockets)
+            {
+                socket.gameObject.SetActive(false);
+                socket.OnConnected += OnReelConnected;
+                socket.OnDisconnected += OnReelDisconnected;
+            }
+
+            m_newStageSocket.OnDisconnected += OnNewReel;
+            m_deleteStageSocket.OnConnected += OnDeleteReel;
+
+            UpdateSockets();
         }
 
         private void OnDisable()
         {
-            m_newStageSocket.OnDisconnected -= OnNewStage;
-            m_deleteStageSocket.OnConnected -= OnDeleteStage;
+            foreach (var socket in m_sockets)
+            {
+                socket.OnConnected += OnReelConnected;
+                socket.OnDisconnected += OnReelDisconnected;
+            }
+
+            m_newStageSocket.OnDisconnected -= OnNewReel;
+            m_deleteStageSocket.OnConnected -= OnDeleteReel;
         }
 
-        private void OnNewStage()
+        private void OnReelConnected(StageReel reel)
+        {
+            if (reel == null)
+            {
+                return;
+            }
+
+            UpdateSockets();
+        }
+
+        private void OnReelDisconnected(StageReel reel)
+        {
+            if (reel == null)
+            {
+                return;
+            }
+
+            UpdateSockets();
+        }
+
+        private void OnNewReel(StageReel reel)
         {
             MelonCoroutines.Start(SpawnNewReel());
         }
 
-        private void OnDeleteStage()
+        private void OnDeleteReel(StageReel reel)
         {
             if (m_deleteStageSocket.Reel.Stage == null)
             {
@@ -77,6 +117,10 @@ namespace NEP.MonoDirector.Tools
             m_deleteStageSocket.Reel.Despawn();
             m_deleteStageSocket.Reel.SetStage(null);
             m_deleteStageSocket.Reel.AttachToSocket(m_newStageSocket);
+
+            UpdateSockets();
+
+            m_deleteSfx.Play();
         }
 
         private IEnumerator SpawnNewReel()
@@ -158,6 +202,29 @@ namespace NEP.MonoDirector.Tools
             StageReel reel = newReelEntity.GetComponent<StageReel>();
             reel.AttachToSocket(m_newStageSocket);
             m_newStageSocket.SetReel(reel);
+        }
+
+        private void UpdateSockets()
+        {
+            for (int i = 0; i < m_sockets.Length; i++)
+            {
+                m_sockets[i].gameObject.SetActive(false);
+            }
+
+            for (int i = 0; i < m_sockets.Length && i < m_film.Stages.Count; i++)
+            {
+                StageShelfSocket socket = m_sockets[i];
+                socket.gameObject.SetActive(true);
+
+                if (socket.Reel)
+                {
+                    socket.Reel.transform.position = socket.transform.position;
+                    socket.Reel.transform.rotation = socket.transform.rotation;
+                }
+            }
+
+            // Set the last socket active to add new reels to the end
+            m_sockets[m_film.Stages.Count].gameObject.SetActive(true);
         }
     }
 }

@@ -4,7 +4,6 @@ using NEP.MonoDirector.Core;
 using Il2CppTMPro;
 using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Marrow.Pool;
-using Il2CppJetBrains.Annotations;
 
 namespace NEP.MonoDirector.Tools
 {
@@ -12,6 +11,7 @@ namespace NEP.MonoDirector.Tools
     public class StageReel(IntPtr ptr) : MonoBehaviour(ptr)
     {
         public Stage Stage => m_stage;
+        public StageShelfSocket AttachedSocket => m_attachedSocket;
 
         private Stage m_stage;
         private Rigidbody m_rigidbody;
