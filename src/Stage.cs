@@ -9,6 +9,7 @@ namespace NEP.MonoDirector.Core
         {
             m_actors = new List<Actor>();
             m_props = new List<Prop>();
+            m_name = "Stage";
         }
 
         public Stage(string name)

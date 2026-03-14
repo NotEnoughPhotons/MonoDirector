@@ -61,7 +61,7 @@ namespace NEP.MonoDirector.Core
             Events.OnStartRecording += () => SetPlayState(PlayState.Recording);
 
             m_activeFilm = new Film();
-            m_activeStage = new Stage("Stage 0");
+            m_activeStage = new Stage();
             m_activeFilm.AddStage(m_activeStage);
         }
 
