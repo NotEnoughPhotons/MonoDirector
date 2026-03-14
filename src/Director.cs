@@ -52,6 +52,8 @@ namespace NEP.MonoDirector.Core
             m_recorder = new Recorder();
             Caster.Initialize();
 
+            Caster.OnActorRecasted += (_) => Record();
+
             Events.OnPrePlayback += () => SetPlayState(PlayState.Preplaying);
             Events.OnPreRecord += () => SetPlayState(PlayState.Prerecording);
 
@@ -65,6 +67,8 @@ namespace NEP.MonoDirector.Core
 
         internal static void Shutdown()
         {
+            Caster.OnActorRecasted -= (_) => Record();
+
             Events.OnPrePlayback -= () => SetPlayState(PlayState.Preplaying);
             Events.OnPreRecord -= () => SetPlayState(PlayState.Prerecording);
 
