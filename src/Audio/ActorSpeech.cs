@@ -42,6 +42,7 @@ namespace NEP.MonoDirector.Audio
         {
             source = gameObject.AddComponent<AudioSource>();
             source.spatialBlend = 1f;
+            source.playOnAwake = false;
 
             spectrum = gameObject.AddComponent<Spectrum>();
             spectrum.source = source;

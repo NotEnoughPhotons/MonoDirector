@@ -164,13 +164,13 @@ namespace NEP.MonoDirector.Core
             {
                 actor.ActorBody.AllowCollisions(true);
                 actor.ClonedAvatar.gameObject.SetActive(true);
-                actor.Act();
+                actor.OnSceneBegin();
             }
 
             foreach (var prop in Caster.Props)
             {
                 prop.gameObject.SetActive(true);
-                prop.Act();
+                prop.OnSceneBegin();
             }
         }
 
