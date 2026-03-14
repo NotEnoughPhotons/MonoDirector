@@ -47,6 +47,8 @@ namespace NEP.MonoDirector.Core
         private float m_recordingTime;
 
         private float m_timeSinceLastTick = 0;
+        private float m_timeSpentInMenu = 0f;
+        private bool m_usedMenu;
 
         private int m_recordTick;
 
@@ -54,6 +56,11 @@ namespace NEP.MonoDirector.Core
         {
             m_lastActor = m_activeActor;
             m_activeActor = new Actor(avatar);
+        }
+
+        public void SetUsedMenu(bool usedMenu)
+        {
+            m_usedMenu = usedMenu;
         }
 
         public void Tick()
@@ -121,6 +128,9 @@ namespace NEP.MonoDirector.Core
 
             m_recordingTime = 0f;
 
+            m_timeSpentInMenu = 0f;
+            m_usedMenu = false;
+
             if (Settings.World.recordActors)
             {
                 SetActor(Constants.RigManager.avatar);
@@ -167,6 +177,11 @@ namespace NEP.MonoDirector.Core
             m_recordTick++;
             m_recordingTime += m_timeSinceLastTick;
 
+            if (m_usedMenu)
+            {
+                m_timeSpentInMenu += m_timeSinceLastTick;
+            }
+
             // keep up!
             if (m_recordingTime > TakeTime)
             {
@@ -199,6 +214,8 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnStopRecording()
         {
+            m_recordingTime -= m_timeSpentInMenu - 1f;
+
             Director.ActiveStage.SetDuration(m_recordingTime);
 
             m_activeActor?.Microphone?.StopRecording();

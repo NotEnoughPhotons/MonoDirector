@@ -63,6 +63,7 @@
 		<Compile Include="src\Downloading\ModObject.cs" />
 		<Compile Include="src\Film.cs" />
 		<Compile Include="src\Logging.cs" />
+		<Compile Include="src\Patches\Rig\PreferencesPanelView.cs" />
 		<Compile Include="src\Patches\Rig\RigScreenOptions.cs" />
 		<Compile Include="src\Patches\Rig\UIRig.cs" />
 		<Compile Include="src\Stage.cs" />
