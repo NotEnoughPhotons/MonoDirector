@@ -1,9 +1,8 @@
-﻿using Il2CppSLZ.Marrow.Pool;
-using NEP.MonoDirector.Actors;
+﻿using NEP.MonoDirector.Actors;
 using NEP.MonoDirector.Core;
 using NEP.MonoDirector.Data;
-using NEP.MonoDirector.Proxy;
 using NEP.MonoDirector.State;
+
 using UnityEngine;
 
 namespace NEP.MonoDirector.UI
@@ -11,15 +10,13 @@ namespace NEP.MonoDirector.UI
     public static class PropMarkerManager
     {
         private static GameObject container;
-        private static Dictionary<Prop, GameObject> markers = new Dictionary<Prop, GameObject>();
-        private static List<GameObject> loadedMarkerObjects = new List<GameObject>();
-        private static List<GameObject> activeMarkers = new List<GameObject>();
+        private static Dictionary<Prop, PropMarker> markers = new Dictionary<Prop, PropMarker>();
+        private static List<PropMarker> loadedMarkerObjects = new List<PropMarker>();
 
         public static void Initialize()
         {
-            markers = new Dictionary<Prop, GameObject>();
-            loadedMarkerObjects = new List<GameObject>();
-            activeMarkers = new List<GameObject>();
+            markers = new Dictionary<Prop, PropMarker>();
+            loadedMarkerObjects = new List<PropMarker>();
 
             container = new GameObject("[MonoDirector] - Prop Marker Container");
             container.transform.SetParent(Bootstrap.MainContainerObject.transform);
@@ -27,10 +24,15 @@ namespace NEP.MonoDirector.UI
             for (int i = 0; i < 32; i++)
             {
                 GameObject obj = GameObject.Instantiate(BundleLoader.PropMarkerObject);
-                obj.SetActive(false);
                 obj.transform.SetParent(container.transform);
                 obj.transform.localPosition = Vector3.zero;
-                loadedMarkerObjects.Add(obj);
+
+                PropMarker marker = new PropMarker();
+                marker.SetMarker(obj);
+                marker.SetProp(null);
+                marker.Hide();
+
+                loadedMarkerObjects.Add(marker);
             }
 
             Events.OnPropCreated += AddMarkerToProp;
@@ -48,7 +50,14 @@ namespace NEP.MonoDirector.UI
 
             markers.Clear();
             loadedMarkerObjects.Clear();
-            activeMarkers.Clear();
+        }
+
+        public static void Update()
+        {
+            foreach (var marker in loadedMarkerObjects)
+            {
+                marker.Update();
+            }
         }
 
         public static void AddMarkerToProp(Prop prop)
@@ -58,19 +67,18 @@ namespace NEP.MonoDirector.UI
                 return;
             }
 
-            GameObject asset = loadedMarkerObjects.FirstOrDefault((marker) => !activeMarkers.Contains(marker));
+            PropMarker marker = loadedMarkerObjects.FirstOrDefault((marker) => !marker.Active);
 
             // HACK: Don't show prop markers during recording, if the prop was added during recording!
             if (Director.PlayState != PlayState.Recording)
             {
-                asset.gameObject.SetActive(true);
+                marker.Hide();
             }
 
-            asset.transform.SetParent(prop.transform);
-            asset.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-
-            markers.Add(prop, asset);
-            activeMarkers.Add(asset);
+            marker.SetOffset(Vector3.up * 0.125f);
+            marker.SetProp(prop);
+            marker.Show();
+            markers.Add(prop, marker);
         }
 
         public static void RemoveMarkerFromProp(Prop prop)
@@ -80,28 +88,28 @@ namespace NEP.MonoDirector.UI
                 return;
             }
 
-            GameObject marker = markers[prop];
-            marker.gameObject.SetActive(false);
-            marker.transform.parent = null;
+            PropMarker marker = markers[prop];
+            marker.SetOffset(Vector3.zero);
+            marker.SetProp(null);
+            marker.Hide();
             markers.Remove(prop);
-            activeMarkers.Remove(marker.gameObject);
         }
 
         private static void ShowMarkers(PlayState playState)
         {
             if(playState == PlayState.Preplaying || playState == PlayState.Prerecording)
             {
-                foreach (var marker in activeMarkers)
+                foreach (var marker in loadedMarkerObjects)
                 {
-                    marker.gameObject.SetActive(false);
+                    marker.Hide();
                 }
             }
 
             if(playState == PlayState.Stopped)
             {
-                foreach (var marker in activeMarkers)
+                foreach (var marker in loadedMarkerObjects)
                 {
-                    marker.gameObject.SetActive(true);
+                    marker.Show();
                 }
             }
         }
