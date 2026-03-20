@@ -6,6 +6,7 @@ namespace NEP.MonoDirector.UI
     public sealed class PropMarker
     {
         public bool Active => m_gameObject.activeInHierarchy;
+        public bool HasProp => m_prop != null;
 
         private GameObject m_gameObject;
         private Prop m_prop;

@@ -72,12 +72,15 @@ namespace NEP.MonoDirector.UI
             // HACK: Don't show prop markers during recording, if the prop was added during recording!
             if (Director.PlayState != PlayState.Recording)
             {
+                marker.Show();
+            }
+            else
+            {
                 marker.Hide();
             }
 
             marker.SetOffset(Vector3.up * 0.125f);
             marker.SetProp(prop);
-            marker.Show();
             markers.Add(prop, marker);
         }
 
@@ -109,7 +112,10 @@ namespace NEP.MonoDirector.UI
             {
                 foreach (var marker in loadedMarkerObjects)
                 {
-                    marker.Show();
+                    if (marker.HasProp)
+                    {
+                        marker.Show();
+                    }
                 }
             }
         }

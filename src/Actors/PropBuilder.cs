@@ -132,6 +132,7 @@ namespace NEP.MonoDirector.Actors
                 var prop = actorProp;
                 prop.InteractableRigidbody.isKinematic = false;
                 Director.RecordingProps.Remove(prop);
+                Director.WorldProps.Remove(prop);
                 GameObject.Destroy(prop);
                 vfxBlip?.CallDespawnEffect();
 
