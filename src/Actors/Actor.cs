@@ -308,11 +308,12 @@ namespace NEP.MonoDirector.Actors
                 PropMarkerManager.RemoveMarkerFromProp(ownedProp);
                 Caster.RemoveProp(ownedProp);
                 ownedProp.DeleteAllFrames();
-                PropBuilder.RemoveProp(ownedProp.GetComponent<InteractableHost>());
+                PropBuilder.RemoveProp(ownedProp.Entity);
             }
 
             m_ownedProps.Clear();
             m_body.Delete();
+            m_body = null;
             GameObject.Destroy(m_clonedAvatar.gameObject);
             GameObject.Destroy(m_microphone.gameObject);
             m_microphone = null;
