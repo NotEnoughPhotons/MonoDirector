@@ -17,6 +17,8 @@ namespace NEP.MonoDirector
     {
         public override void OnInitializeMelon() => Bootstrap.Initialize();
 
+        public override void OnUpdate() => Bootstrap.Update();
+
         public override void OnDeinitializeMelon() => Bootstrap.Shutdown();
     }
 }

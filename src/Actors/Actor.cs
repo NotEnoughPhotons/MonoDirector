@@ -11,6 +11,7 @@ using Il2CppSLZ.Marrow.Interaction;
 using NEP.MonoDirector.Proxy;
 using Il2CppSLZ.Marrow.Warehouse;
 using NEP.MonoDirector.UI;
+using Il2CppSLZ.Marrow;
 
 namespace NEP.MonoDirector.Actors
 {
@@ -307,6 +308,7 @@ namespace NEP.MonoDirector.Actors
                 PropMarkerManager.RemoveMarkerFromProp(ownedProp);
                 Caster.RemoveProp(ownedProp);
                 ownedProp.DeleteAllFrames();
+                PropBuilder.RemoveProp(ownedProp.GetComponent<InteractableHost>());
             }
 
             m_ownedProps.Clear();

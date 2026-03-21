@@ -125,6 +125,9 @@ namespace NEP.MonoDirector.Actors
                 vfxBlip?.CallDespawnEffect();
                 Caster.RemoveProp(prop);
                 GameObject.Destroy(prop);
+                vfxBlip?.CallDespawnEffect();
+
+                Events.OnPropRemoved?.Invoke(prop);
             }
         }
     }

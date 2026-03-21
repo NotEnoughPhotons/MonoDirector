@@ -50,6 +50,11 @@ namespace NEP.MonoDirector.Core
 #endif
         }
 
+        internal static void Update()
+        {
+            PropMarkerManager.Update();
+        }
+
         internal static void Shutdown()
         {
             FeedbackSFX.Shutdown();

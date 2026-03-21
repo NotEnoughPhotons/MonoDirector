@@ -152,6 +152,7 @@
 		<Compile Include="src\UI\Main\PlayheadPage.cs" />
 		<Compile Include="src\UI\Main\SettingsPage.cs" />
 		<Compile Include="src\UI\MDBoneMenu.cs" />
+		<Compile Include="src\UI\PropMarker.cs" />
 		<Compile Include="src\UI\MenuBootstrap.cs" />
 		<Compile Include="src\UI\PropMarkerManager.cs" />
 	</ItemGroup>
