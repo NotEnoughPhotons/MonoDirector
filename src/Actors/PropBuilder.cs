@@ -121,13 +121,9 @@ namespace NEP.MonoDirector.Actors
             {
                 MelonLoader.MelonLogger.Msg($"Removing component from {gameObject.name}");
 
-                var prop = actorProp;
                 vfxBlip?.CallDespawnEffect();
-                Caster.RemoveProp(prop);
-                GameObject.Destroy(prop);
-                vfxBlip?.CallDespawnEffect();
-
-                Events.OnPropRemoved?.Invoke(prop);
+                Caster.RemoveProp(actorProp);
+                GameObject.Destroy(actorProp);
             }
         }
     }
