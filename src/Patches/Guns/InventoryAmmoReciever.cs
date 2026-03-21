@@ -29,7 +29,7 @@ namespace NEP.MonoDirector.Patches.Guns
                     receiver = hand.AttachedReceiver;
                 }
                 
-                var poolee = receiver.Host.Rb.GetComponent<InteractableHost>();
+                var poolee = receiver.Host.Rb.GetComponent<MarrowEntity>();
                 PropBuilder.BuildProp(poolee);
 
                 // HACK:

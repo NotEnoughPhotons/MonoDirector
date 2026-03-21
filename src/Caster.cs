@@ -106,7 +106,7 @@ namespace NEP.MonoDirector.Core
 
         public static void RemoveProp(Prop prop)
         {
-            prop.InteractableRigidbody.isKinematic = false;
+            prop.SetPhysicsActive(true);
             m_props.Remove(prop);
             m_recordProps.Remove(prop);
             OnPropRemoved?.Invoke(prop);

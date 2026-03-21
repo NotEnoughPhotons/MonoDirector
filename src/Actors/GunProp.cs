@@ -20,7 +20,7 @@ namespace NEP.MonoDirector.Actors
         {
             base.Awake();
 
-            m_propFrames = new List<ObjectFrame>();
+            m_bodyFrames = new List<ObjectFrame>();
             m_actionFrames = new List<ActionFrame>();
         }
 

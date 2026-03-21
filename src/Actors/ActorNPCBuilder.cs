@@ -31,7 +31,7 @@ namespace NEP.MonoDirector.Actors
                 MelonLoader.MelonLogger.Msg($"Removing component from {gameObject.name}");
 
                 var prop = actorProp;
-                prop.InteractableRigidbody.isKinematic = false;
+                // prop.InteractableRigidbody.isKinematic = false;
                 // Director.RecordingProps.Remove(prop);
                 GameObject.Destroy(prop);
                 vfxBlip?.CallDespawnEffect();

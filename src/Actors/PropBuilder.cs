@@ -9,122 +9,98 @@ namespace NEP.MonoDirector.Actors
 {
     public static class PropBuilder
     {
-        public static void BuildProp(InteractableHost interactableHost)
+        public static void BuildProp(MarrowEntity entity)
         {
-            if (interactableHost == null)
+            if (!entity)
+                return;
+
+            if (entity.Bodies.Count == 0)
+                return;
+
+            if (entity.GetComponent<Prop>())
+                return;
+
+            if (Prop.EligibleWithType<Gun>(entity))
             {
+#if DEBUG
+                Logging.Msg($"Adding gun component to {entity.name}");
+#endif
+                GunProp prop = entity.gameObject.AddComponent<GunProp>();
+                prop.SetEntity(entity);
+                prop.SetGun(entity.GetComponent<Gun>());
+
+                Caster.AddRecordProp(prop);
                 return;
             }
 
-            var gameObject = interactableHost.gameObject;
-            var rigidbody = interactableHost.Rb;
-
-            bool hasRigidbody = rigidbody != null;
-            bool isProp = gameObject.GetComponent<Prop>() != null;
-
-            if (!hasRigidbody)
+            if (Prop.EligibleWithType<ObjectDestructible>(entity))
             {
+#if DEBUG
+                Logging.Msg($"Adding destructable component to {entity.name}");
+#endif
+                BreakableProp prop = entity.gameObject.AddComponent<BreakableProp>();
+                prop.SetEntity(entity);
+                prop.SetBreakableObject(entity.GetComponent<ObjectDestructible>());
+
+                Caster.AddRecordProp(prop);
                 return;
             }
 
-            if (isProp)
+            if (Prop.EligibleWithType<Magazine>(entity))
             {
+#if DEBUG
+                Logging.Msg($"Adding magazine component to {entity.name}");
+#endif
+                Prop prop = entity.gameObject.AddComponent<Prop>();
+                prop.SetEntity(entity);
+
+                Caster.AddRecordProp(prop);
                 return;
             }
 
-            var vfxBlip = rigidbody.GetComponent<Blip>();
-
-            if (Prop.EligibleWithType<Gun>(rigidbody))
+            if (Prop.EligibleWithType<Atv>(entity))
             {
-                Logging.Msg($"Adding gun component to {gameObject.name}");
+#if DEBUG
+                Logging.Msg($"Adding vehicle component to {entity.name}");
+#endif
+                Prop prop = entity.gameObject.AddComponent<Prop>();
+                prop.SetEntity(entity);
+                //prop.SetVehicle(entity.GetComponent<Atv>());
 
-                var actorProp = gameObject.AddComponent<GunProp>();
-                actorProp.SetRigidbody(rigidbody);
-                actorProp.SetGun(gameObject.GetComponent<Gun>());
-
-                vfxBlip?.CallSpawnEffect();
-
-                Caster.AddProp(actorProp);
+                Caster.AddRecordProp(prop);
                 return;
             }
 
-            if (Prop.EligibleWithType<ObjectDestructible>(rigidbody))
+            if (Prop.IsActorProp(entity))
             {
-                Logging.Msg($"Adding destructable component to {gameObject.name}");
+#if DEBUG
+                Logging.Msg($"Adding prop component to {entity.name}");
+#endif
+                Prop prop = entity.gameObject.AddComponent<Prop>();
+                prop.SetEntity(entity);
 
-                var destructableProp = gameObject.AddComponent<BreakableProp>();
-                destructableProp.SetRigidbody(rigidbody);
-                destructableProp.SetBreakableObject(gameObject.GetComponent<ObjectDestructible>());
-
-                vfxBlip?.CallSpawnEffect();
-
-                Caster.AddRecordProp(destructableProp);
-                return;
-            }
-
-            if (Prop.EligibleWithType<Magazine>(rigidbody))
-            {
-                Logging.Msg($"Adding magazine component to {gameObject.name}");
-
-                var magazineProp = gameObject.AddComponent<Prop>();
-                magazineProp.SetRigidbody(rigidbody);
-
-                vfxBlip?.CallSpawnEffect();
-
-                Caster.AddRecordProp(magazineProp);
-                return;
-            }
-
-            if (Prop.EligibleWithType<Atv>(rigidbody))
-            {
-                Logging.Msg($"Adding vehicle component to {gameObject.name}");
-
-                var vehicle = gameObject.AddComponent<TrackedVehicle>();
-                vehicle.SetRigidbody(rigidbody);
-                vehicle.SetVehicle(rigidbody.GetComponent<Atv>());
-
-                vfxBlip?.CallSpawnEffect();
-
-                Caster.AddRecordProp(vehicle);
-                return;
-            }
-
-            if (Prop.IsActorProp(rigidbody))
-            {
-                Logging.Msg($"Adding prop component to {rigidbody.name}");
-
-                var actorProp = gameObject.AddComponent<Prop>();
-                actorProp.SetRigidbody(rigidbody);
-
-                vfxBlip?.CallSpawnEffect();
-
-                Caster.AddRecordProp(actorProp);
+                Caster.AddRecordProp(prop);
             }
         }
-
-        public static void RemoveProp(InteractableHost interactableHost)
+        
+        public static void RemoveProp(MarrowEntity entity)
         {
-            var gameObject = interactableHost.gameObject;
-            var vfxBlip = gameObject.GetComponent<Blip>();
+            Prop actorProp = entity.GetComponent<Prop>();
 
-            Prop actorProp = gameObject.GetComponent<Prop>();
-            bool isProp = actorProp != null;
-
-            TrackedVehicle vehicle = actorProp.TryCast<TrackedVehicle>();
-            
-            if (vehicle != null)
+            if (Director.PlayState == State.PlayState.Stopped)
             {
-                vehicle.RemoveVehicle();
-            }
-            
-            if (isProp && Director.PlayState == State.PlayState.Stopped)
-            {
-                MelonLoader.MelonLogger.Msg($"Removing component from {gameObject.name}");
+#if DEBUG
+                MelonLoader.MelonLogger.Msg($"Removing component from {entity.name}");
+#endif
+                if (actorProp is TrackedVehicle vehicle)
+                {
+                    vehicle.RemoveVehicle();
+                }
 
-                vfxBlip?.CallDespawnEffect();
                 Caster.RemoveProp(actorProp);
+                Director.ActiveStage.RemoveProp(actorProp);
                 GameObject.Destroy(actorProp);
             }
-        }
+        } 
     }
 }

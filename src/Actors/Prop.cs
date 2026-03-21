@@ -4,19 +4,20 @@ using NEP.MonoDirector.Data;
 using UnityEngine;
 
 using Il2CppSLZ.Marrow;
+using Il2CppSLZ.Marrow.Interaction;
 
 namespace NEP.MonoDirector.Actors
 {
     [MelonLoader.RegisterTypeInIl2Cpp]
     public class Prop(IntPtr ptr) : MonoBehaviour(ptr)
     {
-        public Trackable Actor { get => m_actor; }
+        public Trackable Actor => m_actor;
+        public IReadOnlyList<FrameGroup> PropFrames => m_propFrames.AsReadOnly();
+        public MarrowEntity Entity => m_entity;
 
-        public List<ObjectFrame> PropFrames { get => m_propFrames; }
-        public Rigidbody InteractableRigidbody { get => m_interactableRigidbody; }
-        public bool isRecording;
+        public bool IsRecording => m_isRecording;
 
-        public static readonly Il2CppSystem.Type[] whitelistedTypes = new Il2CppSystem.Type[]
+        public static readonly Il2CppSystem.Type[] TypeWhitelist =
         {
             Il2CppInterop.Runtime.Il2CppType.Of<Gun>(),
             Il2CppInterop.Runtime.Il2CppType.Of<Magazine>(),
@@ -24,65 +25,58 @@ namespace NEP.MonoDirector.Actors
             Il2CppInterop.Runtime.Il2CppType.Of<Atv>()
         };
 
-        private Trackable m_actor;
-        private Rigidbody m_interactableRigidbody;
+        protected Trackable m_actor;
+        protected MarrowEntity m_entity;
 
         protected int m_stateTick;
         protected int m_recordedTicks;
 
-        protected List<ObjectFrame> m_propFrames;
+        protected List<FrameGroup> m_propFrames;
+        protected List<ObjectFrame> m_bodyFrames;
         protected List<ActionFrame> m_actionFrames;
+
+        protected bool m_isRecording;
+
+        private FrameGroup m_previousFrame;
+        private FrameGroup m_nextFrame;
 
         protected virtual void Awake()
         {
-            m_propFrames = new List<ObjectFrame>();
+            m_propFrames = new List<FrameGroup>();
+            m_bodyFrames = new List<ObjectFrame>();
             m_actionFrames = new List<ActionFrame>();
         }
 
-        public static bool IsActorProp(Rigidbody rigidbody)
+        public static bool IsActorProp(MarrowEntity entity)
         {
-            if (rigidbody == null)
-            {
+            if (!entity)
                 return false;
-            }
 
-            if (rigidbody.isKinematic || rigidbody.gameObject.isStatic)
-            {
+            if (entity.gameObject.layer == LayerMask.NameToLayer("EnemyColliders"))
                 return false;
-            }
 
-            if (rigidbody.gameObject.layer == LayerMask.NameToLayer("EnemyColliders"))
-            {
+            // Prop already exists
+            if (entity.GetComponent<Prop>())
                 return false;
-            }
-
-            if(rigidbody.GetComponent<InteractableHost>() == null)
-            {
-                return false;
-            }
-
-            if (rigidbody.GetComponent<Prop>() != null || rigidbody.GetComponent<WorldGrip>() != null)
-            {
-                return false;
-            }
 
             return true;
         }
 
-        public static bool EligibleWithType<T>(Rigidbody rigidbody)
+        public static bool EligibleWithType<T>(MarrowEntity entity)
         {
-            return rigidbody.GetComponent<T>() != null;
+            return entity.GetComponent<T>() != null;
         }
 
         public void DeleteAllFrames()
         {
             m_propFrames.Clear();
+            m_bodyFrames.Clear();
             m_actionFrames.Clear();
         }
 
-        public void SetRigidbody(Rigidbody rigidbody)
+        public void SetEntity(MarrowEntity entity)
         {
-            m_interactableRigidbody = rigidbody;
+            m_entity = entity;
         }
 
         public void SetActor(Trackable actor)
@@ -92,7 +86,13 @@ namespace NEP.MonoDirector.Actors
 
         public void SetPhysicsActive(bool enable)
         {
-            m_interactableRigidbody.isKinematic = enable;
+            foreach (var body in m_entity.Bodies)
+            {
+                if (body.TryGetRigidbody(out Rigidbody rigidbody))
+                {
+                    rigidbody.isKinematic = !enable;
+                }
+            }
         }
 
         public virtual void OnSceneBegin()
@@ -107,14 +107,20 @@ namespace NEP.MonoDirector.Actors
                 return;
             }
 
-            transform.position = PropFrames[0].position;
-            transform.rotation = PropFrames[0].rotation;
-            transform.localScale = PropFrames[0].scale;
-
-            if(m_interactableRigidbody != null)
+            for (int i = 0; i < m_entity.Bodies.Count; i++)
             {
-                m_interactableRigidbody.isKinematic = true;
+                var body = m_entity.Bodies[i];
+
+                if (body == null)
+                {
+                    continue;
+                }
+
+                body.transform.position = m_propFrames[0].TransformFrames[i].position;
+                body.transform.rotation = m_propFrames[0].TransformFrames[i].rotation;
             }
+
+            SetPhysicsActive(false);
 
             foreach (var actionFrame in m_actionFrames)
             {
@@ -124,17 +130,46 @@ namespace NEP.MonoDirector.Actors
 
         public virtual void Act()
         {
-            if(m_interactableRigidbody == null)
+            m_previousFrame = new FrameGroup();
+            m_nextFrame = new FrameGroup();
+
+            for (int i = 0; i < m_propFrames.Count; i++)
             {
-                m_interactableRigidbody = GetComponent<Rigidbody>();
-            }
-            else
-            {
-                m_interactableRigidbody.isKinematic = true;
+                var frame = m_propFrames[i];
+
+                m_previousFrame = m_nextFrame;
+                m_nextFrame = frame;
+
+                if (frame.FrameTime > Playback.Instance.PlaybackTime)
+                {
+                    break;
+                }
             }
 
-            transform.position = Interpolator.InterpolatePosition(PropFrames);
-            transform.rotation = Interpolator.InterpolateRotation(PropFrames);
+            float gap = m_nextFrame.FrameTime - m_previousFrame.FrameTime;
+            float head = Playback.Instance.PlaybackTime - m_previousFrame.FrameTime;
+
+            float delta = head / gap;
+
+            ObjectFrame[] previousTransformFrames = m_previousFrame.TransformFrames;
+            ObjectFrame[] nextTransformFrames = m_nextFrame.TransformFrames;
+
+            for (int i = 0; i < m_entity.Bodies.Count; i++)
+            {
+                if (previousTransformFrames == null)
+                    continue;
+
+                Vector3 previousPosition = previousTransformFrames[i].position;
+                Vector3 nextPosition = nextTransformFrames[i].position;
+
+                Quaternion previousRotation = previousTransformFrames[i].rotation;
+                Quaternion nextRotation = nextTransformFrames[i].rotation;
+
+                MarrowBody body = m_entity.Bodies[i];
+
+                body.transform.position = Vector3.Lerp(previousPosition, nextPosition, delta);
+                body.transform.rotation = Quaternion.Slerp(previousRotation, nextRotation, delta);
+            }
 
             foreach(var actionFrame in m_actionFrames)
             {
@@ -151,26 +186,39 @@ namespace NEP.MonoDirector.Actors
 
         public virtual void Record(int frame)
         {
-            isRecording = true;
+            if (m_entity == null)
+                return;
 
-            ObjectFrame objectFrame = new ObjectFrame()
-            {
-                transform = transform,
-                position = transform.position,
-                rotation = transform.rotation,
-                scale = transform.localScale,
-                frameTime = Recorder.Instance.RecordingTime
-            };
+            m_isRecording = true;
 
-            if (frame == 0 || m_interactableRigidbody != null && m_interactableRigidbody.IsSleeping())
+            List<ObjectFrame> objectFrames = new List<ObjectFrame>();
+            FrameGroup group = new FrameGroup();
+
+            foreach (var body in m_entity.Bodies)
             {
-                m_propFrames.Add(objectFrame);
+                ObjectFrame objectFrame = new ObjectFrame()
+                {
+                    transform = body.transform,
+                    position = body.transform.position,
+                    rotation = body.transform.rotation,
+                    scale = body.transform.localScale,
+                    frameTime = Recorder.Instance.RecordingTime
+                };
+
+                if (frame == 0)
+                {
+                    objectFrames.Add(objectFrame);
+                }
+                else
+                {
+                    objectFrames.Add(objectFrame);
+                    m_recordedTicks++;
+                }
+
+                group.SetFrames(objectFrames.ToArray(), Recorder.Instance.RecordingTime);
             }
-            else
-            {
-                m_propFrames.Add(objectFrame);
-                m_recordedTicks++;
-            }
+
+            m_propFrames.Add(group);
         }
 
         public virtual void RecordAction(Action action)

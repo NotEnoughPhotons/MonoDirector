@@ -4,6 +4,7 @@ using MelonLoader;
 
 using Il2CppSLZ.Marrow;
 using Il2CppTrees;
+using Il2CppSLZ.Marrow.Interaction;
 
 namespace NEP.MonoDirector.Tools
 {
@@ -73,26 +74,21 @@ namespace NEP.MonoDirector.Tools
 
             if(Physics.Raycast(m_firePoint.position, m_firePoint.forward * m_range, out RaycastHit hit))
             {
-                if(hit.rigidbody == null)
-                {
+                if (hit.rigidbody == null)
                     return;
-                }
 
-                InteractableHost entity = hit.rigidbody.GetComponent<InteractableHost>();
-
-                if(entity == null)
-                {
+                if (!MarrowBody.Cache.TryGet(hit.rigidbody.gameObject, out MarrowBody body))
                     return;
-                }
+
+                MarrowEntity entity = body.Entity;
+
+                if (entity == null)
+                    return;
 
                 if(m_mode == Mode.Prop)
-                {
                     PropBuilder.BuildProp(entity);
-                }
                 else
-                {
                     PropBuilder.RemoveProp(entity);
-                }
             }
         }
 

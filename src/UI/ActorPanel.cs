@@ -83,6 +83,8 @@ namespace NEP.MonoDirector.UI
         private void OnDeleteClicked()
         {
             Caster.UncastActor(Caster.SelectedActor);
+            // TODO: Move this into Caster or something
+            Director.ActiveStage.RemoveActor(Caster.SelectedActor);
             m_root.gameObject.SetActive(false);
         }
     }
