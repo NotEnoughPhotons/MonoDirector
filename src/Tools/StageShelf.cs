@@ -17,6 +17,8 @@ namespace NEP.MonoDirector.Tools
     [RegisterTypeInIl2Cpp]
     public class StageShelf(IntPtr ptr) : MonoBehaviour(ptr)
     {
+        public static StageShelf Instance { get; private set; }
+
         private Film m_film;
         private StageShelfSocket[] m_sockets;
         private StageShelfSocket m_newStageSocket;
@@ -30,6 +32,9 @@ namespace NEP.MonoDirector.Tools
 
         private void Awake()
         {
+            if (Instance == null)
+                Instance = this;
+            
             Transform shelf = transform.Find("Canvas/Shelf");
 
             m_sockets = new StageShelfSocket[shelf.childCount];
@@ -71,8 +76,8 @@ namespace NEP.MonoDirector.Tools
         {
             foreach (var socket in m_sockets)
             {
-                socket.OnConnected += OnReelConnected;
-                socket.OnDisconnected += OnReelDisconnected;
+                socket.OnConnected -= OnReelConnected;
+                socket.OnDisconnected -= OnReelDisconnected;
             }
 
             m_newStageSocket.OnDisconnected -= OnNewReel;
