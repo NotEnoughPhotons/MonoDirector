@@ -61,7 +61,15 @@ namespace NEP.MonoDirector.Core
             if (Director.PlayState != PlayState.Playing)
                 return;
 
-            Events.OnPlaybackTick?.Invoke();
+            try
+            {
+                Events.OnPlaybackTick?.Invoke();
+            }
+            catch(Exception e)
+            {
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
+            }
         }
         
         /// <summary>
@@ -76,11 +84,19 @@ namespace NEP.MonoDirector.Core
                 return;
             }
 
-            m_film = Director.ActiveFilm;
-            m_stage = m_film.Stages[0];
+            try
+            {
+                m_film = Director.ActiveFilm;
+                m_stage = m_film.Stages[0];
 
-            if (m_playRoutine == null)
-                m_playRoutine = MelonCoroutines.Start(PlayRoutine()) as Coroutine;
+                if (m_playRoutine == null)
+                    m_playRoutine = MelonCoroutines.Start(PlayRoutine()) as Coroutine;
+            }
+            catch(Exception e)
+            {
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
+            }
         }
 
         /// <summary>
@@ -89,16 +105,24 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnPrePlayback()
         {
-            ResetPlayhead();
-
-            foreach (var castMember in Caster.Cast)
+            try
             {
-                castMember.OnSceneBegin();
+                ResetPlayhead();
+
+                foreach (var castMember in Caster.Cast)
+                {
+                    castMember.OnSceneBegin();
+                }
+
+                foreach (var prop in Caster.Props)
+                {
+                    prop.OnSceneBegin();
+                }
             }
-
-            foreach (var prop in Caster.Props)
+            catch(Exception e)
             {
-                prop.OnSceneBegin();
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
             }
         }
 
@@ -107,12 +131,20 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnPlay()
         {
-            foreach(var actor in Caster.Cast)
+            try
             {
-                if(actor is Actor actorPlayer)
+                foreach (var actor in Caster.Cast)
                 {
-                    actorPlayer?.Microphone?.Playback();
+                    if (actor is Actor actorPlayer)
+                    {
+                        actorPlayer?.Microphone?.Playback();
+                    }
                 }
+            }
+            catch(Exception e)
+            {
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
             }
         }
 
@@ -126,9 +158,16 @@ namespace NEP.MonoDirector.Core
                 return;
             }
 
-            AnimateAll();
-            
-            m_playbackTime += PlaybackRate * Time.deltaTime;
+            try
+            {
+                AnimateAll();
+                m_playbackTime += PlaybackRate * Time.deltaTime;
+            }
+            catch(Exception e)
+            {
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
+            }
         }
 
         /// <summary>
@@ -136,18 +175,26 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnStopPlayback()
         {
-            foreach (Trackable castMember in Caster.Cast)
+            try
             {
-                if (castMember != null && castMember is Actor actorPlayer)
+                foreach (Trackable castMember in Caster.Cast)
                 {
-                    actorPlayer?.Microphone?.StopPlayback();
+                    if (castMember != null && castMember is Actor actorPlayer)
+                    {
+                        actorPlayer?.Microphone?.StopPlayback();
+                    }
+                }
+
+                if (m_playRoutine != null)
+                {
+                    MelonCoroutines.Stop(m_playRoutine);
+                    m_playRoutine = null;
                 }
             }
-
-            if (m_playRoutine != null)
+            catch(Exception e)
             {
-                MelonCoroutines.Stop(m_playRoutine);
-                m_playRoutine = null;
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
             }
         }
 
@@ -178,11 +225,19 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void AnimateAll()
         {
-            foreach (var castMember in Caster.Cast)
-                AnimateActor(castMember);
+            try
+            {
+                foreach (var castMember in Caster.Cast)
+                    AnimateActor(castMember);
 
-            foreach (var prop in Caster.Props)
-                AnimateProp(prop);
+                foreach (var prop in Caster.Props)
+                    AnimateProp(prop);
+            }
+            catch (Exception e)
+            {
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
+            }
         }
         
         /// <summary>

@@ -162,6 +162,7 @@ namespace NEP.MonoDirector.Core
             ActorFrameManager.Initialize();
             WarehouseLoader.SpawnFromBarcode(WarehouseLoader.actorPanelBarcode);
             WarehouseLoader.SpawnFromBarcode(WarehouseLoader.mainMenuBarcode);
+            WarehouseLoader.SpawnFromBarcode(WarehouseLoader.stageShelfBarcode);
         }
 
         private static void CheckAudioImport()
@@ -170,6 +171,12 @@ namespace NEP.MonoDirector.Core
             {
                 m_audioImportInstalled = true;
             }
+        }
+
+        internal static void AnnounceError()
+        {
+            var mixer = BoneLib.Audio.InHead;
+            BoneLib.Audio.Play2DOneShot(BundleLoader.ErrorClip, mixer, 0.1f);
         }
 
         internal static void TestDebugSerialize()

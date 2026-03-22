@@ -14,6 +14,7 @@ namespace NEP.MonoDirector.Data
         public static AudioClip PreRollClip { get => m_preRollClip; }
         public static AudioClip PostRollClip { get => m_postRollClip; }
         public static AudioClip LinkAudioClip { get => m_linkAudioClip; }
+        public static AudioClip ErrorClip { get => m_errorClip; }
 
         private static AssetBundle m_uiBundle;
         private static AssetBundle m_soundBundle;
@@ -26,6 +27,7 @@ namespace NEP.MonoDirector.Data
         private static AudioClip m_preRollClip;
         private static AudioClip m_postRollClip;
         private static AudioClip m_linkAudioClip;
+        private static AudioClip m_errorClip;
 
         public static void Initialize()
         {
@@ -40,6 +42,7 @@ namespace NEP.MonoDirector.Data
             m_preRollClip = m_soundBundle.LoadPersistentAsset<AudioClip>("preroll");
             m_postRollClip = m_soundBundle.LoadPersistentAsset<AudioClip>("postroll");
             m_linkAudioClip = m_soundBundle.LoadPersistentAsset<AudioClip>("linkaudio");
+            m_errorClip = m_soundBundle.LoadPersistentAsset<AudioClip>("kl_fiddlesticks");
         }
 
         private static AssetBundle LoadBundle(string name)

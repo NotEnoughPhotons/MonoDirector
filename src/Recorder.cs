@@ -70,7 +70,15 @@ namespace NEP.MonoDirector.Core
                 return;
             }
 
-            Events.OnRecordTick?.Invoke();
+            try
+            {
+                Events.OnRecordTick?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
+            }
         }
 
         public void StartRecordRoutine()
@@ -91,25 +99,34 @@ namespace NEP.MonoDirector.Core
 
         public void RecordActor()
         {
-            if (Settings.World.recordActors)
+            try
             {
-                m_activeActor.RecordFrame();
+                if (Settings.World.recordActors)
+                {
+                    m_activeActor.RecordFrame();
+                }
+
+                foreach (var prop in Caster.RecordProps)
+                {
+                    prop.Record(m_recordTick);
+                }
+
+                foreach (var castMember in Caster.Cast)
+                {
+                    Playback.Instance.AnimateActor(castMember);
+                }
+
+                foreach (var prop in Caster.Props)
+                {
+                    Playback.Instance.AnimateProp(prop);
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
             }
             
-            foreach (var prop in Caster.RecordProps)
-            {
-                prop.Record(m_recordTick);
-            }
-
-            foreach (var castMember in Caster.Cast)
-            {
-                Playback.Instance.AnimateActor(castMember);
-            }
-
-            foreach(var prop in Caster.Props)
-            {
-                Playback.Instance.AnimateProp(prop);
-            }
         }
 
         /// <summary>
@@ -117,33 +134,41 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnPreRecord()
         {
-            if (m_recordTick > 0)
+            try
             {
-                m_recordTick = 0;
+                if (m_recordTick > 0)
+                {
+                    m_recordTick = 0;
+                }
+
+                Playback.Instance.ResetPlayhead();
+
+                m_fpsTimer = 0f;
+
+                m_recordingTime = 0f;
+
+                m_timeSpentInMenu = 0f;
+                m_usedMenu = false;
+
+                if (Settings.World.recordActors)
+                {
+                    SetActor(Constants.RigManager.avatar);
+                }
+
+                foreach (var castMember in Caster.Cast)
+                {
+                    castMember.OnSceneBegin();
+                }
+
+                foreach (var prop in Caster.Props)
+                {
+                    prop.OnSceneBegin();
+                }
             }
-
-            Playback.Instance.ResetPlayhead();
-
-            m_fpsTimer = 0f;
-
-            m_recordingTime = 0f;
-
-            m_timeSpentInMenu = 0f;
-            m_usedMenu = false;
-
-            if (Settings.World.recordActors)
+            catch (Exception e)
             {
-                SetActor(Constants.RigManager.avatar);
-            }
-
-            foreach (var castMember in Caster.Cast)
-            {
-                castMember.OnSceneBegin();
-            }
-
-            foreach(var prop in Caster.Props)
-            {
-                prop.OnSceneBegin();
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
             }
         }
 
@@ -152,16 +177,25 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnPostRecord()
         {
-            m_activeActor?.Microphone?.SetCorrectionMode(Audio.ActorSpeech.AudioCorrectionMode.Corrected);
-            m_activeActor?.Microphone?.RecordMicrophone();
-
-            foreach (Trackable castMember in Caster.Cast)
+            try
             {
-                if (castMember != null && castMember is Actor actorPlayer)
+                m_activeActor?.Microphone?.SetCorrectionMode(Audio.ActorSpeech.AudioCorrectionMode.Corrected);
+                m_activeActor?.Microphone?.RecordMicrophone();
+
+                foreach (Trackable castMember in Caster.Cast)
                 {
-                    actorPlayer?.Microphone?.Playback();
+                    if (castMember != null && castMember is Actor actorPlayer)
+                    {
+                        actorPlayer?.Microphone?.Playback();
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
+            }
+            
         }
 
         /// <summary>
@@ -174,39 +208,48 @@ namespace NEP.MonoDirector.Core
                 return;
             }
 
-            m_recordTick++;
-            m_recordingTime += m_timeSinceLastTick;
-
-            if (m_usedMenu)
+            try
             {
-                m_timeSpentInMenu += m_timeSinceLastTick;
-            }
+                m_recordTick++;
+                m_recordingTime += m_timeSinceLastTick;
 
-            // keep up!
-            if (m_recordingTime > TakeTime)
-            {
-                TakeTime = m_recordingTime;
-            }
-
-            Playback.Instance.MovePlayhead(m_timeSinceLastTick);
-
-            if (Director.CaptureState == CaptureState.CaptureCamera)
-            {
-                RecordCamera();
-            }
-            
-            if (Director.CaptureState == CaptureState.CaptureActor)
-            {
-                RecordActor();
-            }
-
-            foreach (var castMember in Caster.Cast)
-            {
-                if (castMember != null)
+                if (m_usedMenu)
                 {
-                    castMember.Act();
+                    m_timeSpentInMenu += m_timeSinceLastTick;
+                }
+
+                // keep up!
+                if (m_recordingTime > TakeTime)
+                {
+                    TakeTime = m_recordingTime;
+                }
+
+                Playback.Instance.MovePlayhead(m_timeSinceLastTick);
+
+                if (Director.CaptureState == CaptureState.CaptureCamera)
+                {
+                    RecordCamera();
+                }
+
+                if (Director.CaptureState == CaptureState.CaptureActor)
+                {
+                    RecordActor();
+                }
+
+                foreach (var castMember in Caster.Cast)
+                {
+                    if (castMember != null)
+                    {
+                        castMember.Act();
+                    }
                 }
             }
+            catch(Exception e)
+            {
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
+            }
+            
         }
 
         /// <summary>
@@ -214,93 +257,101 @@ namespace NEP.MonoDirector.Core
         /// </summary>
         public void OnStopRecording()
         {
-            m_recordingTime -= m_timeSpentInMenu - 1f;
-
-            Director.ActiveStage.SetDuration(m_recordingTime);
-
-            m_activeActor?.Microphone?.StopRecording();
-
-            foreach (Trackable castMember in Caster.Cast)
+            try
             {
-                if (castMember != null && castMember is Actor actorPlayer)
+                m_recordingTime -= m_timeSpentInMenu - 1f;
+
+                Director.ActiveStage.SetDuration(m_recordingTime);
+
+                m_activeActor?.Microphone?.StopRecording();
+
+                foreach (Trackable castMember in Caster.Cast)
                 {
-                    actorPlayer?.Microphone?.StopPlayback();
+                    if (castMember != null && castMember is Actor actorPlayer)
+                    {
+                        actorPlayer?.Microphone?.StopPlayback();
+                    }
                 }
-            }
 
 #if DEBUG
-            /*
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            byte[] actorBytes = ActiveActor.ToBinary();
-            sw.Stop();
-            
-            Main.Logger.Msg($"[STOPWATCH]: Actor::ToBinary() took {sw.ElapsedMilliseconds}...");
-            
-            sw.Restart();
-            
-            using (FileStream file = File.Open("test.mdat", FileMode.Create))
-            {
-                uint ident = ActiveActor.GetBinaryID();
-                file.Write(BitConverter.GetBytes(ident), 0, sizeof(uint));
-                
-                file.Write(actorBytes, 0, actorBytes.Length);
-            };
-            
-            sw.Stop();
-            
-            Main.Logger.Msg($"[STOPWATCH]: Writing MDAT took {sw.ElapsedMilliseconds}...");
-            sw.Restart();
-            
-            // Then try to read it back
-            using (FileStream file = File.Open("test.mdat", FileMode.Open))
-            {
-                // Seek past the first 4 bytes
-                file.Seek(4, SeekOrigin.Begin);
-                ActiveActor.FromBinary(file);
-            }
+                /*
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                byte[] actorBytes = ActiveActor.ToBinary();
+                sw.Stop();
 
-            sw.Stop();
-            
-            Main.Logger.Msg($"[STOPWATCH]: Actor::FromBinary() took {sw.ElapsedMilliseconds}...");
-            */
-#endif
+                Main.Logger.Msg($"[STOPWATCH]: Actor::ToBinary() took {sw.ElapsedMilliseconds}...");
 
-            if (Settings.World.recordActors)
-            {
-                m_activeActor.CloneAvatar();
-                
-                foreach (var recordedProp in Caster.RecordProps)
+                sw.Restart();
+
+                using (FileStream file = File.Open("test.mdat", FileMode.Create))
                 {
-                    m_activeActor.OwnProp(recordedProp);
+                    uint ident = ActiveActor.GetBinaryID();
+                    file.Write(BitConverter.GetBytes(ident), 0, sizeof(uint));
+
+                    file.Write(actorBytes, 0, actorBytes.Length);
+                };
+
+                sw.Stop();
+
+                Main.Logger.Msg($"[STOPWATCH]: Writing MDAT took {sw.ElapsedMilliseconds}...");
+                sw.Restart();
+
+                // Then try to read it back
+                using (FileStream file = File.Open("test.mdat", FileMode.Open))
+                {
+                    // Seek past the first 4 bytes
+                    file.Seek(4, SeekOrigin.Begin);
+                    ActiveActor.FromBinary(file);
                 }
 
-                // NOTE: Perhaps add the active actor to the list?
-                Caster.CastActor(m_activeActor);
-                Director.ActiveStage.AddActor(m_activeActor);
+                sw.Stop();
+
+                Main.Logger.Msg($"[STOPWATCH]: Actor::FromBinary() took {sw.ElapsedMilliseconds}...");
+                */
+#endif
+
+                if (Settings.World.recordActors)
+                {
+                    m_activeActor.CloneAvatar();
+
+                    foreach (var recordedProp in Caster.RecordProps)
+                    {
+                        m_activeActor.OwnProp(recordedProp);
+                    }
+
+                    // NOTE: Perhaps add the active actor to the list?
+                    Caster.CastActor(m_activeActor);
+                    Director.ActiveStage.AddActor(m_activeActor);
+                }
+
+                m_lastActor = m_activeActor;
+
+                m_activeActor = null;
+
+                Caster.CastActors(ActiveActors);
+                Director.ActiveStage.AddActors(ActiveActors);
+                Director.ActiveStage.AddProps(Caster.RecordProps.ToList());
+
+                // Caster.AddProps(Director.RecordingProps);
+                // Director.LastRecordedProps = Director.RecordingProps;
+
+                Caster.TransferRecordedProps();
+
+                ActiveActors.Clear();
+
+                Director.ActiveStage.SetDuration(m_recordingTime);
+
+                if (m_recordRoute != null)
+                {
+                    MelonCoroutines.Stop(m_recordRoute);
+                    m_recordRoute = null;
+                }
             }
-            
-            m_lastActor = m_activeActor;
-
-            m_activeActor = null;
-
-            Caster.CastActors(ActiveActors);
-            Director.ActiveStage.AddActors(ActiveActors);
-            Director.ActiveStage.AddProps(Caster.RecordProps.ToList());
-            
-            // Caster.AddProps(Director.RecordingProps);
-            // Director.LastRecordedProps = Director.RecordingProps;
-
-            Caster.TransferRecordedProps();
-
-            ActiveActors.Clear();
-
-            Director.ActiveStage.SetDuration(m_recordingTime);
-
-            if (m_recordRoute != null)
+            catch(Exception e)
             {
-                MelonCoroutines.Stop(m_recordRoute);
-                m_recordRoute = null;
+                Logging.ErrorDebug(e.ToString());
+                Bootstrap.AnnounceError();
             }
         }
 
