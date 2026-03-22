@@ -25,6 +25,10 @@ namespace NEP.MonoDirector.Core
 
         public static int WorldTick { get => m_worldTick; }
 
+        public static event Action<Stage> OnStageAdded;
+        public static event Action<Stage> OnStageRemoved;
+        public static event Action<Stage> OnStageSet;
+
         public static event Action<Actor> OnActorSelected;
         public static event Action<Actor> OnActorDeselected;
 
@@ -140,8 +144,46 @@ namespace NEP.MonoDirector.Core
             m_camera = camera;
         }
 
+        public static void AddStage(Stage stage)
+        {
+            m_activeFilm.AddStage(stage);
+            OnStageAdded?.Invoke(stage);
+        }
+
+        public static void RemoveStage(Stage stage)
+        {
+            // Removing the same stage
+            if (m_activeStage.StageIndex == stage.StageIndex && m_activeFilm.Stages.Count > 1)
+            {
+                if (m_activeStage.StageIndex > 0)
+                    m_activeStage = m_activeFilm.Stages[m_activeStage.StageIndex - 1];
+                else if (m_activeStage.StageIndex == 0)
+                    m_activeStage = m_activeFilm.Stages[m_activeStage.StageIndex + 1];
+
+                SetStage(m_activeStage);
+            }
+
+            m_activeFilm.RemoveStage(stage);
+
+            // If the film is empty, add a new stage and set it.
+            if (m_activeFilm.Empty)
+            {
+                Stage newStage = new Stage();
+                AddStage(newStage);
+                SetStage(newStage);
+            }
+
+            OnStageRemoved?.Invoke(stage);
+        }
+
         public static void SetStage(Stage stage)
         {
+            if (stage == null)
+            {
+                Logging.WarnDebug("Director.SetStage was called with a null stage!");
+                return;
+            }
+
             foreach (var actor in Caster.Cast)
             {
                 actor.ActorBody.AllowCollisions(false);
@@ -174,6 +216,8 @@ namespace NEP.MonoDirector.Core
                 prop.gameObject.SetActive(true);
                 prop.OnSceneBegin();
             }
+
+            OnStageSet?.Invoke(stage);
         }
 
         public static void SelectActor(Actor actor) => Caster.SelectActor(actor);

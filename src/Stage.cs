@@ -24,12 +24,14 @@ namespace NEP.MonoDirector.Core
         public Barcode LevelBarcode => m_levelBarcode;
         public string Name => m_name;
         public float Duration => m_duration;
+        public int StageIndex => m_stageIndex;
 
         private List<Actor> m_actors;
         private List<Prop> m_props;
         private Barcode m_levelBarcode;
         private string m_name;
         private float m_duration;
+        private int m_stageIndex;
 
         public static void Swap(ref Stage left, ref Stage right)
         {
@@ -81,6 +83,11 @@ namespace NEP.MonoDirector.Core
         public void SetDuration(float duration)
         {
             m_duration = duration;
+        }
+
+        public void SetIndex(int index)
+        {
+            m_stageIndex = index;
         }
     }
 }
